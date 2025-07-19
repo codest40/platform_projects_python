@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - Timzap</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/calendar.css">
+    
+    <!-- Luxon CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo">🌍 Timzap</h1>
+                    <nav class="nav">
+                        <a href="../index.html" class="nav-link">Home</a>
+                        <a href="calendar.html" class="nav-link active">Calendar</a>
+                        <button id="theme-toggle" class="theme-toggle">🌙</button>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Calendar Section -->
+        <section class="calendar-section">
+            <div class="container">
+                <div class="calendar-header">
+                    <h2 class="calendar-title">Calendar & Reminders</h2>
+                    <button id="add-reminder-btn" class="btn-primary">Add Reminder</button>
+                </div>
+
+                <!-- Calendar Navigation -->
+                <div class="calendar-nav">
+                    <button id="prev-month" class="nav-btn">←</button>
+                    <h3 id="current-month" class="current-month"></h3>
+                    <button id="next-month" class="nav-btn">→</button>
+                    <button id="today-btn" class="today-btn">Today</button>
+                </div>
+
+                <!-- Calendar Grid -->
+                <div class="calendar-container">
+                    <div class="calendar-weekdays">
+                        <div class="weekday">Sun</div>
+                        <div class="weekday">Mon</div>
+                        <div class="weekday">Tue</div>
+                        <div class="weekday">Wed</div>
+                        <div class="weekday">Thu</div>
+                        <div class="weekday">Fri</div>
+                        <div class="weekday">Sat</div>
+                    </div>
+                    <div id="calendar-grid" class="calendar-grid"></div>
+                </div>
+
+                <!-- Reminders Section -->
+                <div class="reminders-section">
+                    <h3 class="reminders-title">Upcoming Reminders</h3>
+                    <div id="reminders-list" class="reminders-list"></div>
+                    <div id="reminders-pagination" class="pagination"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Add Reminder Modal -->
+        <div id="reminder-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add Reminder</h3>
+                    <button id="close-modal" class="close-btn">×</button>
+                </div>
+                <form id="reminder-form" class="reminder-form">
+                    <div class="form-group">
+                        <label for="reminder-text">Reminder Text</label>
+                        <input type="text" id="reminder-text" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-date">Date</label>
+                        <input type="date" id="reminder-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-time">Time</label>
+                        <input type="time" id="reminder-time" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="reminder-timezone">Timezone</label>
+                        <select id="reminder-timezone" required></select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Reminder</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script type="module" src="../js/main.js"></script>
+    <script type="module" src="../js/calendarRender.js"></script>
+    <script type="module" src="../js/calendarNavigation.js"></script>
+    <script type="module" src="../js/reminderManager.js"></script>
+    <script type="module" src="../js/reminderSortView.js"></script>
+    <script type="module" src="../js/paginate.js"></script>
+</body>
+</html>

@@ -1,0 +1,558 @@
+[
+  {
+    "code": "us",
+    "name": "United States",
+    "emoji": "🇺🇸",
+    "cities": [
+      { "name": "New York", "timezone": "America/New_York" },
+      { "name": "Los Angeles", "timezone": "America/Los_Angeles" },
+      { "name": "Chicago", "timezone": "America/Chicago" },
+      { "name": "Denver", "timezone": "America/Denver" },
+      { "name": "Phoenix", "timezone": "America/Phoenix" },
+      { "name": "Miami", "timezone": "America/New_York" },
+      { "name": "Las Vegas", "timezone": "America/Los_Angeles" },
+      { "name": "Seattle", "timezone": "America/Los_Angeles" },
+      { "name": "Boston", "timezone": "America/New_York" },
+      { "name": "San Francisco", "timezone": "America/Los_Angeles" }
+    ]
+  },
+  {
+    "code": "ca",
+    "name": "Canada",
+    "emoji": "🇨🇦",
+    "cities": [
+      { "name": "Toronto", "timezone": "America/Toronto" },
+      { "name": "Vancouver", "timezone": "America/Vancouver" },
+      { "name": "Montreal", "timezone": "America/Montreal" },
+      { "name": "Calgary", "timezone": "America/Edmonton" },
+      { "name": "Ottawa", "timezone": "America/Toronto" },
+      { "name": "Edmonton", "timezone": "America/Edmonton" },
+      { "name": "Winnipeg", "timezone": "America/Winnipeg" },
+      { "name": "Halifax", "timezone": "America/Halifax" }
+    ]
+  },
+  {
+    "code": "gb",
+    "name": "United Kingdom",
+    "emoji": "🇬🇧",
+    "cities": [
+      { "name": "London", "timezone": "Europe/London" },
+      { "name": "Edinburgh", "timezone": "Europe/London" },
+      { "name": "Cardiff", "timezone": "Europe/London" },
+      { "name": "Belfast", "timezone": "Europe/London" },
+      { "name": "Manchester", "timezone": "Europe/London" },
+      { "name": "Birmingham", "timezone": "Europe/London" },
+      { "name": "Glasgow", "timezone": "Europe/London" },
+      { "name": "Liverpool", "timezone": "Europe/London" }
+    ]
+  },
+  {
+    "code": "de",
+    "name": "Germany",
+    "emoji": "🇩🇪",
+    "cities": [
+      { "name": "Berlin", "timezone": "Europe/Berlin" },
+      { "name": "Munich", "timezone": "Europe/Berlin" },
+      { "name": "Hamburg", "timezone": "Europe/Berlin" },
+      { "name": "Frankfurt", "timezone": "Europe/Berlin" },
+      { "name": "Cologne", "timezone": "Europe/Berlin" },
+      { "name": "Stuttgart", "timezone": "Europe/Berlin" },
+      { "name": "Dresden", "timezone": "Europe/Berlin" }
+    ]
+  },
+  {
+    "code": "fr",
+    "name": "France",
+    "emoji": "🇫🇷",
+    "cities": [
+      { "name": "Paris", "timezone": "Europe/Paris" },
+      { "name": "Lyon", "timezone": "Europe/Paris" },
+      { "name": "Marseille", "timezone": "Europe/Paris" },
+      { "name": "Nice", "timezone": "Europe/Paris" },
+      { "name": "Toulouse", "timezone": "Europe/Paris" },
+      { "name": "Strasbourg", "timezone": "Europe/Paris" },
+      { "name": "Bordeaux", "timezone": "Europe/Paris" }
+    ]
+  },
+  {
+    "code": "jp",
+    "name": "Japan",
+    "emoji": "🇯🇵",
+    "cities": [
+      { "name": "Tokyo", "timezone": "Asia/Tokyo" },
+      { "name": "Osaka", "timezone": "Asia/Tokyo" },
+      { "name": "Kyoto", "timezone": "Asia/Tokyo" },
+      { "name": "Nagoya", "timezone": "Asia/Tokyo" },
+      { "name": "Yokohama", "timezone": "Asia/Tokyo" },
+      { "name": "Kobe", "timezone": "Asia/Tokyo" },
+      { "name": "Hiroshima", "timezone": "Asia/Tokyo" },
+      { "name": "Fukuoka", "timezone": "Asia/Tokyo" }
+    ]
+  },
+  {
+    "code": "au",
+    "name": "Australia",
+    "emoji": "🇦🇺",
+    "cities": [
+      { "name": "Sydney", "timezone": "Australia/Sydney" },
+      { "name": "Melbourne", "timezone": "Australia/Melbourne" },
+      { "name": "Brisbane", "timezone": "Australia/Brisbane" },
+      { "name": "Perth", "timezone": "Australia/Perth" },
+      { "name": "Adelaide", "timezone": "Australia/Adelaide" },
+      { "name": "Canberra", "timezone": "Australia/Sydney" },
+      { "name": "Darwin", "timezone": "Australia/Darwin" },
+      { "name": "Hobart", "timezone": "Australia/Hobart" }
+    ]
+  },
+  {
+    "code": "cn",
+    "name": "China",
+    "emoji": "🇨🇳",
+    "cities": [
+      { "name": "Beijing", "timezone": "Asia/Shanghai" },
+      { "name": "Shanghai", "timezone": "Asia/Shanghai" },
+      { "name": "Guangzhou", "timezone": "Asia/Shanghai" },
+      { "name": "Shenzhen", "timezone": "Asia/Shanghai" },
+      { "name": "Chengdu", "timezone": "Asia/Shanghai" },
+      { "name": "Hangzhou", "timezone": "Asia/Shanghai" },
+      { "name": "Wuhan", "timezone": "Asia/Shanghai" },
+      { "name": "Xi'an", "timezone": "Asia/Shanghai" }
+    ]
+  },
+  {
+    "code": "in",
+    "name": "India",
+    "emoji": "🇮🇳",
+    "cities": [
+      { "name": "Mumbai", "timezone": "Asia/Kolkata" },
+      { "name": "Delhi", "timezone": "Asia/Kolkata" },
+      { "name": "Bangalore", "timezone": "Asia/Kolkata" },
+      { "name": "Chennai", "timezone": "Asia/Kolkata" },
+      { "name": "Kolkata", "timezone": "Asia/Kolkata" },
+      { "name": "Hyderabad", "timezone": "Asia/Kolkata" },
+      { "name": "Pune", "timezone": "Asia/Kolkata" },
+      { "name": "Ahmedabad", "timezone": "Asia/Kolkata" }
+    ]
+  },
+  {
+    "code": "br",
+    "name": "Brazil",
+    "emoji": "🇧🇷",
+    "cities": [
+      { "name": "São Paulo", "timezone": "America/Sao_Paulo" },
+      { "name": "Rio de Janeiro", "timezone": "America/Sao_Paulo" },
+      { "name": "Brasília", "timezone": "America/Sao_Paulo" },
+      { "name": "Salvador", "timezone": "America/Bahia" },
+      { "name": "Fortaleza", "timezone": "America/Fortaleza" },
+      { "name": "Belo Horizonte", "timezone": "America/Sao_Paulo" },
+      { "name": "Manaus", "timezone": "America/Manaus" },
+      { "name": "Recife", "timezone": "America/Recife" }
+    ]
+  },
+  {
+    "code": "ru",
+    "name": "Russia",
+    "emoji": "🇷🇺",
+    "cities": [
+      { "name": "Moscow", "timezone": "Europe/Moscow" },
+      { "name": "St. Petersburg", "timezone": "Europe/Moscow" },
+      { "name": "Novosibirsk", "timezone": "Asia/Novosibirsk" },
+      { "name": "Yekaterinburg", "timezone": "Asia/Yekaterinburg" },
+      { "name": "Vladivostok", "timezone": "Asia/Vladivostok" },
+      { "name": "Kazan", "timezone": "Europe/Moscow" },
+      { "name": "Samara", "timezone": "Europe/Samara" },
+      { "name": "Irkutsk", "timezone": "Asia/Irkutsk" }
+    ]
+  },
+  {
+    "code": "mx",
+    "name": "Mexico",
+    "emoji": "🇲🇽",
+    "cities": [
+      { "name": "Mexico City", "timezone": "America/Mexico_City" },
+      { "name": "Guadalajara", "timezone": "America/Mexico_City" },
+      { "name": "Monterrey", "timezone": "America/Mexico_City" },
+      { "name": "Tijuana", "timezone": "America/Tijuana" },
+      { "name": "Cancun", "timezone": "America/Cancun" },
+      { "name": "Puebla", "timezone": "America/Mexico_City" },
+      { "name": "Juarez", "timezone": "America/Ojinaga" }
+    ]
+  },
+  {
+    "code": "it",
+    "name": "Italy",
+    "emoji": "🇮🇹",
+    "cities": [
+      { "name": "Rome", "timezone": "Europe/Rome" },
+      { "name": "Milan", "timezone": "Europe/Rome" },
+      { "name": "Naples", "timezone": "Europe/Rome" },
+      { "name": "Turin", "timezone": "Europe/Rome" },
+      { "name": "Florence", "timezone": "Europe/Rome" },
+      { "name": "Venice", "timezone": "Europe/Rome" },
+      { "name": "Bologna", "timezone": "Europe/Rome" }
+    ]
+  },
+  {
+    "code": "es",
+    "name": "Spain",
+    "emoji": "🇪🇸",
+    "cities": [
+      { "name": "Madrid", "timezone": "Europe/Madrid" },
+      { "name": "Barcelona", "timezone": "Europe/Madrid" },
+      { "name": "Valencia", "timezone": "Europe/Madrid" },
+      { "name": "Seville", "timezone": "Europe/Madrid" },
+      { "name": "Bilbao", "timezone": "Europe/Madrid" },
+      { "name": "Malaga", "timezone": "Europe/Madrid" },
+      { "name": "Las Palmas", "timezone": "Atlantic/Canary" }
+    ]
+  },
+  {
+    "code": "nl",
+    "name": "Netherlands",
+    "emoji": "🇳🇱",
+    "cities": [
+      { "name": "Amsterdam", "timezone": "Europe/Amsterdam" },
+      { "name": "Rotterdam", "timezone": "Europe/Amsterdam" },
+      { "name": "The Hague", "timezone": "Europe/Amsterdam" },
+      { "name": "Utrecht", "timezone": "Europe/Amsterdam" },
+      { "name": "Eindhoven", "timezone": "Europe/Amsterdam" }
+    ]
+  },
+  {
+    "code": "se",
+    "name": "Sweden",
+    "emoji": "🇸🇪",
+    "cities": [
+      { "name": "Stockholm", "timezone": "Europe/Stockholm" },
+      { "name": "Gothenburg", "timezone": "Europe/Stockholm" },
+      { "name": "Malmö", "timezone": "Europe/Stockholm" },
+      { "name": "Uppsala", "timezone": "Europe/Stockholm" }
+    ]
+  },
+  {
+    "code": "no",
+    "name": "Norway",
+    "emoji": "🇳🇴",
+    "cities": [
+      { "name": "Oslo", "timezone": "Europe/Oslo" },
+      { "name": "Bergen", "timezone": "Europe/Oslo" },
+      { "name": "Trondheim", "timezone": "Europe/Oslo" },
+      { "name": "Stavanger", "timezone": "Europe/Oslo" }
+    ]
+  },
+  {
+    "code": "dk",
+    "name": "Denmark",
+    "emoji": "🇩🇰",
+    "cities": [
+      { "name": "Copenhagen", "timezone": "Europe/Copenhagen" },
+      { "name": "Aarhus", "timezone": "Europe/Copenhagen" },
+      { "name": "Odense", "timezone": "Europe/Copenhagen" },
+      { "name": "Aalborg", "timezone": "Europe/Copenhagen" }
+    ]
+  },
+  {
+    "code": "fi",
+    "name": "Finland",
+    "emoji": "🇫🇮",
+    "cities": [
+      { "name": "Helsinki", "timezone": "Europe/Helsinki" },
+      { "name": "Tampere", "timezone": "Europe/Helsinki" },
+      { "name": "Turku", "timezone": "Europe/Helsinki" },
+      { "name": "Oulu", "timezone": "Europe/Helsinki" }
+    ]
+  },
+  {
+    "code": "ch",
+    "name": "Switzerland",
+    "emoji": "🇨🇭",
+    "cities": [
+      { "name": "Zurich", "timezone": "Europe/Zurich" },
+      { "name": "Geneva", "timezone": "Europe/Zurich" },
+      { "name": "Basel", "timezone": "Europe/Zurich" },
+      { "name": "Bern", "timezone": "Europe/Zurich" }
+    ]
+  },
+  {
+    "code": "at",
+    "name": "Austria",
+    "emoji": "🇦🇹",
+    "cities": [
+      { "name": "Vienna", "timezone": "Europe/Vienna" },
+      { "name": "Graz", "timezone": "Europe/Vienna" },
+      { "name": "Salzburg", "timezone": "Europe/Vienna" },
+      { "name": "Innsbruck", "timezone": "Europe/Vienna" }
+    ]
+  },
+  {
+    "code": "be",
+    "name": "Belgium",
+    "emoji": "🇧🇪",
+    "cities": [
+      { "name": "Brussels", "timezone": "Europe/Brussels" },
+      { "name": "Antwerp", "timezone": "Europe/Brussels" },
+      { "name": "Ghent", "timezone": "Europe/Brussels" },
+      { "name": "Bruges", "timezone": "Europe/Brussels" }
+    ]
+  },
+  {
+    "code": "pl",
+    "name": "Poland",
+    "emoji": "🇵🇱",
+    "cities": [
+      { "name": "Warsaw", "timezone": "Europe/Warsaw" },
+      { "name": "Krakow", "timezone": "Europe/Warsaw" },
+      { "name": "Gdansk", "timezone": "Europe/Warsaw" },
+      { "name": "Wroclaw", "timezone": "Europe/Warsaw" }
+    ]
+  },
+  {
+    "code": "cz",
+    "name": "Czech Republic",
+    "emoji": "🇨🇿",
+    "cities": [
+      { "name": "Prague", "timezone": "Europe/Prague" },
+      { "name": "Brno", "timezone": "Europe/Prague" },
+      { "name": "Ostrava", "timezone": "Europe/Prague" }
+    ]
+  },
+  {
+    "code": "gr",
+    "name": "Greece",
+    "emoji": "🇬🇷",
+    "cities": [
+      { "name": "Athens", "timezone": "Europe/Athens" },
+      { "name": "Thessaloniki", "timezone": "Europe/Athens" },
+      { "name": "Patras", "timezone": "Europe/Athens" }
+    ]
+  },
+  {
+    "code": "tr",
+    "name": "Turkey",
+    "emoji": "🇹🇷",
+    "cities": [
+      { "name": "Istanbul", "timezone": "Europe/Istanbul" },
+      { "name": "Ankara", "timezone": "Europe/Istanbul" },
+      { "name": "Izmir", "timezone": "Europe/Istanbul" },
+      { "name": "Antalya", "timezone": "Europe/Istanbul" }
+    ]
+  },
+  {
+    "code": "eg",
+    "name": "Egypt",
+    "emoji": "🇪🇬",
+    "cities": [
+      { "name": "Cairo", "timezone": "Africa/Cairo" },
+      { "name": "Alexandria", "timezone": "Africa/Cairo" },
+      { "name": "Giza", "timezone": "Africa/Cairo" }
+    ]
+  },
+  {
+    "code": "za",
+    "name": "South Africa",
+    "emoji": "🇿🇦",
+    "cities": [
+      { "name": "Cape Town", "timezone": "Africa/Johannesburg" },
+      { "name": "Johannesburg", "timezone": "Africa/Johannesburg" },
+      { "name": "Durban", "timezone": "Africa/Johannesburg" },
+      { "name": "Pretoria", "timezone": "Africa/Johannesburg" }
+    ]
+  },
+  {
+    "code": "ng",
+    "name": "Nigeria",
+    "emoji": "🇳🇬",
+    "cities": [
+      { "name": "Lagos", "timezone": "Africa/Lagos" },
+      { "name": "Abuja", "timezone": "Africa/Lagos" },
+      { "name": "Kano", "timezone": "Africa/Lagos" },
+      { "name": "Ibadan", "timezone": "Africa/Lagos" }
+    ]
+  },
+  {
+    "code": "ke",
+    "name": "Kenya",
+    "emoji": "🇰🇪",
+    "cities": [
+      { "name": "Nairobi", "timezone": "Africa/Nairobi" },
+      { "name": "Mombasa", "timezone": "Africa/Nairobi" },
+      { "name": "Kisumu", "timezone": "Africa/Nairobi" }
+    ]
+  },
+  {
+    "code": "kr",
+    "name": "South Korea",
+    "emoji": "🇰🇷",
+    "cities": [
+      { "name": "Seoul", "timezone": "Asia/Seoul" },
+      { "name": "Busan", "timezone": "Asia/Seoul" },
+      { "name": "Incheon", "timezone": "Asia/Seoul" },
+      { "name": "Daegu", "timezone": "Asia/Seoul" }
+    ]
+  },
+  {
+    "code": "th",
+    "name": "Thailand",
+    "emoji": "🇹🇭",
+    "cities": [
+      { "name": "Bangkok", "timezone": "Asia/Bangkok" },
+      { "name": "Chiang Mai", "timezone": "Asia/Bangkok" },
+      { "name": "Pattaya", "timezone": "Asia/Bangkok" },
+      { "name": "Phuket", "timezone": "Asia/Bangkok" }
+    ]
+  },
+  {
+    "code": "sg",
+    "name": "Singapore",
+    "emoji": "🇸🇬",
+    "cities": [
+      { "name": "Singapore", "timezone": "Asia/Singapore" }
+    ]
+  },
+  {
+    "code": "my",
+    "name": "Malaysia",
+    "emoji": "🇲🇾",
+    "cities": [
+      { "name": "Kuala Lumpur", "timezone": "Asia/Kuala_Lumpur" },
+      { "name": "George Town", "timezone": "Asia/Kuala_Lumpur" },
+      { "name": "Johor Bahru", "timezone": "Asia/Kuala_Lumpur" }
+    ]
+  },
+  {
+    "code": "id",
+    "name": "Indonesia",
+    "emoji": "🇮🇩",
+    "cities": [
+      { "name": "Jakarta", "timezone": "Asia/Jakarta" },
+      { "name": "Surabaya", "timezone": "Asia/Jakarta" },
+      { "name": "Bandung", "timezone": "Asia/Jakarta" },
+      { "name": "Medan", "timezone": "Asia/Jakarta" },
+      { "name": "Denpasar", "timezone": "Asia/Makassar" }
+    ]
+  },
+  {
+    "code": "ph",
+    "name": "Philippines",
+    "emoji": "🇵🇭",
+    "cities": [
+      { "name": "Manila", "timezone": "Asia/Manila" },
+      { "name": "Cebu City", "timezone": "Asia/Manila" },
+      { "name": "Davao", "timezone": "Asia/Manila" },
+      { "name": "Quezon City", "timezone": "Asia/Manila" }
+    ]
+  },
+  {
+    "code": "vn",
+    "name": "Vietnam",
+    "emoji": "🇻🇳",
+    "cities": [
+      { "name": "Ho Chi Minh City", "timezone": "Asia/Ho_Chi_Minh" },
+      { "name": "Hanoi", "timezone": "Asia/Ho_Chi_Minh" },
+      { "name": "Da Nang", "timezone": "Asia/Ho_Chi_Minh" }
+    ]
+  },
+  {
+    "code": "nz",
+    "name": "New Zealand",
+    "emoji": "🇳🇿",
+    "cities": [
+      { "name": "Auckland", "timezone": "Pacific/Auckland" },
+      { "name": "Wellington", "timezone": "Pacific/Auckland" },
+      { "name": "Christchurch", "timezone": "Pacific/Auckland" }
+    ]
+  },
+  {
+    "code": "ar",
+    "name": "Argentina",
+    "emoji": "🇦🇷",
+    "cities": [
+      { "name": "Buenos Aires", "timezone": "America/Argentina/Buenos_Aires" },
+      { "name": "Córdoba", "timezone": "America/Argentina/Cordoba" },
+      { "name": "Rosario", "timezone": "America/Argentina/Buenos_Aires" },
+      { "name": "Mendoza", "timezone": "America/Argentina/Mendoza" }
+    ]
+  },
+  {
+    "code": "cl",
+    "name": "Chile",
+    "emoji": "🇨🇱",
+    "cities": [
+      { "name": "Santiago", "timezone": "America/Santiago" },
+      { "name": "Valparaíso", "timezone": "America/Santiago" },
+      { "name": "Concepción", "timezone": "America/Santiago" }
+    ]
+  },
+  {
+    "code": "co",
+    "name": "Colombia",
+    "emoji": "🇨🇴",
+    "cities": [
+      { "name": "Bogotá", "timezone": "America/Bogota" },
+      { "name": "Medellín", "timezone": "America/Bogota" },
+      { "name": "Cali", "timezone": "America/Bogota" },
+      { "name": "Cartagena", "timezone": "America/Bogota" }
+    ]
+  },
+  {
+    "code": "pe",
+    "name": "Peru",
+    "emoji": "🇵🇪",
+    "cities": [
+      { "name": "Lima", "timezone": "America/Lima" },
+      { "name": "Arequipa", "timezone": "America/Lima" },
+      { "name": "Cusco", "timezone": "America/Lima" }
+    ]
+  },
+  {
+    "code": "ve",
+    "name": "Venezuela",
+    "emoji": "🇻🇪",
+    "cities": [
+      { "name": "Caracas", "timezone": "America/Caracas" },
+      { "name": "Maracaibo", "timezone": "America/Caracas" },
+      { "name": "Valencia", "timezone": "America/Caracas" }
+    ]
+  },
+  {
+    "code": "ec",
+    "name": "Ecuador",
+    "emoji": "🇪🇨",
+    "cities": [
+      { "name": "Quito", "timezone": "America/Guayaquil" },
+      { "name": "Guayaquil", "timezone": "America/Guayaquil" },
+      { "name": "Cuenca", "timezone": "America/Guayaquil" }
+    ]
+  },
+  {
+    "code": "il",
+    "name": "Israel",
+    "emoji": "🇮🇱",
+    "cities": [
+      { "name": "Tel Aviv", "timezone": "Asia/Jerusalem" },
+      { "name": "Jerusalem", "timezone": "Asia/Jerusalem" },
+      { "name": "Haifa", "timezone": "Asia/Jerusalem" }
+    ]
+  },
+  {
+    "code": "ae",
+    "name": "United Arab Emirates",
+    "emoji": "🇦🇪",
+    "cities": [
+      { "name": "Dubai", "timezone": "Asia/Dubai" },
+      { "name": "Abu Dhabi", "timezone": "Asia/Dubai" },
+      { "name": "Sharjah", "timezone": "Asia/Dubai" }
+    ]
+  },
+  {
+    "code": "sa",
+    "name": "Saudi Arabia",
+    "emoji": "🇸🇦",
+    "cities": [
+      { "name": "Riyadh", "timezone": "Asia/Riyadh" },
+      { "name": "Jeddah", "timezone": "Asia/Riyadh" },
+      { "name": "Mecca", "timezone": "Asia/Riyadh" },
+      { "name": "Medina", "timezone": "Asia/Riyadh" }
+    ]
+  }
+]
