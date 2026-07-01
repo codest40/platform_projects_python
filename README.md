@@ -11,6 +11,8 @@ Each top-level directory represents a **standalone project** with its own purpos
 ├── observer/
 ├── app/
 ├── /
+├── vaultops/
+├── policy/
 └── ...
 ```
 
