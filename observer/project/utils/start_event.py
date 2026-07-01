@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import inspect
 from project.logging.logger import emit, emit_span, emit_exception
-from project.utils.runner import TraceObserver, EventRunner, get_status
+from project.utils.runner import TraceObserver, EventRunner
 from project.utils.context import get_caller_context
 import traceback as tb
 from threading import Lock
@@ -36,9 +36,9 @@ def compiler(resource, func, args=(), kwargs=None,):
     process_lock = None
 
     if lock is None:
-        raise ValueError(f"Unknown resource: {resource}. [COMPILER]")
+        raise ValueError(f"[COMPILER] Unknown resource: {resource}.")
     if not lock.acquire(blocking=False):
-        raise RuntimeError(f"Another {resource} event is already running in this thread.") from None
+        raise RuntimeError(f"[COMPILER] Another {resource} event is already running in this thread.") from None
     try:
         process_lock = acquire_process_lock(resource)
         caller = get_caller_context(inspect.unwrap(func))
