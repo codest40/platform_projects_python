@@ -1,11 +1,10 @@
 
 from project.utils.decorators import trace
-from project.utils.runner import run_collection
+from project.utils.start_event import run_collection
 from project.utils.helpers import (
     timestamp, start_count
     )
 from project.models.cpu import Cpu_Data as records
-from project.executors.exc_cpu import execute_cpu_actions
 import psutil
 import platform
 

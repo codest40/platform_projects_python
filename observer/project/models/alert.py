@@ -8,15 +8,11 @@ from dataclasses import dataclass
 @dataclass(slots=True)
 class EmailConfig:
     smtp_server: str
-
     smtp_port: int
 
     sender: str
-
     receiver: str
-
     username: str
-
     password: str
 
     use_tls: bool = True

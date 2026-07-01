@@ -1,5 +1,6 @@
 
 # Observer Runner Context
+from __future__ import annotations
 from dataclasses import dataclass
 import inspect
 from project.logging.logger import emit, emit_span, emit_exception
@@ -7,6 +8,7 @@ from project.utils.helpers import line, timestamp, start_count
 from project.utils.context import get_caller_context, get_span_context
 from typing import Any, Callable
 import traceback as tb
+import time
 from project.utils.traces import (
     start_trace,
     end_trace,
@@ -14,7 +16,7 @@ from project.utils.traces import (
     pop_span,
 )
 
-VALID_STATUS = frozenset({"PENDING", "RUNNING", "SUCCESS", "FAILED",})
+VALID_STATUS = frozenset({"PENDING", "RUNNING", "SUCCESS", "FAILED", "LOCKED"})
 def get_status(status: str) -> str:
     if status not in VALID_STATUS:
         raise ValueError(f"Invalid status: {status}")
@@ -23,8 +25,9 @@ def get_status(status: str) -> str:
 #==================================================
 # Context manager to Run an event
 #==============================================
+
 @dataclass(slots=True)
-class EventObserver:
+class EventRunner:
 
     resource: str
     start: float = 0.0
@@ -33,26 +36,71 @@ class EventObserver:
 
     exc_type: type | None = None
     exception: Exception | None = None
-    traceback: Any | None = None
+    traceback: str | None = None
     traceback_obj: Any | None = None
 
+    attempts: int = 0
+
     status: str = get_status("PENDING")
+    comment: str | None = None
 
     def __enter__(self):
 
         if not isinstance(self.resource, str):
-            raise TypeError(f"❌ {self.resource} resource must be supplied as a string")
+            raise TypeError(
+                f"❌ {self.resource} resource must be supplied as a string"
+            )
 
         self.start = start_count()
+
         print(line())
         print(f"Starting {self.resource} Event Observer...")
+
         self.status = get_status("RUNNING")
 
         return self
 
-    def run(self, func: Callable[..., Any], *args, **kwargs):
+    def run(
+        self,
+        func: Callable[..., Any],
+        *args,
+        retries: int = 0,
+        retry_delay: float = 0.0,
+        retry_exceptions: tuple[type[Exception], ...] = (Exception,),
+        **kwargs,
+    ):
 
-        self.data = func(*args, **kwargs)
+        last_exception = None
+
+        for attempt in range(retries + 1):
+
+            self.attempts = attempt + 1
+
+            try:
+
+                self.data = func(*args, **kwargs)
+                return self
+
+            except retry_exceptions as exc:
+
+                last_exception = exc
+
+                if attempt == retries:
+                    break
+
+                if retry_delay > 0:
+                    time.sleep(retry_delay)
+
+        self.exception = last_exception
+        self.exc_type = type(last_exception)
+        self.traceback_obj = last_exception.__traceback__
+        self.traceback = "".join(
+            tb.format_exception(
+                type(last_exception),
+                last_exception,
+                last_exception.__traceback__,
+            )
+        )
 
         return self
 
@@ -68,16 +116,28 @@ class EventObserver:
             self.exc_type = exc_type
             self.traceback_obj = traceback
             self.traceback = "".join(
-              tb.format_exception(exc_type, exc_value, traceback)
+                tb.format_exception(
+                    exc_type,
+                    exc_value,
+                    traceback,
+                )
             )
+
+            self.status = get_status("FAILED")
+
+            return True
+
+        if self.exception is not None:
+
             self.status = get_status("FAILED")
 
             return True
 
         self.status = get_status("SUCCESS")
-        print(f"✅ {self.resource} Event Observer complete.")
-        return False
 
+        print(f"✅ {self.resource} Event Observer complete.")
+
+        return False
 
 #================================================
 # Orchestrator for Span
@@ -110,50 +170,161 @@ class TraceObserver:
 
 
 
-#=======================================================
-# Run Collection + Span and report status to collector files
-#===================================================
+# ==========================================================
+# EVENT RUNNER COMPONENTS
+# ==========================================================
 
-def run_collection(
+def event_validate(
     *,
-    resource: str,
-    func,
-    success: dict | None = None,
-    failure: dict | None = None,
-  ):
+    retries: int,
+    retry_delay: float,
+    retry_exceptions: tuple[type[Exception], ...],
+) -> None:
+    """
+    Validate EventRunner execution options.
+    """
 
-  caller = get_caller_context(inspect.unwrap(func))
-
-  with TraceObserver(resource=resource):
-
-    with EventObserver(resource=resource) as obj:
-        obj.run(func)
-
-    if obj.exception:
-
-        emit_exception(
-            caller=caller,
-            category=obj.exc_type.__name__,
-            cause=str(obj.exception),
-            impact=obj.status,
-            exc_info=(
-                obj.exc_type,
-                obj.exception,
-                obj.traceback_obj,
-            ),
-            **(failure or {}),
+    if retries < 0:
+        raise ValueError(
+            f"❌ retries must be >= 0, got {retries}"
         )
 
-    else:
-        emit(
-            caller=caller,
-            metadata=obj.data,
-            severity = obj.data.severity,
-            summary = obj.data.summary,
-            comment = obj.data.comment,
-            duration_ms=obj.duration_ms,
-            impact=obj.status,
-            **(success or {}),
+    if retry_delay < 0:
+        raise ValueError(
+            f"❌ retry_delay must be >= 0, got {retry_delay}"
         )
 
-    return obj
+    if not isinstance(retry_exceptions, tuple):
+        raise TypeError(
+            "❌ retry_exceptions must be a tuple of Exception types."
+        )
+
+    if not retry_exceptions:
+        raise ValueError(
+            "❌ retry_exceptions cannot be empty."
+        )
+
+    for exc in retry_exceptions:
+
+        if not inspect.isclass(exc):
+            raise TypeError(
+                f"❌ {exc!r} is not a class."
+            )
+
+        if not issubclass(exc, Exception):
+            raise TypeError(
+                f"❌ {exc.__name__} must inherit from Exception."
+            )
+
+
+# ==========================================================
+# EVENT RUNNER COMPONENTS
+# ==========================================================
+
+def event_record_exception(
+    runner: EventRunner,
+    exc: Exception,
+) -> None:
+    """
+    Record an exception on the EventRunner.
+    """
+
+    runner.exception = exc
+    runner.exc_type = type(exc)
+    runner.traceback_obj = exc.__traceback__
+
+    runner.traceback = "".join(
+        tb.format_exception(
+            type(exc),
+            exc,
+            exc.__traceback__,
+        )
+    )
+
+
+
+# ==========================================================
+# EVENT RUNNER COMPONENTS
+# ==========================================================
+
+def event_sleep(delay: float) -> None:
+    """
+    Pause execution before the next retry.
+    """
+
+    if delay <= 0:
+        return
+
+    time.sleep(delay)
+
+# ==========================================================
+# EVENT RUNNER COMPONENTS
+# ==========================================================
+
+def event_execute(
+    runner: EventRunner,
+    func: Callable[..., Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
+) -> None:
+    """
+    Execute a callable and store its result.
+    """
+
+    runner.attempts += 1
+
+    runner.data = func(*args, **kwargs)
+
+
+# ==========================================================
+# EVENT RUNNER COMPONENTS
+# ==========================================================
+
+def event_retry(
+    runner: EventRunner,
+    func: Callable[..., Any],
+    args: tuple[Any, ...],
+    kwargs: dict[str, Any],
+    retries: int,
+    retry_delay: float,
+    retry_exceptions: tuple[type[Exception], ...],
+) -> None:
+    """
+    Execute a callable with retry support.
+    """
+
+    for attempt in range(retries + 1):
+
+        try:
+
+            event_execute(
+                runner,
+                func,
+                args,
+                kwargs,
+            )
+
+            return
+
+        except retry_exceptions as exc:
+
+            event_record_exception(
+                runner,
+                exc,
+            )
+
+            if attempt == retries:
+                return
+
+            event_sleep(retry_delay)
+
+
+
+"""
+event_validate()
+event_execute()
+event_retry()
+event_record_exception()
+event_sleep()
+event_finish()
+"""

@@ -2,95 +2,23 @@
 
 Platform Observer is a Python observability framework for collecting, tracing, and reporting platform execution events.
 
-The project provides a structured foundation for operational logging, distributed tracing concepts, execution orchestration, and standardized event reporting. Rather than relying solely on plain log messages, Platform Observer models execution as **events** and **spans**, making it easier to understand what happened, where it happened, and how long it took.
+It monitors the health of systems by collecting key operational metrics, analyzing them against predefined platform rules, and executing automated responses when required.
+The project focuses on the metrics platform engineers rely on for day-to-day operations, including CPU, memory, disk, network, processes, and other critical system resources. Rather than simply collecting data, Observer is designed to identify operational conditions that may indicate performance degradation, resource exhaustion, or infrastructure issues.
+Based on its analysis, Observer can trigger configurable actions such as alerts, webhooks, cloud operations, Kubernetes tasks, or other automated platform workflows.
 
-The long-term goal is to serve as a lightweight observability layer for infrastructure collectors, automation scripts, background jobs, and platform tooling.
+## Current Focus
 
----
+* Collect critical system metrics
+* Analyze platform health using rule-based logic
+* Generate structured logs and execution traces
+* Execute automated responses through pluggable executors
 
-## Current Features
+## Planned Capabilities
 
-* Structured event model
-* Human-readable console logging
-* JSON Lines (`.jsonl`) logging for downstream processing
-* Automatic trace and span generation
-* Parent-child span relationships
-* Function tracing decorators
-* Runtime caller inspection
-* Execution path tracking
-* Context-aware event serialization
-* Exception reporting with tracebacks
-* Collection runner for standardized execution lifecycle
-* Runtime metadata (hostname, PID, timestamps, application version)
+* Additional infrastructure collectors
+* More advanced analysis and correlation
+* Cloud and Kubernetes integrations
+* Expanded alerting and notification channels
+* AI-assisted analysis and recommendations (planned for future releases)
 
----
-
-## Project Structure
-
-```
-project/
-├── collectors/
-├── models/
-├── utils/
-│   ├── context.py
-│   ├── decorators.py
-│   ├── formatters.py
-│   ├── helpers.py
-│   ├── logger.py
-│   ├── logging_core.py
-│   ├── modify.py
-│   ├── runner.py
-│   └── traces.py
-```
-
-Current responsibilities include:
-
-* **Logging Core** – logger configuration and handlers
-* **Formatters** – JSON and human-readable output
-* **Tracing** – trace/span lifecycle management
-* **Context** – caller discovery and runtime metadata
-* **Runner** – standardized execution workflow
-* **Logger API** – event, exception, and span emission
-
----
-
-## Logging Outputs
-
-Platform Observer currently writes logs to multiple destinations:
-
-* Console output
-* `logs/observer.log` (human-readable)
-* `logs/observer.jsonl` (structured JSON)
-
----
-
-## Current Status
-
-The current focus is building a reliable observability foundation before expanding into platform collectors, metrics, resource monitoring, dashboards, and additional integrations.
-
----
-
-## Roadmap
-
-Planned work includes:
-
-* CPU, memory, disk, and network collectors
-* Background job execution
-* Metrics aggregation
-* OpenTelemetry compatibility
-* Exporters
-* Alerting support
-* Plugin architecture
-* Additional output backends
-
----
-
-## Project Goals
-
-* Consistent event reporting
-* Lightweight tracing
-* Clear execution visibility
-* Structured machine-readable logs
-* Human-friendly operational output
-
-
+Observer is being developed as a modular platform engineering tool, allowing collectors, analyzers, executors, and alerting components to evolve independently while working together as a complete observability pipeline.
