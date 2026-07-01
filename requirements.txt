@@ -1,0 +1,7 @@
+psutil
+requests
+reportlab
+fastapi
+uvicorn
+PyYAML
+pytz==2026.1
