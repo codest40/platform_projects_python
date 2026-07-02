@@ -119,7 +119,7 @@ Each check produces one of three outcomes:
 
 For easy readabiltyi
 
-##Stage 5 — Overall Verdict
+## Stage 5 — Overall Verdict
 
 After every health check completes, the analyzer determines an overall CPU assessment.
 
@@ -132,7 +132,7 @@ Possible outcomes include:
 The analyzer also recommends next steps for the operator.
 
 
-##Stage 6 — Analysis Event
+## Stage 6 — Analysis Event
 
 The completed analysis is emitted as a structured event containing:
 
@@ -146,7 +146,7 @@ The completed analysis is emitted as a structured event containing:
 This creates an audit trail explaining why a conclusion was reached.
 
 
-## ## Stage 7 — Response
+## Stage 7 — Response
 
 After collection and analysis complete, Observer can trigger one or more execution layers based on the results.
 The framework is intentionally designed to be extensible, allowing users to integrate their own response mechanisms without modifying the collection or analysis pipeline.
