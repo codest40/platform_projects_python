@@ -21,7 +21,7 @@ These projects are designed to be reusable building blocks that can be incorpora
 
 Projects are primarily built with:
 * Python
-* Bash (where automation or system integration is required)
+* Bash (where system integration is smoother)
 
 For detailed information about any project, navigate to its directory and read its dedicated README.
 
