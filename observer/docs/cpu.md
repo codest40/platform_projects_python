@@ -117,7 +117,6 @@ Each check produces one of three outcomes:
 - WARNING
 - CRITICAL
 
-For easy readabiltyi
 
 ## Stage 5 — Overall Verdict
 
