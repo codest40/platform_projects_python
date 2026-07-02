@@ -12,7 +12,5 @@ def get_cpu_model():
 
 print(get_cpu_model())
 
-try:
-  emit(f"Testing emit at {timestamp()}")
-except Exception as e:
-  print("Emit() Encountered Issues!")
+
+emit(f"Testing emit at {timestamp()}")

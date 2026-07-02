@@ -191,10 +191,10 @@ class PrettyFormatter(logging.Formatter):
           lines.extend([
               "",
               "Caller",
-              f"  Module        : {caller['module']}",
-              f"  File          : {caller['file']}",
-              f"  Function      : {caller['function']}",
-              f"  Line          : {caller['line']}",
+              f"  Module        : {caller.get('module', 'N/A')}",
+              f"  File          : {caller.get('file', 'N/A')}",
+              f"  Function      : {caller.get('function', 'N/A')}",
+              f"  Line          : {caller.get('line', 'N/A')}",
           ])
 
         if record.exc_info:
