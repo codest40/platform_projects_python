@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from project.utils.helpers import start_count
 
 def activate_system():
     print("Activating pipeline..")
@@ -7,20 +8,15 @@ def activate_system():
 activate_system()
 from project.collectors.cpu import collect_cpu_metrics
 from project.utils.runner import get_status
-from project.alerts.activate_alert import activate_run_alert
+
+def start_resource(res, func):
+  start = start_count()
+  func()
+  end = start_count()
+  print(f"{res} Pipeline Duration: {end - start}")
 
 # CPU
-result = collect_cpu_metrics()
+start_resource("cpu", collect_cpu_metrics)
 
-if result is None:
-  print(f"❌ ERROR: Emit() response returned: {result}")
-elif result.status == get_status("FAILED"):
-    print("Collecting Cpu Metrics Failed")
-    activate_run_alert(title="Testing alert", message="❌ Cpu Metric Collection Failed", severity="CRITICAL",)
-elif result.status == get_status("SUCCESS"):
-    print("Collecting Cpu Metrics Passed")
-    activate_run_alert(title="Testing alert", message="Cpu Metric Collection Passed")
-else:
-  print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is very wrong")
 #MEM
-
+#start_resource("mem", collect_mem_metrics)

@@ -181,7 +181,11 @@ def attach_tracing_data(event) -> None:
 
     span = current_span()
 
-    event.event_id = new_id()
+    if hasattr(event, "analysis_id"):
+      event.analysis_id = new_id()
+    if hasattr(event, "event_id"):
+      event.event_id = new_id()
+
     event.trace_id = trace_context.trace_id
 
     if span:

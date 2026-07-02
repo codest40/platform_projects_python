@@ -4,6 +4,7 @@ Platform Observer Logger
 
 from __future__ import annotations
 from project.models.events import PlatformEvent
+from project.models.events import AnalysisEvent
 
 from project.logging.logging_core import logger
 from project.utils.context import get_caller_context, get_span_context, resolve_log_level
@@ -56,7 +57,19 @@ def emit_span(span: PlatformSpan, caller) -> None:
             "caller": caller,
         },
     )
+def emit_analysis(event: AnalysisEvent, caller=None) -> None:
+    if caller is None:
+        caller = get_caller_context()
 
+    attach(event)
+    logger.log(
+        level=resolve_log_level(event.severity),
+        msg=event.summary,
+        extra={
+            "analysis_event": event,
+            "caller": caller,
+        },
+    )
 
 # EXCEPTION EMISSION
 def emit_exception(*args, caller=None, **kwargs) -> None:

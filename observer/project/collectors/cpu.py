@@ -1,12 +1,19 @@
 
 from project.utils.decorators import trace
-from project.utils.start_event import run_collection
-from project.utils.helpers import (
-    timestamp, start_count
-    )
+from project.utils.start_event import run_collection, run_analysis
+from project.utils.runner import get_status
+from project.alerts.activate_alert import activate_run_alert
+from project.utils.helpers import timestamp
 from project.models.cpu import Cpu_Data as records
+from project.analyzers.cpu import analyze_cpu_metrics
 import psutil
-import platform
+
+def get_cpu_model():
+    with open("/proc/cpuinfo") as f:
+        for line in f:
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    return "Unknown"
 
 @trace("cpu_collected_metrics")
 def collect_cpu_metrics():
@@ -41,6 +48,7 @@ def collect_cpu_metrics():
       )
       comment = "Immediate attention Required"
 
+    cpu_model = get_cpu_model()
     return records(
 
         physical_cores = psutil.cpu_count(logical=False),
@@ -54,7 +62,7 @@ def collect_cpu_metrics():
         idle_percent = cpu_times.idle,
         iowait_percent = getattr(cpu_times, "iowait", 0.0),
 
-        cpu_model = platform.processor(),
+        cpu_model = cpu_model,
         per_core_util = psutil.cpu_percent(interval=None, percpu=True),
         severity=severity,
         summary=summary,
@@ -82,3 +90,22 @@ def collect_cpu_metrics():
         },
       )
 
+@trace("cpu_pipeline")
+def cpu_pipeline():
+  result = collect_cpu_metrics()
+  if result is None:
+    print(f"❌ ERROR: Emit() response returned: {result}")
+  elif result.status == get_status("FAILED"):
+      print("❌ Collecting Cpu Metrics Failed")
+      activate_run_alert(title="Cpu Metrics collection Alert", message="❌ Cpu Metric Collection Failed", severity="CRITICAL",)
+  elif result.status == get_status("SUCCESS"):
+      print("✅ Cpu Metrics Collection Passed")
+      res = run_analysis(func=analyze_cpu_metrics, result=result)
+      if not res:
+          print("❌ Cpu Analysis Failed")
+      print("✅ Cpu Metrics Analysis Passed")
+  else:
+    print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is very wrong")
+
+
+#cpu_pipeline()

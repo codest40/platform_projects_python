@@ -14,7 +14,7 @@ from pathlib import Path
 from datetime import  datetime
 from uuid import uuid4
 
-from project.models.events import PlatformEvent
+from project.models.events import PlatformEvent, AnalysisEvent
 from project.utils.helpers import timestamp, context_helpers, log_levels
 
 # =========================================================
@@ -259,5 +259,28 @@ def serialize_span(span, caller):
 
         "caller": caller,
 
+        "system": get_system_context(),
+    }
+
+
+
+
+def serialize_analysis(analysis: AnalysisEvent, caller):
+
+    return {
+
+        "type": "analysis",
+
+        "timestamp": analysis.analyzed_at,
+        "summary": analysis.summary,
+        "component": analysis.component,
+        "confidence": analysis.confidence,
+        "recommendations": analysis.recommendations,
+        "health_checks": analysis.health_checks,
+        "analysis_id": analysis.analysis_id,
+        "trace_id": analysis.trace_id,
+        "span_id": analysis.span_id,
+
+        "caller": caller,
         "system": get_system_context(),
     }

@@ -50,7 +50,6 @@ EOF
     exit 0
 fi
 
-# Ensure the log directory exists
 mkdir -p "$(dirname "$LOG_FILE")"
 
 # ---------------------------
@@ -60,8 +59,8 @@ send_alert() {
     local message="$1"
     # Desktop notification
     notify-send "Network Alert: " "$message"
-    # Log downtime with timestamp
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $message" >> "$LOG_FILE"
+
     # Keep only 2 most recent entries
     tail -n 2 "$LOG_FILE" > "$LOG_FILE.tmp" && mv "$LOG_FILE.tmp" "$LOG_FILE"
     tail -n 2 "$ERR_FILE" > "$ERR_FILE.tmp" && mv "$ERR_FILE.tmp" "$ERR_FILE"

@@ -42,4 +42,37 @@ class PlatformEvent:
     parent_span_id: str | None = None
 
 
+#=================================================
+# Analysis
+#=============================
+@dataclass(slots=True)
+class HealthCheck:
 
+    check: str
+    status: str
+    reason: str
+
+@dataclass(slots=True)
+class AnalysisEvent:
+
+    component: str
+
+    summary: str
+
+    severity: str
+
+    health_checks: list[HealthCheck]
+
+    analyzed_at: str
+
+    recommendations: list[str] = field(default_factory=list)
+
+    confidence: str | None = None
+
+    duration_ms: float | None = None
+
+    trace_id: str | None = None
+
+    span_id: str | None = None
+
+    analysis_id: str | None = None

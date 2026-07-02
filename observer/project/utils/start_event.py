@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 import inspect
-from project.logging.logger import emit, emit_span, emit_exception
+from project.logging.logger import emit, emit_span, emit_exception, emit_analysis
 from project.utils.runner import TraceObserver, EventRunner
 from project.utils.context import get_caller_context
 import traceback as tb
@@ -8,6 +8,7 @@ from threading import Lock
 from collections import defaultdict
 from pathlib import Path
 import fcntl
+import sys
 
 #================================================
 # Compile and Run event
@@ -106,3 +107,33 @@ def run_collection(
         )
     return obj
 
+
+
+def run_analysis(
+    *,
+    func,
+    result,
+    success: dict | None = None,
+    failure: dict | None = None,
+):
+
+    caller = get_caller_context(inspect.unwrap(func))
+
+    try:
+        analysis = func(result)
+
+    except Exception:
+        emit_exception(
+            caller=caller,
+            exc_info=sys.exc_info(),
+            **(failure or {}),
+        )
+        return None
+
+    emit_analysis(
+        caller=caller,
+        event=analysis,
+        **(success or {}),
+    )
+
+    return analysis
