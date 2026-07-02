@@ -1,30 +1,9 @@
 # 
 
-## ObserverRunner is the conductor like Kubernetes' control plane.
-
 ```
 
-1. The decorator onlt does "create span" and says "A pod started."
+1. The decorator onlt does create span
 
-2. ObserverRunner later says
+2. ObserverRunner uses span
 
-"Everything is finished.
-
-Close every remaining span.
-
-Emit them.
-
-End trace.
-
-Cleanup."
-
-So ObserverRunner becomes responsible for things like
-
-start_trace()
-
-yield
-
-while there are spans:
-    emit(pop_span())
-
-end_trace()
+3. runer
