@@ -2,7 +2,7 @@
 
 - The CPU pipeline is responsible for determining whether the CPU is likely contributing to system performance problems.
 
-- Rather than relying solely on CPU utilization, the pipeline evaluates several platform engineering indicators before reaching a conclusion.
+- Rather than relying solely on CPU utilization, the pipeline evaluates several strong indicators before reaching a conclusion.
 
 ## Execution Flow
 ```
