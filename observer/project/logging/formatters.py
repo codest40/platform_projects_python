@@ -184,16 +184,18 @@ class PrettyFormatter(logging.Formatter):
                     f"  • {item}"
                 )
 
-        caller = record.caller
 
-        lines.extend([
-            "",
-            "Caller",
-            f"  Module        : {caller['module']}",
-            f"  File          : {caller['file']}",
-            f"  Function      : {caller['function']}",
-            f"  Line          : {caller['line']}",
-        ])
+        caller = record.caller
+        #print(f"Printing Caller: {caller}")
+        if caller:
+          lines.extend([
+              "",
+              "Caller",
+              f"  Module        : {caller['module']}",
+              f"  File          : {caller['file']}",
+              f"  Function      : {caller['function']}",
+              f"  Line          : {caller['line']}",
+          ])
 
         if record.exc_info:
 
