@@ -12,6 +12,7 @@ Based on its analysis, Observer can trigger configurable actions such as alerts,
 * Analyze platform health using rule-based logic
 * Generate structured logs and execution traces
 * Execute automated responses through pluggable executors
+* Major aim here is to find results enough to exclude resource (mark it healthy) from other debugging factors
 
 ## Planned Capabilities
 

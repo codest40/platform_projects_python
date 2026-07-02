@@ -1,15 +1,7 @@
 # # Platform Observer
 
-Platform Observer is a Python observability framework for collecting, tracing, and reporting platform execution events.
-
-The project provides a structured foundation for operational logging, distributed tracing concepts, execution orchestration, and standardized event reporting. Rather than relying solely on plain log messages, Platform Observer models execution as **events** and **spans**, making it easier to understand what happened, where it happened, and how long it took.
-
-The long-term goal is to serve as a lightweight observability layer for infrastructure collectors, automation scripts, background jobs, and platform tooling.
-
----
 
 ## Current Features
-
 * Structured event model
 * Human-readable console logging
 * JSON Lines (`.jsonl`) logging for downstream processing
@@ -26,7 +18,6 @@ The long-term goal is to serve as a lightweight observability layer for infrastr
 ---
 
 ## Project Structure
-
 ```
 project/
 ├── collectors/
@@ -64,16 +55,7 @@ Platform Observer currently writes logs to multiple destinations:
 
 ---
 
-## Current Status
-
-The current focus is building a reliable observability foundation before expanding into platform collectors, metrics, resource monitoring, dashboards, and additional integrations.
-
----
-
-## Roadmap
-
-Planned work includes:
-
+## Planned work includes:
 * CPU, memory, disk, and network collectors
 * Background job execution
 * Metrics aggregation
@@ -84,13 +66,4 @@ Planned work includes:
 * Additional output backends
 
 ---
-
-## Project Goals
-
-* Consistent event reporting
-* Lightweight tracing
-* Clear execution visibility
-* Structured machine-readable logs
-* Human-friendly operational output
-
 
