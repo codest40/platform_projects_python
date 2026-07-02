@@ -116,7 +116,7 @@ Each check produces one of three outcomes:
 - PASS
 - WARNING
 - CRITICAL
-
+..
 
 ##Stage 5 — Overall Verdict
 
