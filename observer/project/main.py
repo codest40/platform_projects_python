@@ -7,7 +7,7 @@ def activate_system():
     print("Activating pipeline..")
 
 activate_system()
-from project.collectors.cpu import collect_cpu_metrics
+from project.collectors.cpu.cpu import cpu_pipeline
 from project.utils.runner import get_status
 
 def start_resource(res, func):
@@ -17,7 +17,7 @@ def start_resource(res, func):
   print(f"{res} Pipeline Duration: {end - start}")
 
 # CPU
-start_resource("cpu", collect_cpu_metrics)
+start_resource("cpu", cpu_pipeline)
 
 #MEM
 #start_resource("mem", collect_mem_metrics)

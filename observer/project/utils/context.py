@@ -12,6 +12,7 @@ import os
 import socket
 from pathlib import Path
 from datetime import  datetime
+from dataclasses import fields, is_dataclass
 from uuid import uuid4
 
 from project.models.events import PlatformEvent, AnalysisEvent
@@ -184,103 +185,87 @@ def get_system_context() -> dict[str, str | int]:
 # EVENT SERIALIZATION
 # =========================================================
 
+def model_to_dict(obj):
+    """
+    Convert supported models into a plain dictionary.
+    """
+
+    if obj is None:
+        return {}
+
+    if is_dataclass(obj):
+        return {
+            f.name: getattr(obj, f.name)
+            for f in fields(obj)
+        }
+
+    if isinstance(obj, dict):
+        return obj.copy()
+
+    return vars(obj).copy()
+
+
+def serialize_model(
+    *,
+    obj,
+    caller,
+    event_type: str,
+) -> dict:
+
+    payload = model_to_dict(obj)
+
+    payload.update({
+        "type": event_type,
+        "caller": caller,
+        "system": get_system_context(),
+    })
+
+    return payload
+
+
 def serialize_event(
     event: PlatformEvent,
     caller: dict[str, str | int],
 ) -> dict:
-    """
-    Convert a PlatformEvent into a structured dictionary.
-    Runtime metadata + tracing ids is injected here before formatting.
-    """
 
-    return {
-        "type": "event",
+    payload = serialize_model(
+        obj=event,
+        caller=caller,
+        event_type="event",
+    )
 
-        "timestamp": timestamp(),
+    payload["timestamp"] = timestamp()
 
-        "level": logging.getLevelName(event.severity),
+    if "severity" in payload:
+        payload["level"] = logging.getLevelName(
+            payload.pop("severity")
+        )
 
-        "event_name": event.event_name,
-
-        "category": event.category,
-
-        "collector": event.collector,
-
-        "operation": event.operation,
-
-        "summary": event.summary,
-
-        "event_duration_ms": event.event_duration_ms,
-
-        "cause": event.cause,
-
-        "impact": event.impact,
-
-        "recommendations": event.recommendations,
-
-        "metadata": event.metadata,
-
-        "tags": event.tags,
-
-        "event_id": event.event_id,
-
-        "trace_id": event.trace_id,
-
-        "span_id": event.span_id,
-
-        "parent_span_id": event.parent_span_id,
-
-        "caller": caller,
-
-        "system": get_system_context(),
-    }
-
-
-
-def serialize_span(span, caller):
-
-    return {
-
-        "type": "span",
-
-        "trace_id": span.trace_id,
-
-        "span_id": span.span_id,
-
-        "parent_span_id": span.parent_span_id,
-
-        "name": span.name,
-
-        "started_at": span.started_at,
-
-        "finished_at": span.finished_at,
-
-        "span_duration_ms": span.span_duration_ms,
-
-        "caller": caller,
-
-        "system": get_system_context(),
-    }
-
-
+    return payload
 
 
 def serialize_analysis(analysis: AnalysisEvent, caller):
 
-    return {
+    payload = serialize_model(
+        obj=analysis,
+        caller=caller,
+        event_type="analysis",
+    )
 
-        "type": "analysis",
+    payload["timestamp"] = payload.pop("analyzed_at", timestamp())
 
-        "timestamp": analysis.analyzed_at,
-        "summary": analysis.summary,
-        "component": analysis.component,
-        "confidence": analysis.confidence,
-        "recommendations": analysis.recommendations,
-        "health_checks": analysis.health_checks,
-        "analysis_id": analysis.analysis_id,
-        "trace_id": analysis.trace_id,
-        "span_id": analysis.span_id,
+    if "severity" in payload:
+        payload["level"] = logging.getLevelName(
+            payload.pop("severity")
+        )
 
-        "caller": caller,
-        "system": get_system_context(),
-    }
+    return payload
+
+
+def serialize_span(span, caller):
+
+    return serialize_model(
+        obj=span,
+        caller=caller,
+        event_type="span",
+    )

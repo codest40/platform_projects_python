@@ -100,7 +100,7 @@ def cpu_pipeline():
       activate_run_alert(title="Cpu Metrics collection Alert", message="❌ Cpu Metric Collection Failed", severity="CRITICAL",)
   elif result.status == get_status("SUCCESS"):
       print("✅ Cpu Metrics Collection Passed")
-      res = run_analysis(func=analyze_cpu_metrics, result=result)
+      res = run_analysis(resource="cpu", func=analyze_cpu_metrics, result=result)
       if not res:
           print("❌ Cpu Analysis Failed")
       print("✅ Cpu Metrics Analysis Passed")

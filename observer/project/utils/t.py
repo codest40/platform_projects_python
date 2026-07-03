@@ -13,4 +13,9 @@ def get_cpu_model():
 print(get_cpu_model())
 
 
-emit(f"Testing emit at {timestamp()}")
+emit(
+    f"[App] App_log",
+    f"Testing emit at {timestamp()}",
+    collector="App Api",
+    comment="Api worked successfullyy",
+)

@@ -57,10 +57,12 @@ def emit_span(span: PlatformSpan, caller) -> None:
             "caller": caller,
         },
     )
-def emit_analysis(event: AnalysisEvent, caller=None) -> None:
+
+def emit_analysis(caller=None, **kwargs) -> None:
     if caller is None:
         caller = get_caller_context()
 
+    event = AnalysisEvent(**kwargs)
     attach(event)
     logger.log(
         level=resolve_log_level(event.severity),

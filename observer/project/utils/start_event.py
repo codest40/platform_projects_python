@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import inspect
 from project.logging.logger import emit, emit_span, emit_exception, emit_analysis
 from project.utils.runner import TraceObserver, EventRunner
+from project.utils.adapters import adapt_event_model, adapt_analysis_model
 from project.utils.context import get_caller_context
 import traceback as tb
 from threading import Lock
@@ -9,6 +10,7 @@ from collections import defaultdict
 from pathlib import Path
 import fcntl
 import sys
+
 
 #================================================
 # Compile and Run event
@@ -68,7 +70,6 @@ def compiler(resource, func, args=(), kwargs=None,):
 #=======================================================
 # Run Collection + Span and report status to collector files
 #===================================================
-
 def run_collection(
     *,
     resource: str,
@@ -78,41 +79,49 @@ def run_collection(
   ):
 
     obj, caller = compiler(resource, func)
+
     if obj is None:
       return
 
     if obj.exception:
+        overrides=failure
+    else:
+        overrides=success
+
+    payload = adapt_event_model(
+          resource=resource,
+          result=obj,
+          overrides=overrides,
+        )
+
+    if obj.exception:
         emit_exception(
             caller=caller,
-            category=obj.exc_type.__name__,
-            cause=str(obj.exception),
-            impact=obj.status,
             exc_info=(
                 obj.exc_type,
                 obj.exception,
                 obj.traceback_obj,
             ),
-            **(failure or {}),
+            **payload,
         )
     else:
         emit(
             caller=caller,
-            metadata=obj.data,
-            severity = obj.data.severity,
-            summary = obj.data.summary,
-            comment = obj.data.comment,
-            duration_ms=obj.duration_ms,
-            impact=obj.status,
-            **(success or {}),
+            **payload,
         )
+
     return obj
 
 
 
+#=======================================================
+# Run Analysis and log
+#===================================================
 def run_analysis(
     *,
     func,
     result,
+    resource: str,
     success: dict | None = None,
     failure: dict | None = None,
 ):
@@ -130,10 +139,15 @@ def run_analysis(
         )
         return None
 
+    payload = adapt_analysis_model(
+        resource=resource,
+        analysis=analysis,
+        overrides=success,
+    )
+
     emit_analysis(
         caller=caller,
-        event=analysis,
-        **(success or {}),
+        **payload,
     )
 
     return analysis

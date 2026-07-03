@@ -1,165 +1,193 @@
-
 from __future__ import annotations
+from dataclasses import dataclass
 
-from dataclasses import dataclass, field
-from typing import Any
 
+# ==========================================================
+# Collector Selection
+# ==========================================================
+
+@dataclass(slots=True)
+class GetMemType:
+    psutil: bool = False
+    pressure: bool = False
+    meminfo: bool = False
+    vmstat: bool = False
+    cgroup: bool = False
+    numa: bool = False
+    process: bool = False
+
+
+# ==========================================================
+# Memory Snapshot
+# ==========================================================
 
 @dataclass(slots=True)
 class MemoryData:
 
     # ==========================================================
-    # Capacity
+    # Host Memory
     # ==========================================================
     total: int = 0
     available: int = 0
     used: int = 0
     free: int = 0
 
-    cached: int = 0
-    buffers: int = 0
-    shared: int = 0
-    active: int = 0
-    inactive: int = 0
-    wired: int = 0
-    slab: int = 0
-    page_tables: int = 0
-    kernel_stack: int = 0
+    cached: int | None = None
+    buffers: int | None = None
+    shared: int | None = None
+
+    active: int | None = None
+    inactive: int | None = None
+
+    slab: int | None = None
+    slab_reclaimable: int | None = None
+    slab_unreclaimable: int | None = None
+
+    page_tables: int | None = None
+    kernel_stack: int | None = None
+
+    wired: int | None = None          # BSD/macOS
+    vmalloc_used: int | None = None
 
     # ==========================================================
     # Utilization
     # ==========================================================
-    percent: float = 0.0
-    available_percent: float = 0.0
-    used_percent: float = 0.0
-    cache_percent: float = 0.0
-    buffer_percent: float = 0.0
+    percent: float | None = None
+
+    available_percent: float | None = None
+    used_percent: float | None = None
+
+    cache_percent: float | None = None
+    buffer_percent: float | None = None
 
     # ==========================================================
     # Swap
     # ==========================================================
-    swap_total: int = 0
-    swap_used: int = 0
-    swap_free: int = 0
-    swap_percent: float = 0.0
+    swap_total: int | None = None
+    swap_used: int | None = None
+    swap_free: int | None = None
+    swap_percent: float | None = None
 
-    swap_in: int = 0
-    swap_out: int = 0
+    swap_in: int | None = None
+    swap_out: int | None = None
 
-    pages_swapped_in: int = 0
-    pages_swapped_out: int = 0
+    pages_swapped_in: int | None = None
+    pages_swapped_out: int | None = None
 
     # ==========================================================
-    # Virtual Memory
+    # Commit Accounting
     # ==========================================================
-    virtual_total: int = 0
-    virtual_available: int = 0
-    committed: int = 0
-    commit_limit: int = 0
-    commit_percent: float = 0.0
+    committed_as: int | None = None
+    commit_limit: int | None = None
+    commit_percent: float | None = None
 
     # ==========================================================
     # Paging
     # ==========================================================
-    major_page_faults: int = 0
-    minor_page_faults: int = 0
-    total_page_faults: int = 0
+    major_page_faults: int | None = None
+    minor_page_faults: int | None = None
+    total_page_faults: int | None = None
 
-    page_fault_rate: float = 0.0
-    page_scan_rate: float = 0.0
-    page_reclaim_rate: float = 0.0
+    page_scan_rate: float | None = None
+    page_reclaim_rate: float | None = None
+
+    reclaim_activity: int | None = None
+    allocation_failures: int | None = None
 
     # ==========================================================
-    # Memory Pressure
+    # Memory Pressure (Linux PSI)
     # ==========================================================
-    pressure: str = ""
-    low_memory_events: int = 0
-    oom_events: int = 0
-    allocation_failures: int = 0
-    reclaim_activity: int = 0
+    psi_some_avg10: float | None = None
+    psi_some_avg60: float | None = None
+    psi_some_avg300: float | None = None
+
+    psi_full_avg10: float | None = None
+    psi_full_avg60: float | None = None
+    psi_full_avg300: float | None = None
+
+    low_memory_events: int | None = None
+    oom_events: int | None = None
 
     # ==========================================================
     # Huge Pages
     # ==========================================================
-    huge_pages_total: int = 0
-    huge_pages_free: int = 0
-    huge_pages_reserved: int = 0
-    huge_pages_used: int = 0
-    huge_page_size: int = 0
+    huge_pages_total: int | None = None
+    huge_pages_free: int | None = None
+    huge_pages_reserved: int | None = None
+    huge_pages_used: int | None = None
+    huge_page_size: int | None = None
 
     # ==========================================================
     # NUMA
     # ==========================================================
-    numa_nodes: int = 0
-    numa_remote_accesses: int = 0
-    numa_imbalance: float = 0.0
+    numa_nodes: int | None = None
+    numa_remote_accesses: int | None = None
+    numa_imbalance: float | None = None
 
     # ==========================================================
     # Process Memory
     # ==========================================================
-    rss: int = 0
-    vms: int = 0
-    uss: int = 0
-    pss: int = 0
+    rss: int | None = None
+    vms: int | None = None
+    uss: int | None = None
+    pss: int | None = None
 
-    shared_memory: int = 0
-    private_memory: int = 0
+    shared_memory: int | None = None
+    private_memory: int | None = None
 
-    process_memory_percent: float = 0.0
-    peak_memory: int = 0
+    anonymous_memory: int | None = None
+    file_backed_memory: int | None = None
 
-    anonymous_memory: int = 0
-    file_backed_memory: int = 0
-
-    # ==========================================================
-    # Container Memory
-    # ==========================================================
-    container_memory_limit: int = 0
-    container_memory_request: int = 0
-    container_memory_usage: int = 0
-    container_working_set: int = 0
-
-    container_cache: int = 0
-    container_rss: int = 0
-    container_page_cache: int = 0
-
-    container_oom_events: int = 0
-    container_memory_throttling: int = 0
-    cgroup_memory_usage: int = 0
+    process_memory_percent: float | None = None
+    peak_memory: int | None = None
 
     # ==========================================================
-    # Kernel Memory
+    # Container / cgroup
     # ==========================================================
-    slab_reclaimable: int = 0
-    slab_unreclaimable: int = 0
-    vmalloc_used: int = 0
+    cgroup_memory_usage: int | None = None
 
-    dirty_pages: int = 0
-    writeback_pages: int = 0
+    container_memory_usage: int | None = None
+    container_memory_limit: int | None = None
+    container_working_set: int | None = None
+
+    container_cache: int | None = None
+    container_page_cache: int | None = None
+    container_rss: int | None = None
+
+    container_oom_events: int | None = None
 
     # ==========================================================
     # Filesystem Cache
     # ==========================================================
-    page_cache: int = 0
-    dirty_cache: int = 0
-    writeback_cache: int = 0
+    page_cache: int | None = None
 
-    dentry_cache: int = 0
-    inode_cache: int = 0
+    dirty_pages: int | None = None
+    writeback_pages: int | None = None
 
-    # ==========================================================
-    # Performance
-    # ==========================================================
-    memory_growth_rate: float = 0.0
-    memory_leak_detected: bool = False
+    dirty_cache: int | None = None
+    writeback_cache: int | None = None
 
-    sustained_high_utilization: bool = False
-    memory_spike_detected: bool = False
-
-    cache_hit_ratio: float = 0.0
-    cache_eviction_rate: float = 0.0
+    dentry_cache: int | None = None
+    inode_cache: int | None = None
 
     # ==========================================================
-    # Health
+    # Derived Metrics for Analyzer to use
     # ==========================================================
-    health: str = ""
+    page_fault_rate: float | None = None
+
+    memory_growth_rate: float | None = None
+
+    cache_hit_ratio: float | None = None
+    cache_eviction_rate: float | None = None
+
+    memory_spike_detected: bool | None = None
+    memory_leak_detected: bool | None = None
+
+    sustained_high_utilization: bool | None = None
+
+    # ==========================================================
+    # Analyzer Summary
+    # ==========================================================
+    pressure: str | None = None
+    health: str | None = None
+    comment: str | None = None

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass(slots=True)
 class Cpu_Data:
@@ -20,3 +20,15 @@ class Cpu_Data:
     severity: str
     summary: str
     comment: str
+
+@dataclass(slots=True)
+class CpuAnalysis:
+    health_checks: list[HealthCheck]
+    recommendations: list[str] = field(default_factory=list)
+    component: str | None=None
+    analyzed_at: str | None=None
+    summary: str | None=None
+    severity: str | None=None
+    confidence: str | None=None
+
+

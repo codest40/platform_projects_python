@@ -52,19 +52,16 @@ class HealthCheck:
     status: str
     reason: str
 
+
 @dataclass(slots=True)
 class AnalysisEvent:
 
     component: str
-
     summary: str
-
     severity: str
-
     health_checks: list[HealthCheck]
-
     analyzed_at: str
-
+    metadata: dict[str, Any] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
 
     confidence: str | None = None

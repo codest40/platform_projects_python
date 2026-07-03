@@ -1,10 +1,10 @@
-from project.models.cpu import Cpu_Data
-from project.models.events import AnalysisEvent, HealthCheck
+from project.models.cpu import Cpu_Data, CpuAnalysis
+from project.models.events import HealthCheck
 from project.utils.runner import get_status
 from project.utils.helpers import timestamp
 
 
-def analyze_cpu_metrics(result) -> AnalysisEvent:
+def analyze_cpu_metrics(result) -> CpuAnalysis:
 
     if result.status != get_status("SUCCESS"):
         raise RuntimeError(
@@ -199,7 +199,7 @@ def analyze_cpu_metrics(result) -> AnalysisEvent:
           "None",
         ]
 
-    return AnalysisEvent(
+    return CpuAnalysis(
         component="cpu",
         summary=verdict,
         confidence=confidence if confidence else None,
