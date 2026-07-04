@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from project.utils.helpers import start_count
+from project.utils.helpers import start_count, get_status
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def activate_system():
@@ -8,7 +8,8 @@ def activate_system():
 
 activate_system()
 from project.collectors.cpu.cpu import cpu_pipeline
-from project.utils.runner import get_status
+from project.collectors.mem.mem import memory_pipeline
+from project.collectors.disk.disk import disk_pipeline
 
 def start_resource(res, func):
   start = start_count()
@@ -20,4 +21,7 @@ def start_resource(res, func):
 start_resource("cpu", cpu_pipeline)
 
 #MEM
-#start_resource("mem", collect_mem_metrics)
+start_resource("memory", memory_pipeline)
+
+#DISK
+start_resource("disk", disk_pipeline)

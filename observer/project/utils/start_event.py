@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import inspect
 from project.logging.logger import emit, emit_span, emit_exception, emit_analysis
-from project.utils.runner import TraceObserver, EventRunner
+from project.utils.runners import TraceObserver, EventRunner
 from project.utils.adapters import adapt_event_model, adapt_analysis_model
 from project.utils.context import get_caller_context
 import traceback as tb

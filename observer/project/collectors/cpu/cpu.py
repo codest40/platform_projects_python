@@ -1,9 +1,8 @@
 
 from project.utils.decorators import trace
 from project.utils.start_event import run_collection, run_analysis
-from project.utils.runner import get_status
 from project.alerts.activate_alert import activate_run_alert
-from project.utils.helpers import timestamp
+from project.utils.helpers import timestamp, get_status
 from project.models.cpu import Cpu_Data as records
 from project.analyzers.cpu import analyze_cpu_metrics
 import psutil
@@ -70,7 +69,7 @@ def collect_cpu_metrics():
     )
 
 
-  print("Running [Starting Collection function] for CPU...")
+  #print("Running [Starting Collection function] for CPU...")
   return run_collection(
         resource="cpu",
         func=cpu_info,
@@ -97,7 +96,7 @@ def cpu_pipeline():
     print(f"❌ ERROR: Emit() response returned: {result}")
   elif result.status == get_status("FAILED"):
       print("❌ Collecting Cpu Metrics Failed")
-      activate_run_alert(title="Cpu Metrics collection Alert", message="❌ Cpu Metric Collection Failed", severity="CRITICAL",)
+      activate_run_alert(title="Cpu Metrics collection Alert", message=f"❌ Cpu Metric Collection Failed: {result}", severity="CRITICAL",)
   elif result.status == get_status("SUCCESS"):
       print("✅ Cpu Metrics Collection Passed")
       res = run_analysis(resource="cpu", func=analyze_cpu_metrics, result=result)

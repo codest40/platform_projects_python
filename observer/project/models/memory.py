@@ -1,5 +1,5 @@
 from __future__ import annotations
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 # ==========================================================
@@ -85,6 +85,7 @@ class MemoryData:
     # Paging
     # ==========================================================
     major_page_faults: int | None = None
+    major_page_fault_rate: int | None = None
     minor_page_faults: int | None = None
     total_page_faults: int | None = None
 
@@ -191,3 +192,15 @@ class MemoryData:
     pressure: str | None = None
     health: str | None = None
     comment: str | None = None
+
+
+@dataclass(slots=True)
+class MemoryAnalysis:
+    health_checks: list[HealthCheck]
+    recommendations: list[str] = field(default_factory=list)
+    component: str | None=None
+    analyzed_at: str | None=None
+    summary: str | None=None
+    severity: str | None=None
+    pressure: str | None = None
+    confidence: str | None=None

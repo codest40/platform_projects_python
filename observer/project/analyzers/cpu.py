@@ -1,7 +1,6 @@
 from project.models.cpu import Cpu_Data, CpuAnalysis
 from project.models.events import HealthCheck
-from project.utils.runner import get_status
-from project.utils.helpers import timestamp
+from project.utils.helpers import timestamp, get_status
 
 
 def analyze_cpu_metrics(result) -> CpuAnalysis:
@@ -23,7 +22,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="CPU Utilization",
-                status="CRITICAL",
+                status="🔴 CRITICAL",
                 reason=f"CPU utilization is critically high ({cpu.usage_percent:.1f}%).",
             )
         )
@@ -32,7 +31,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="CPU Utilization",
-                status="WARNING",
+                status="⚠️  WARNING",
                 reason=f"CPU utilization is elevated ({cpu.usage_percent:.1f}%).",
             )
         )
@@ -41,7 +40,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="CPU Utilization",
-                status="PASS",
+                status="✅ PASS",
                 reason=f"CPU utilization is healthy ({cpu.usage_percent:.1f}%).",
             )
         )
@@ -54,7 +53,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Idle CPU",
-                status="PASS",
+                status="✅ PASS",
                 reason=f"Idle CPU time is healthy ({cpu.idle_percent:.1f}%).",
             )
         )
@@ -63,7 +62,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Idle CPU",
-                status="WARNING",
+                status="⚠️  WARNING",
                 reason=f"Idle CPU time is becoming low ({cpu.idle_percent:.1f}%).",
             )
         )
@@ -72,7 +71,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Idle CPU",
-                status="CRITICAL",
+                status="🔴 CRITICAL",
                 reason=f"Very little idle CPU remains ({cpu.idle_percent:.1f}%).",
             )
         )
@@ -87,7 +86,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Load Average",
-                status="PASS",
+                status="✅ PASS",
                 reason="Load average is within available CPU capacity.",
             )
         )
@@ -96,7 +95,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Load Average",
-                status="CRITICAL",
+                status="🔴 CRITICAL",
                 reason="Load average exceeds available logical CPU cores.",
             )
         )
@@ -109,7 +108,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="IO Wait",
-                status="WARNING",
+                status="⚠️  WARNING",
                 reason=f"IO wait is {cpu.iowait_percent:.1f}%; storage may be the bottleneck.",
             )
         )
@@ -118,7 +117,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="IO Wait",
-                status="PASS",
+                status="✅ PASS",
                 reason="IO wait is within normal limits.",
             )
         )
@@ -133,7 +132,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Core Balance",
-                status="WARNING",
+                status="⚠️  WARNING",
                 reason="One CPU core is saturated while overall utilization remains moderate.",
             )
         )
@@ -142,7 +141,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Core Balance",
-                status="PASS",
+                status="✅ PASS",
                 reason="CPU workload is evenly distributed across cores.",
             )
         )
@@ -155,7 +154,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Kernel Activity",
-                status="WARNING",
+                status="⚠️  WARNING",
                 reason="Kernel CPU time exceeds user CPU time.",
             )
         )
@@ -164,7 +163,7 @@ def analyze_cpu_metrics(result) -> CpuAnalysis:
         checks.append(
             HealthCheck(
                 check="Kernel Activity",
-                status="PASS",
+                status="✅ PASS",
                 reason="Kernel CPU activity is within expected limits.",
             )
         )

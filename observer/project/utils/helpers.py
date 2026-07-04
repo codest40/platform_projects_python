@@ -30,6 +30,15 @@ def timestamp(local: bool = False, format: bool = True) -> str:
 def start_count():
     return perf_counter()
 
+
+#==================================================
+VALID_STATUS = frozenset({"PENDING", "RUNNING", "SUCCESS", "FAILED", "LOCKED"})
+def get_status(status: str) -> str:
+    if status not in VALID_STATUS:
+        raise ValueError(f"Invalid status: {status}")
+    return status
+
+
 #==================================================================
 DEFAULT_WIDTH = 80
 DEFAULT_FILL = "="

@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import inspect
 from project.logging.logger import emit, emit_span, emit_exception
-from project.utils.helpers import line, timestamp, start_count
+from project.utils.helpers import line, timestamp, start_count, get_status
 from project.utils.context import get_caller_context, get_span_context
 from typing import Any, Callable
 import traceback as tb
@@ -15,12 +15,6 @@ from project.utils.traces import (
     push_span,
     pop_span,
 )
-
-VALID_STATUS = frozenset({"PENDING", "RUNNING", "SUCCESS", "FAILED", "LOCKED"})
-def get_status(status: str) -> str:
-    if status not in VALID_STATUS:
-        raise ValueError(f"Invalid status: {status}")
-    return status
 
 #==================================================
 # Context manager to Run an event
