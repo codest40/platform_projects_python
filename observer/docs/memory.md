@@ -169,9 +169,10 @@ In addition to the overall verdict, the event records the individual health chec
 
 ## Current Scope
 
-The Memory pipeline already evaluates a broad range of Linux memory indicators. However, some metrics are currently interpreted using cumulative values rather than activity over time.
+The Memory pipeline already evaluates a broad range of Linux memory indicators.
+However, Some metrics are currently evaluated using cumulative counters reported by the Linux kernel. While these values provide useful context, interpreting them as rates over time would produce more accurate diagnostics.
 
-Future improvements include:
+Future improvements would include:
 
 * Page fault rates instead of total page faults since boot.
 * Memory reclaim rates over configurable intervals.
