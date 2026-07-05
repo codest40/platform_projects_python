@@ -86,7 +86,6 @@ These sources provide information such as:
 * Process memory usage
 
 ## Analysis based on the most important factors:
-```
 | Priority | Check                       | Why it matters                                                    |
 | -------: | --------------------------- | ----------------------------------------------------------------- |
 |        1 | Available memory            | Is the machine actually running out of usable RAM?                |
@@ -97,7 +96,6 @@ These sources provide information such as:
 |        6 | Commit ratio                | Has memory been overcommitted?                                    |
 |        7 | Major page faults           | Is disk-backed paging hurting performance?                        |
 |        8 | Cache vs application memory | Is high usage just filesystem cache or real application pressure? |
-```
 
 The collection stage focuses only on gathering data. It does not determine whether the system is healthy or unhealthy.
 
