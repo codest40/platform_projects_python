@@ -1,11 +1,16 @@
 # CPU Pipeline
 
-- The CPU pipeline is responsible for determining whether the CPU is likely contributing to system performance problems.
+## Purpose
 
-- Rather than relying solely on CPU utilization, the pipeline evaluates several strong indicators before reaching a conclusion.
+The CPU pipeline helps determine whether the CPU is contributing to system performance problems.
+
+Rather than relying on a single metric such as CPU utilization, Observer evaluates multiple CPU health indicators before reaching a conclusion. This approach reduces false positives and provides operators with a more reliable assessment of overall CPU health.
+
+---
 
 ## Execution Flow
-```
+
+```text
 CPU Pipeline
      │
      ▼
@@ -39,118 +44,132 @@ Health Checks
      ▼
 Generate Analysis
      │
-     ▼ 
+     ▼
 Emit Analysis Event (log)
      │
      ▼
-Executors / Alerts etc
+Executors / Alerts / Automation
 ```
+
+---
 
 ## Stage 1 — Metric Collection
 
-The collector gathers raw CPU metrics from the operating system using psutil.
+The collection stage gathers a snapshot of the system's current CPU state from the operating system.
 
-Current metrics include:
+The collector records metrics such as:
 
-- CPU utilization
-- CPU frequency
-- Physical cores
-- Logical cores
-- Per-core utilization
-- Load average
-- User CPU time
-- System CPU time
-- Idle CPU time
-- IO wait
-- CPU model
+* CPU utilization
+* CPU frequency
+* Physical cores
+* Logical cores
+* Per-core utilization
+* Load average
+* User CPU time
+* System CPU time
+* Idle CPU time
+* IO wait
+* CPU model
 
-The collector does not determine system health.
-Its responsibility is only to produce an accurate snapshot of the CPU.
+At this stage, no health decisions are made. The goal is simply to collect accurate and consistent CPU information.
 
-
+---
 
 ## Stage 2 — Collection Runner
 
-Every collector executes through the common runner.
+Every collector executes through a common collection runner.
 
-The runner provides:
+The runner provides shared operational capabilities, including:
 
-- execution timing
-- structured logging
-- exception capture
-- tracing
-- thread safety
-- process safety
+* Execution timing
+* Structured logging
+* Exception handling
+* Request tracing
+* Thread safety
+* Process safety
 
-This allows every collector to behave consistently.
+Using a common runner ensures that every collector behaves consistently and produces a standardized execution record.
 
+---
 
 ## Stage 3 — Collection Event
 
-After successful collection an event is emitted containing:
+After collection completes, Observer emits a structured collection event.
 
-- summary
-- severity
-- metadata
-- execution duration
-- trace identifiers
-- caller information
+The event contains information such as:
 
-If collection fails, an exception event is emitted instead.
+* Summary
+* Severity
+* Metadata
+* Execution duration
+* Trace identifiers
+* Caller information
 
+If collection fails, an exception event is emitted instead. This provides a complete audit trail for every collection attempt.
+
+---
 
 ## Stage 4 — CPU Analysis
 
-The analyzer evaluates the collected metrics using predefined operational rules.
+Once collection is complete, the analyzer evaluates the collected metrics using predefined operational health checks.
 
 Current health checks include:
 
-- CPU utilization
-- Idle CPU
-- Load average
-- IO wait
-- Core balance
-- Kernel activity
+* CPU utilization
+* Idle CPU
+* Load average
+* IO wait
+* Core balance
+* Kernel activity
 
-Each check produces one of three outcomes:
-- PASS
-- WARNING
-- CRITICAL
+Each health check produces one of three outcomes:
 
+* PASS
+* WARNING
+* CRITICAL
+
+Instead of relying on a single metric, Observer combines the results of multiple checks before determining whether the CPU is likely contributing to a performance issue.
+
+---
 
 ## Stage 5 — Overall Verdict
 
-After every health check completes, the analyzer determines an overall CPU assessment.
+After all health checks complete, the analyzer produces an overall assessment of CPU health.
 
 Possible outcomes include:
 
-- CPU can reasonably be ruled out.
-- CPU shows warning signs but cannot yet be blamed.
-- CPU remains a primary suspect.
+* CPU can reasonably be ruled out as the source of the problem.
+* CPU shows warning signs but cannot yet be identified as the primary cause.
+* CPU remains a strong candidate for the observed performance issue.
 
-The analyzer also recommends next steps for the operator.
+The analyzer also provides recommendations to help guide the next stage of investigation.
 
+---
 
 ## Stage 6 — Analysis Event
 
-The completed analysis is emitted as a structured event containing:
+The completed analysis is emitted as a structured analysis event.
 
-- overall verdict
-- severity
-- confidence
-- health checks
-- recommendations
-- trace identifiers
+The event includes:
 
-This creates an audit trail explaining why a conclusion was reached.
+* Overall verdict
+* Severity
+* Confidence
+* Health check results
+* Recommendations
+* Trace identifiers
 
+These events create an auditable record explaining how the final assessment was reached.
+
+---
 
 ## Stage 7 — Response
 
-After collection and analysis complete, Observer can trigger one or more execution layers based on the results.
-The framework is intentionally designed to be extensible, allowing users to integrate their own response mechanisms without modifying the collection or analysis pipeline.
+After collection and analysis are complete, Observer can trigger one or more execution layers based on the analysis results.
 
-Examples include:
+The execution stage is intentionally separated from collection and analysis, allowing users to integrate their own response mechanisms without modifying the pipeline itself.
+
+Common examples include:
 
 * Alert notifications
 * Webhooks
@@ -158,8 +177,6 @@ Examples include:
 * Kubernetes actions
 * Ticket creation
 * Custom automation scripts
-* Any other execution workflow appropriate for the environment
+* Any other environment-specific workflow
 
-This separation allows the **collection**, **analysis**, and **execution** stages to evolve independently. Users can choose which actions to perform—or whether to perform any actions at all—based on the collected metrics and the analysis outcome.
-
-
+This separation allows the **collection**, **analysis**, and **execution** stages to evolve independently. Users can choose which actions to perform—or whether to perform any actions at all—based on the collected metrics and the resulting analysis.
