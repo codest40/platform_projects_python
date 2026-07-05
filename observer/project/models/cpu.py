@@ -20,6 +20,7 @@ class Cpu_Data:
     severity: str
     summary: str
     comment: str
+    collected_at: float | None = None
 
 @dataclass(slots=True)
 class CpuAnalysis:

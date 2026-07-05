@@ -26,6 +26,7 @@ class EventRunner:
     resource: str
     start: float = 0.0
     duration_ms: float = 0.0
+    collected_at: float = 0.0
     data: Any = None
 
     exc_type: type | None = None
@@ -73,6 +74,7 @@ class EventRunner:
             try:
 
                 self.data = func(*args, **kwargs)
+                self.collected_at = timestamp(unix=True)
                 return self
 
             except retry_exceptions as exc:

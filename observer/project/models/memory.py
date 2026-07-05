@@ -189,6 +189,7 @@ class MemoryData:
     # ==========================================================
     # Analyzer Summary
     # ==========================================================
+    collected_at: float | None = None
     pressure: str | None = None
     health: str | None = None
     comment: str | None = None

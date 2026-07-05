@@ -19,3 +19,5 @@ emit(
     collector="App Api",
     comment="Api worked successfullyy",
 )
+
+print(f"Timestamp: {timestamp(unix=True)}")

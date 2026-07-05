@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, Callable
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from time import perf_counter
+from time import perf_counter, time
 import traceback as tb
 import logging
 
@@ -18,9 +18,11 @@ def utc_now():
 def utc_local():
     return datetime.now(LOCAL_TZ)
 
-def timestamp(local: bool = False, format: bool = True) -> str:
+def timestamp(local: bool = False, unix: bool = False, format: bool = True) -> str:
     if local:
         return utc_local()
+    if unix:
+      return time()
     if not format:
       return utc_now()
 

@@ -10,27 +10,27 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
             "❌ [DISK ANALYZER] Disk collection did not complete successfully."
         )
 
-    disk: DiskData = result.data
+    disk: DiskData = result
 
     checks: list[HealthCheck] = []
 
-    # ---------------------------------------------------
-    # Filesystem Utilization
-    # ---------------------------------------------------
+    # ==========================================================
+    # Filesystem Capacity
+    # ==========================================================
 
     if disk.percent >= 90:
         checks.append(
             HealthCheck(
-                check="Filesystem Utilization",
+                check="Filesystem Capacity",
                 status="🔴 CRITICAL",
-                reason=f"Filesystem utilization is critically high ({disk.percent:.1f}%). Disk space exhaustion is imminent.",
+                reason=f"Filesystem utilization is critically high ({disk.percent:.1f}%).",
             )
         )
 
     elif disk.percent >= 70:
         checks.append(
             HealthCheck(
-                check="Filesystem Utilization",
+                check="Filesystem Capacity",
                 status="⚠️ WARNING",
                 reason=f"Filesystem utilization is elevated ({disk.percent:.1f}%).",
             )
@@ -39,26 +39,27 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
     else:
         checks.append(
             HealthCheck(
-                check="Filesystem Utilization",
+                check="Filesystem Capacity",
                 status="✅ PASS",
                 reason=f"Filesystem utilization is healthy ({disk.percent:.1f}%).",
             )
         )
 
-    # ---------------------------------------------------
+    # ==========================================================
     # IO Pressure (PSI)
-    # ---------------------------------------------------
+    # ==========================================================
 
     if (
         (disk.psi_full_avg10 or 0) > 0
         or (disk.psi_full_avg60 or 0) > 0
         or (disk.psi_full_avg300 or 0) > 0
     ):
+
         checks.append(
             HealthCheck(
                 check="IO Pressure",
                 status="🔴 CRITICAL",
-                reason="Tasks are completely stalled waiting for storage resources.",
+                reason="Tasks are completely stalled waiting for storage.",
             )
         )
 
@@ -67,15 +68,17 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
         or (disk.psi_some_avg60 or 0) >= 5
         or (disk.psi_some_avg300 or 0) >= 5
     ):
+
         checks.append(
             HealthCheck(
                 check="IO Pressure",
                 status="⚠️ WARNING",
-                reason="Storage contention is beginning to delay task execution.",
+                reason="Storage pressure is delaying task execution.",
             )
         )
 
     else:
+
         checks.append(
             HealthCheck(
                 check="IO Pressure",
@@ -84,195 +87,299 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
             )
         )
 
-    # ---------------------------------------------------
-    # Outstanding IO
-    # ---------------------------------------------------
+    # ==========================================================
+    # Device Utilization
+    # ==========================================================
 
-    if disk.io_in_progress is not None:
+    util = disk.device_utilization_percent
 
-        if disk.io_in_progress > 20:
-            checks.append(
-                HealthCheck(
-                    check="Outstanding IO",
-                    status="🔴 CRITICAL",
-                    reason=f"{disk.io_in_progress} IO requests are currently outstanding.",
-                )
-            )
+    if util is not None:
 
-        elif disk.io_in_progress > 10:
-            checks.append(
-                HealthCheck(
-                    check="Outstanding IO",
-                    status="⚠️ WARNING",
-                    reason=f"{disk.io_in_progress} IO requests are waiting for completion.",
-                )
-            )
+        if util >= 95:
+
+            status = "🔴 CRITICAL"
+            reason = f"Storage device is busy {util:.1f}% of the time."
+
+        elif util >= 80:
+
+            status = "⚠️ WARNING"
+            reason = f"Storage device utilization is elevated ({util:.1f}%)."
 
         else:
-            checks.append(
-                HealthCheck(
-                    check="Outstanding IO",
-                    status="✅ PASS",
-                    reason="No significant IO queue buildup detected.",
-                )
-            )
 
-    # ---------------------------------------------------
+            status = "✅ PASS"
+            reason = "Device utilization is within normal limits."
+
+        checks.append(
+            HealthCheck(
+                check="Device Utilization",
+                status=status,
+                reason=reason,
+            )
+        )
+
+    # ==========================================================
+    # Queue Depth
+    # ==========================================================
+
+    queue = disk.average_queue_depth
+
+    if queue is not None:
+
+        if queue >= 5:
+
+            status = "🔴 CRITICAL"
+            reason = f"Average queue depth is {queue:.2f}."
+
+        elif queue >= 2:
+
+            status = "⚠️ WARNING"
+            reason = f"Average queue depth is increasing ({queue:.2f})."
+
+        else:
+
+            status = "✅ PASS"
+            reason = "No significant queue buildup detected."
+
+        checks.append(
+            HealthCheck(
+                check="Queue Depth",
+                status=status,
+                reason=reason,
+            )
+        )
+
+    # ==========================================================
     # IO Latency
-    # ---------------------------------------------------
+    # ==========================================================
 
-    if disk.average_wait_ms is not None:
-
-        if disk.average_wait_ms >= 50:
-            checks.append(
-                HealthCheck(
-                    check="IO Latency",
-                    status="🔴 CRITICAL",
-                    reason=f"Average IO wait time is {disk.average_wait_ms:.1f} ms.",
-                )
-            )
-
-        elif disk.average_wait_ms >= 20:
-            checks.append(
-                HealthCheck(
-                    check="IO Latency",
-                    status="⚠️ WARNING",
-                    reason=f"Average IO wait time is elevated ({disk.average_wait_ms:.1f} ms).",
-                )
-            )
-
-        else:
-            checks.append(
-                HealthCheck(
-                    check="IO Latency",
-                    status="✅ PASS",
-                    reason="Storage latency is within normal limits.",
-                )
-            )
-
-    # ---------------------------------------------------
-    # Dirty / Writeback Pages
-    # ---------------------------------------------------
-
-    dirty = disk.dirty_pages or 0
-    writeback = disk.writeback_pages or 0
-
-    if writeback > 1000:
-        checks.append(
-            HealthCheck(
-                check="Writeback Activity",
-                status="⚠️ WARNING",
-                reason="Kernel writeback activity is elevated.",
-            )
-        )
-
-    else:
-        checks.append(
-            HealthCheck(
-                check="Writeback Activity",
-                status="✅ PASS",
-                reason="Filesystem writeback activity is normal.",
-            )
-        )
-
-    # ---------------------------------------------------
-    # Process Disk IO
-    # ---------------------------------------------------
-
-    total_bytes = (
-        (disk.process_read_bytes or 0)
-        + (disk.process_write_bytes or 0)
+    latency = max(
+        disk.average_read_latency_ms or 0,
+        disk.average_write_latency_ms or 0,
     )
 
-    if total_bytes > 1024 * 1024 * 1024:
+    if latency > 0:
+
+        if latency >= 50:
+
+            status = "🔴 CRITICAL"
+            reason = f"Average device latency is {latency:.1f} ms."
+
+        elif latency >= 20:
+
+            status = "⚠️ WARNING"
+            reason = f"Average device latency is elevated ({latency:.1f} ms)."
+
+        else:
+
+            status = "✅ PASS"
+            reason = "Storage latency is healthy."
 
         checks.append(
             HealthCheck(
-                check="Process Disk IO",
-                status="⚠️ WARNING",
-                reason="Current process is generating heavy disk IO.",
+                check="IO Latency",
+                status=status,
+                reason=reason,
             )
         )
+
+    # ==========================================================
+    # Writeback Activity
+    # ==========================================================
+
+    if disk.flushes_per_sec is not None:
+
+        if disk.flushes_per_sec >= 500:
+
+            status = "⚠️ WARNING"
+            reason = "Flush activity is elevated."
+
+        else:
+
+            status = "✅ PASS"
+            reason = "Flush activity is normal."
+
+        checks.append(
+            HealthCheck(
+                check="Writeback Activity",
+                status=status,
+                reason=reason,
+            )
+        )
+
+    # ==========================================================
+    # Process Disk IO
+    # ==========================================================
+
+    proc_io = (
+        (disk.process_read_mb_per_sec or 0)
+        + (disk.process_write_mb_per_sec or 0)
+    )
+
+    if proc_io >= 100:
+
+        status = "⚠️ WARNING"
+        reason = "Current process is generating heavy disk throughput."
 
     else:
 
-        checks.append(
-            HealthCheck(
-                check="Process Disk IO",
-                status="✅ PASS",
-                reason="Current process disk activity is within expected limits.",
-            )
-        )
+        status = "✅ PASS"
+        reason = "Current process disk activity is within expected limits."
 
-    # ---------------------------------------------------
-    # Flush Activity
-    # ---------------------------------------------------
-
-    if (
-        disk.flush_time_ms is not None
-        and disk.flush_time_ms > 0
-    ):
-        checks.append(
-            HealthCheck(
-                check="Flush Activity",
-                status="✅ PASS",
-                reason="Flush operations are being recorded normally.",
-            )
+    checks.append(
+        HealthCheck(
+            check="Process Disk IO",
+            status=status,
+            reason=reason,
         )
+    )
+
+    # ==========================================================
+    # Container Disk IO
+    # ==========================================================
+
+    container_io = (
+        (disk.container_read_mb_per_sec or 0)
+        + (disk.container_write_mb_per_sec or 0)
+    )
+
+    if container_io >= 100:
+
+        status = "⚠️ WARNING"
+        reason = "Container workloads are generating heavy storage throughput."
 
     else:
-        checks.append(
-            HealthCheck(
-                check="Flush Activity",
-                status="✅ PASS",
-                reason="No abnormal flush activity detected.",
-            )
+
+        status = "✅ PASS"
+        reason = "Container storage activity is within expected limits."
+
+    checks.append(
+        HealthCheck(
+            check="Container Disk IO",
+            status=status,
+            reason=reason,
+        )
+    )
+
+    # ==========================================================
+    # Correlate Evidence
+    # ==========================================================
+
+    evidence = []
+
+    if (disk.psi_full_avg10 or 0) > 0:
+        evidence.append("psi")
+
+    if (disk.device_utilization_percent or 0) >= 95:
+        evidence.append("utilization")
+
+    if latency >= 50:
+        evidence.append("latency")
+
+    if (disk.average_queue_depth or 0) >= 5:
+        evidence.append("queue")
+
+    if disk.percent >= 90:
+        evidence.append("capacity")
+
+    if (disk.flushes_per_sec or 0) >= 500:
+        evidence.append("flush")
+
+    if proc_io >= 100:
+        evidence.append("process")
+
+    if container_io >= 100:
+        evidence.append("container")
+
+    performance = {
+        "psi",
+        "utilization",
+        "latency",
+        "queue",
+    }
+
+    performance_hits = len(performance & set(evidence))
+    capacity_issue = "capacity" in evidence
+
+    recommendations: list[str] = []
+
+    if capacity_issue:
+        recommendations.append(
+            "Review filesystem capacity and reclaim disk space."
         )
 
-    # ---------------------------------------------------
-    # Overall Verdict
-    # ---------------------------------------------------
+    if "psi" in evidence:
+        recommendations.append(
+            "Investigate tasks stalled waiting for storage resources."
+        )
 
-    statuses = {c.status for c in checks}
+    if "latency" in evidence:
+        recommendations.append(
+            "Investigate elevated storage latency."
+        )
 
-    confidence = "High"
+    if "queue" in evidence:
+        recommendations.append(
+            "Identify processes contributing to IO queue buildup."
+        )
 
-    if any("CRITICAL" in s for s in statuses):
+    if "utilization" in evidence:
+        recommendations.append(
+            "Review sustained device utilization."
+        )
+
+    if "process" in evidence:
+        recommendations.append(
+            "Inspect processes generating heavy disk activity."
+        )
+
+    if "container" in evidence:
+        recommendations.append(
+            "Inspect container workloads producing heavy storage traffic."
+        )
+
+    if performance_hits >= 3:
 
         severity = "CRITICAL"
+        confidence = "High"
 
-        summary = "Storage remains a primary suspect."
+        summary = (
+            "Multiple independent indicators point to storage as the primary "
+            "performance bottleneck."
+        )
 
-        recommendations = [
-            "Identify processes generating heavy disk IO.",
-            "Review filesystem capacity.",
-            "Inspect IO pressure and outstanding IO requests.",
-            "Investigate writeback activity.",
-            "Verify storage device performance.",
-        ]
-
-    elif any("WARNING" in s for s in statuses):
+    elif performance_hits >= 2 or (
+        performance_hits >= 1 and capacity_issue
+    ):
 
         severity = "WARNING"
+        confidence = "Medium"
 
-        summary = "Storage shows warning signs but cannot yet be blamed."
+        summary = (
+            "Storage shows several warning indicators and should be investigated."
+        )
 
-        recommendations = [
-            "Monitor storage utilization and IO pressure.",
-            "Watch for increasing writeback or queue buildup.",
-            "Continue observing storage latency.",
-        ]
+    elif capacity_issue:
+
+        severity = "WARNING"
+        confidence = "Medium"
+
+        summary = (
+            "Filesystem capacity is becoming constrained, although broader storage "
+            "performance remains stable."
+        )
 
     else:
 
         severity = "INFO"
-
-        summary = "Storage can reasonably be ruled out."
-
-        recommendations = [
-            "Storage does not appear to be the limiting resource.",
-            "Continue investigating CPU, memory, or network.",
-        ]
+        confidence = "High"
+        recommendations.append(
+            "Nothing to reccomend. Disk is healthy"
+        )
+        summary = (
+            "Storage appears healthy and is unlikely to be responsible for the "
+            "observed system behaviour."
+        )
 
     return DiskAnalysis(
         component="Disk",

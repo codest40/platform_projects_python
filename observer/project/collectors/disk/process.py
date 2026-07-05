@@ -23,11 +23,11 @@ def collect_process_disk(disk: DiskData) -> None:
     # Current Process IO
     # ==========================================================
 
-    disk.read_count = io.read_count
-    disk.write_count = io.write_count
+    disk.process_read_count = io.read_count
+    disk.process_write_count = io.write_count
 
-    disk.read_bytes = io.read_bytes
-    disk.write_bytes = io.write_bytes
+    disk.process_read_bytes = io.read_bytes
+    disk.process_write_bytes = io.write_bytes
 
     # Linux only
     disk.read_chars = getattr(io, "read_chars", None)

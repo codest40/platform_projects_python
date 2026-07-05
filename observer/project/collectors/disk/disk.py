@@ -8,10 +8,12 @@ from project.collectors.disk.usage import collect_usage
 from project.collectors.disk.cgroup import collect_cgroup
 from project.collectors.disk.process import collect_process_disk
 from project.analyzers.disk import analyze_disk_metrics
-from project.alerts.activate_alert import activate_run_alert
+#from project.alerts.activate_alert import activate_run_alert
 from project.utils.decorators import trace
-from project.utils.helpers import get_status
-from project.utils.start_event import run_collection, run_analysis
+#from project.utils.helpers import get_status
+#from project.utils.start_event import run_collection, run_analysis, save_state, load_states
+from project.utils.pipeline import pipeline_runner
+from project.collectors.disk.filter import filter_disk_state, compute_disk_rates
 
 DISKTYPE = GetDiskType(
     psutil=True,
@@ -57,27 +59,21 @@ def collect_disk() -> DiskData:
 
 @trace("run_disk")
 def run_collect_disk():
-  result = run_collection(resource="disk", func=collect_disk)
+  result = pipeline_runner(
+      resource="disk",
+      collect=collect_disk,
+      analyze=analyze_disk_metrics,
+      filter=filter_disk_state,
+      compute=compute_disk_rates,
+      extra=run_collect_disk,
+  )
+
   return result
 
 @trace("disk_pipeline")
 def disk_pipeline():
   result = run_collect_disk()
-  if result is None:
-    print(f"❌ ERROR: Emit() response returned: {result}")
-  elif result.status == get_status("FAILED"):
-      print("❌ Collecting Disk Metrics Failed")
-      activate_run_alert(title="Disk Metrics collection Alert", message=f"❌ Disk Metric Collection Failed: {result}", severity="CRITICAL",)
-  elif result.status == get_status("SUCCESS"):
-      print("✅ Disk Metrics Collection Passed")
-      res = run_analysis(resource="Disk", func=analyze_disk_metrics, result=result)
-      if not res:
-          print("❌ Disk Analysis Failed")
-      print("✅ Disk Metrics Analysis Passed")
-  else:
-    print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is very wrong")
+  print("DONE")
 
+disk_pipeline()
 
-#disk_pipeline()
-
-#import reuse_pipeline_runner(kwargs) from start_event

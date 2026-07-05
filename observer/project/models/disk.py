@@ -1,7 +1,5 @@
 from __future__ import annotations
-
 from dataclasses import dataclass, field
-
 from project.models.events import HealthCheck
 
 
@@ -133,19 +131,6 @@ class DiskData:
     container_io_pressure: float | None = None
 
     # ======================================================
-    # Derived Metrics (Rate Calculations)
-    # ======================================================
-
-    read_rate: float | None = None
-    write_rate: float | None = None
-
-    throughput: float | None = None
-    iops: float | None = None
-
-    disk_growth_rate: float | None = None
-    sustained_high_utilization: bool | None = None
-
-    # ======================================================
     # Interval Metrics (/proc/diskstats)
     # ======================================================
 
@@ -171,7 +156,8 @@ class DiskData:
 
     container_read_mb_per_sec: float | None = None
     container_write_mb_per_sec: float | None = None
-
+    collected_at: float | None = None
+    status: str = "PENDING"
 
 # ==========================================================
 # Analysis

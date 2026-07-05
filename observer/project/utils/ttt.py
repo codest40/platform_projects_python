@@ -5,6 +5,7 @@ from project.logging.logger import emit, emit_span, emit_exception, emit_analysi
 from project.utils.runners import TraceObserver, EventRunner
 from project.utils.adapters import adapt_event_model, adapt_analysis_model
 from project.utils.context import get_caller_context
+from project.utils.helpers import line
 import traceback as tb
 from threading import Lock
 from collections import defaultdict
@@ -165,7 +166,7 @@ def save_state(resource: str, data: Any) -> None:
     previous = STATE_DIR / f"{resource}_previous.json"
     current = STATE_DIR / f"{resource}_current.json"
 
-    if is_dataclass(data):
+    if isdataclass(data):
       payload = asdict(data)
     elif isinstance(data, dict):
       payload = data
@@ -173,10 +174,10 @@ def save_state(resource: str, data: Any) -> None:
       raise TypeError("❌ save_state() expects a dataclass or dictionary.")
 
 
-    if current.exists():
-        previous.write_text(current.read_text())
-    current.write_text(json.dumps(payload, indent=4))
-
+    if not previous.exists():
+        previous.write_text(json.dumps(payload, indent=4))
+    else:
+        current.write_text(json.dumps(payload, indent=4))
 
 
 
@@ -203,5 +204,39 @@ def load_states(resource: str) -> tuple[dict | None, dict | None]:
         current = json.loads(current_file.read_text())
 
     return previous, current
+
+
+#===========================================
+#
+#=============================================
+def pipeline_runner(resource, collect_func. analyze_func, alert_title=None, message=None, serverity=None):
+  result = run_collect_disk(resource, collect_func)
+  if result is None:
+    line("pipeline runner")
+    print(f"❌ {resource} ERROR: Emit() response returned: {result}")
+  elif result.status == get_status("FAILED"):
+      print(f"❌ Collecting {resource} Metrics Failed")
+      activate_run_alert(title=f"{resource} Metrics collection Alert", message=f"❌ {resource} Metric Collection Failed: {result}", severity="CRITICAL",)
+  elif result.status == get_status("SUCCESS"):
+      print(f"✅ {resource} Metrics Collection Passed")
+      print(result)
+      if not result.collected_at:
+          print("❌ {resource} collected Result Does Not have collected_at filed")
+          return
+
+      payload = filter_resource_state(resource, result)
+      previous = load_state(resource)
+      if previous:
+        result = compute_resource_rates(result.data, previous, current)
+        save_state("disk", payload)
+      previous, current = load_state(resource)
+      result = compute_disk_rates(disk: DiskData, previous=prev, current=curr)
+      #res = run_analysis(resource="Disk", func=analyze_disk_metrics, result=result)
+      #if not res:
+      #    print("❌ Disk Analysis Failed")
+      print("✅ Disk Metrics Analysis Passed")
+  else:
+    print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is very wrong")
+
 
 
