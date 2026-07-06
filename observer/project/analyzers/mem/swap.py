@@ -8,15 +8,18 @@ and swap activity over time.
 from __future__ import annotations
 
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 def analyze_swap(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, checks=list[HealthCheck]):
 
     # ==========================================================
     # Swap Configuration
     # ==========================================================
     checks: list[HealthCheck] = []
+    count = 0
+
     if memory.swap_total is None or memory.swap_total == 0:
 
         checks.append(
@@ -26,8 +29,12 @@ def analyze_swap(
                 reason="No swap space is configured on this system.",
             )
         )
+        if memory.swap_total == 0:
+          state="COMPLETE"
+        else:
+          state="UNAVAILABLE"
 
-        return checks
+        return build_result(name="swap", state=state, checks)
 
     # ==========================================================
     # Swap Utilization
@@ -51,6 +58,7 @@ def analyze_swap(
                 reason=f"Swap utilization very high ({swap_percent:.1f}%).",
             )
         )
+        count+=1
     elif swap_percent >= 30:
         checks.append(
             HealthCheck(
@@ -59,6 +67,7 @@ def analyze_swap(
                 reason=f"Swap utilization elevated ({swap_percent:.1f}%).",
             )
         )
+        count+=1
     else:
         checks.append(
             HealthCheck(
@@ -67,7 +76,7 @@ def analyze_swap(
                 reason=f"Swap utilization healthy ({swap_percent:.1f}%).",
             )
         )
-
+        count+=1
     # ==========================================================
     # Swap IO Activity (MB/s level signal)
     # ==========================================================
@@ -91,6 +100,7 @@ def analyze_swap(
                 reason=f"High swap IO activity (in={swap_in:.2f}, out={swap_out:.2f} MB/s).",
             )
         )
+        count+=1
     elif swap_in > 0 or swap_out > 0:
         checks.append(
             HealthCheck(
@@ -99,6 +109,7 @@ def analyze_swap(
                 reason=f"Swap IO activity detected (in={swap_in:.2f}, out={swap_out:.2f} MB/s).",
             )
         )
+        count+=1
     else:
         checks.append(
             HealthCheck(
@@ -107,6 +118,7 @@ def analyze_swap(
                 reason="No swap IO activity detected.",
             )
         )
+        count+=1
 
     # ==========================================================
     # Swap Paging Activity (separate domain)
@@ -131,6 +143,7 @@ def analyze_swap(
                 reason=f"Heavy swap paging (in={pages_in}, out={pages_out}).",
             )
         )
+        count+=1
     elif pages_in > 0 or pages_out > 0:
         checks.append(
             HealthCheck(
@@ -139,6 +152,7 @@ def analyze_swap(
                 reason=f"Swap paging activity detected (in={pages_in}, out={pages_out}).",
             )
         )
+        count+=1
     else:
         checks.append(
             HealthCheck(
@@ -147,5 +161,12 @@ def analyze_swap(
                 reason="No swap paging activity detected.",
             )
         )
+        count+=1
 
-    return checks
+    TOTAL=3
+    if TOTAL==count:
+      state="COMPLETE"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="swap", state=state, checks)

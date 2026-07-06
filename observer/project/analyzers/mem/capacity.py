@@ -6,11 +6,12 @@ No severity logic. No thresholds. No interpretation.
 """
 
 from __future__ import annotations
-from project.models.memory import MemoryData, HealthCheck
+from project.models.memory import MemoryData, HealthCheck, AnalyzerResult
+from project.analyzers.mem.data import build_result
 
 def analyze_capacity(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, checks=list[HealthCheck]):
     """
     Analyze host memory capacity snapshot.
     """
@@ -18,6 +19,7 @@ def analyze_capacity(
     checks: list[HealthCheck] = []
     available = memory.available_percent
     used = memory.used_percent
+    count = 0
 
     # =====================================================
     # Availability Signal
@@ -31,6 +33,7 @@ def analyze_capacity(
                 reason=f"Available memory snapshot: {available:.1f}%",
             )
         )
+        count += 1
 
     # =====================================================
     # Usage Signal
@@ -44,6 +47,7 @@ def analyze_capacity(
                 reason=f"Used memory snapshot: {used:.1f}%",
             )
         )
+        count += 1
 
     # =====================================================
     # Missing Data Case
@@ -57,5 +61,11 @@ def analyze_capacity(
                 reason="Memory capacity statistics are unavailable.",
             )
         )
+        return build_result("capacity", "UNAVAILABLE", checks)
 
-    return checks
+    TOTAL=2
+    if TOTAL == count:
+      state="COMPLETED"
+    else:
+      state="PARTIAL"
+    return build_result("capacity", state, checks)

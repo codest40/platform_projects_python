@@ -4,8 +4,9 @@ Memory OOM / Allocation Failure Analyzer.
 
 from __future__ import annotations
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
-def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
+def analyze_oom(memory: MemoryData) -> build_result(name, state, checks=list[HealthCheck]):
     """
     Analyze Out-Of-Memory activity.
     Focuses on actual memory exhaustion rather than
@@ -21,6 +22,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
     total_oom = memory.oom_events
     container_oom = memory.container_oom_events
     alloc_total = memory.allocation_failures
+    count=0
 
     # ==========================================================
     # Kernel OOM
@@ -47,6 +49,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     elif total_oom > 0:
         checks.append(
@@ -59,6 +62,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     else:
         checks.append(
@@ -68,6 +72,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 reason="No kernel OOM events detected.",
             )
         )
+        count += 1
 
     # ==========================================================
     # Container OOM
@@ -93,6 +98,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     elif container_oom > 0:
         checks.append(
@@ -105,6 +111,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     else:
         checks.append(
@@ -114,6 +121,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 reason="No container OOM events detected.",
             )
         )
+        count += 1
 
     # ==========================================================
     # Allocation Failures
@@ -140,6 +148,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     elif alloc_total > 0:
         checks.append(
@@ -152,6 +161,7 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     else:
         checks.append(
@@ -161,5 +171,14 @@ def analyze_oom(memory: MemoryData) -> list[HealthCheck]:
                 reason="No allocation failures detected.",
             )
         )
+        count += 1
 
-    return checks
+    TOTAL=3
+    if TOTAL==count:
+      state="COMPLETE"
+    elif count == 0:
+      state="UNAVAILABLE"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="oom", state=state, checks=checks)

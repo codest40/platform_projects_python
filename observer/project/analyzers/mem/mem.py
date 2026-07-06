@@ -22,10 +22,11 @@ from project.analyzers.mem.paging import analyze_memory_paging
 from project.analyzers.mem.reclaim import analyze_memory_reclaim
 from project.analyzers.mem.swap import analyze_swap
 from project.analyzers.mem.process import analyze_process
+from project.analyzers.mem.data import build_result, analyzers
 
 from project.analyzers.mem.normalizer import normalize
 from project.analyzers.mem.summary import summarize_memory
-from project.models.memory import Signal
+from project.models.memory import Signal, AnalyzerResult
 from project.utils.runners import EventRunner
 from project.utils.helpers import get_status
 
@@ -40,26 +41,16 @@ def analyze_memory_metrics(result: EventRunner) -> MemoryAnalysis:
 
     memory = result.data
     checks: list[HealthCheck] = []
+    metadata: dict = {}
 
     # ==========================================================
     # 1. Run analyzers (pure detection layer)
     # ==========================================================
 
-    checks.extend(analyze_cache(memory))
-    checks.extend(analyze_capacity(memory))
-
-    checks.extend(analyze_memory_growth(memory))
-    checks.extend(analyze_commit(memory))
-
-    checks.extend(analyze_container(memory))
-    checks.extend(analyze_oom(memory))
-
-    checks.extend(analyze_memory_pressure(memory))
-    checks.extend(analyze_memory_paging(memory))
-    checks.extend(analyze_memory_reclaim(memory))
-
-    checks.extend(analyze_swap(memory))
-    checks.extend(analyze_process(memory))
+    for each in analyzers:
+      result = AnalyzerResult(each(memory))
+      checks.extend(result.checks)
+      metadata[result.name] = {"state": result.state, "total_checks": len(result.checks)}
 
     # ==========================================================
     # 2. Normalize signals
@@ -71,4 +62,4 @@ def analyze_memory_metrics(result: EventRunner) -> MemoryAnalysis:
     # 3. Summary (final decision engine)
     # ==========================================================
 
-    return summarize_memory(memory, checks, signals)
+    return summarize_memory(memory, checks, signals, metadata)

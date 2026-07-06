@@ -6,15 +6,17 @@ Evaluates page fault activity using interval rates.
 from __future__ import annotations
 
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 def analyze_memory_paging(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, list[HealthCheck]):
 
     checks: list[HealthCheck] = []
     total = memory.page_faults_per_sec
     major = memory.major_page_faults_per_sec
     minor = memory.minor_page_faults_per_sec
+    count=0
 
     # ==========================================================
     # Missing Data Guard
@@ -28,7 +30,7 @@ def analyze_memory_paging(
                 reason="Page fault statistics are unavailable.",
             )
         )
-        return checks
+        return build_result(name="paging", state="UNAVAILABLE", checks)
 
     # ==========================================================
     # Major Page Faults
@@ -45,6 +47,7 @@ def analyze_memory_paging(
                 ),
             )
         )
+        count+=1
 
     elif major >= 10:
         checks.append(
@@ -54,6 +57,7 @@ def analyze_memory_paging(
                 reason=f"Elevated major page fault rate ({major:.2f}/s).",
             )
         )
+        count+=1
 
     else:
         checks.append(
@@ -63,6 +67,7 @@ def analyze_memory_paging(
                 reason=f"Major page fault rate is normal ({major:.2f}/s).",
             )
         )
+        count+=1
 
     # ==========================================================
     # Minor Page Faults
@@ -76,6 +81,8 @@ def analyze_memory_paging(
                 reason=f"High minor page fault rate ({minor:.0f}/s).",
             )
         )
+        count+=1
+
     else:
         checks.append(
             HealthCheck(
@@ -85,4 +92,10 @@ def analyze_memory_paging(
             )
         )
 
-    return checks
+    TOTAL=2
+    if TOTAL==count:
+      state="COMPLETE"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="paging", state=state, checks)

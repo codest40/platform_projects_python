@@ -4,15 +4,14 @@ Container Memory Analyzer.
 
 from __future__ import annotations
 from project.models.memory import MemoryData, HealthCheck
-
+from project.analyzers.mem.data import build_result
 
 MB = 1024 * 1024
 
 
-def analyze_container(memory: MemoryData) -> list[HealthCheck]:
+def analyze_container(memory: MemoryData) -> build_result(name, state, checks=list[HealthCheck]):
     """
     Analyze container memory utilization.
-
     This analyzer evaluates memory usage relative to the
     container's configured cgroup memory limit.
     """
@@ -28,6 +27,8 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
 
     growth = memory.container_memory_growth_mb_per_sec
     oom_rate = memory.container_oom_events_per_sec
+
+    count=0
 
     # ----------------------------------------------------------
     # Not running inside a memory-limited container
@@ -45,7 +46,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
-        return checks
+        return build_result(name="container", state="UNAVAILABLE", checks)
 
     utilization = usage / limit * 100
 
@@ -64,6 +65,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     elif utilization >= 85:
         checks.append(
@@ -76,6 +78,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     else:
         checks.append(
@@ -88,6 +91,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     # ----------------------------------------------------------
     # Working Set
@@ -104,6 +108,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     # ----------------------------------------------------------
     # Memory Growth
@@ -120,6 +125,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
     # ----------------------------------------------------------
     # RSS
@@ -133,6 +139,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Resident memory is {rss / MB:.1f} MB.",
             )
         )
+        count += 1
 
     # ----------------------------------------------------------
     # Cache
@@ -146,6 +153,7 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Filesystem cache is {cache / MB:.1f} MB.",
             )
         )
+        count += 1
 
     # ----------------------------------------------------------
     # Container OOM
@@ -162,6 +170,13 @@ def analyze_container(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count += 1
 
-    return checks
+    TOTAL=6
+    if TOTAL == count:
+      state="COMPLETED"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="container", state=state, checks=checks)
 

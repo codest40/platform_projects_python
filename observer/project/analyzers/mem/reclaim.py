@@ -7,10 +7,11 @@ Evaluates kernel page scanning and page reclaim activity.
 from __future__ import annotations
 
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 def analyze_memory_reclaim(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, checks=list[HealthCheck]):
 
     checks: list[HealthCheck] = []
     scanned = memory.pages_scanned_per_sec
@@ -28,7 +29,7 @@ def analyze_memory_reclaim(
                 reason="Memory reclaim statistics are unavailable.",
             )
         )
-        return checks
+        return build_result(name="reclaim", state="UNAVAILABLE", checks=checks)
 
     # ==========================================================
     # Idle State
@@ -42,7 +43,7 @@ def analyze_memory_reclaim(
                 reason="No memory reclaim activity detected.",
             )
         )
-        return checks
+        return build_result(name="reclaim", state="COMPLETE", checks=checks)
 
     # ==========================================================
     # Efficiency (derived locally, but NOT normalized yet)
@@ -122,4 +123,4 @@ def analyze_memory_reclaim(
             )
         )
 
-    return checks
+    return build_result(name="reclaim", state="COMPLETE", checks)

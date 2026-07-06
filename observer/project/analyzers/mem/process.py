@@ -4,11 +4,12 @@ Process Memory Analyzer.
 
 from __future__ import annotations
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 MB = 1024 * 1024
 
 
-def analyze_process(memory: MemoryData) -> list[HealthCheck]:
+def analyze_process(memory: MemoryData) -> build_result(name, state, checks=list[HealthCheck]):
 
     checks: list[HealthCheck] = []
 
@@ -20,6 +21,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
     growth = memory.process_memory_growth_mb_per_sec
     peak = memory.peak_memory
 
+    count = 0
     # ==========================================================
     # Memory Utilization
     # ==========================================================
@@ -40,6 +42,8 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Process uses {percent:.1f}% of system memory.",
             )
         )
+        count+=1
+
     elif percent >= 50:
         checks.append(
             HealthCheck(
@@ -48,6 +52,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Process uses {percent:.1f}% of system memory.",
             )
         )
+        count+=1
     else:
         checks.append(
             HealthCheck(
@@ -56,6 +61,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Process memory usage is healthy ({percent:.1f}%).",
             )
         )
+        count+=1
 
     # ==========================================================
     # Memory Growth
@@ -77,6 +83,8 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Rapid growth detected ({growth:.1f} MB/s).",
             )
         )
+        count+=1
+
     elif growth > 20:
         checks.append(
             HealthCheck(
@@ -85,6 +93,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Elevated growth detected ({growth:.1f} MB/s).",
             )
         )
+        count+=1
     else:
         checks.append(
             HealthCheck(
@@ -93,6 +102,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Stable process memory growth ({growth:.1f} MB/s).",
             )
         )
+        count+=1
 
     # ==========================================================
     # Peak Memory
@@ -106,6 +116,7 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 reason=f"Peak usage: {peak / MB:.1f} MB.",
             )
         )
+        count+=1
 
     # ==========================================================
     # Memory Layout
@@ -131,5 +142,12 @@ def analyze_process(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        count+=1
 
-    return checks
+    TOTAL=4
+    if TOTAL=count:
+      state="COMPLETE"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="process", state=state, checks)

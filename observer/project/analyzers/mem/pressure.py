@@ -7,10 +7,11 @@ to determine the severity of memory contention.
 from __future__ import annotations
 
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 def analyze_memory_pressure(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, checks=list[HealthCheck]):
 
     checks: list[HealthCheck] = []
     some10 = memory.psi_some_avg10
@@ -36,8 +37,9 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return checks
+        return build_result(name="pressure", state="UNAVAILABLE", checks)
 
+     result = build_result(name="pressure", state="COMPLETE", checks)
     # ==========================================================
     # Full Stall (Highest Severity)
     # ==========================================================
@@ -56,7 +58,7 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return checks
+        return result
 
     # ==========================================================
     # Severe Contention
@@ -76,7 +78,7 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return checks
+        return result
 
     # ==========================================================
     # Elevated Pressure
@@ -95,7 +97,7 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return checks
+        return result
 
     # ==========================================================
     # Mild Pressure
@@ -114,7 +116,7 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return checks
+        return result
 
     # ==========================================================
     # Healthy
@@ -132,4 +134,4 @@ def analyze_memory_pressure(
         )
     )
 
-    return checks
+    return result

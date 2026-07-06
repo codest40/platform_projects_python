@@ -7,15 +7,17 @@ Pure detector for interval-based memory change signals.
 from __future__ import annotations
 
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
 def analyze_memory_growth(
     memory: MemoryData,
-) -> list[HealthCheck]:
+) -> build_result(name, state, checks=list[HealthCheck]):
 
     # ==========================================================
     # Used Memory Growth
     # ==========================================================
     checks: list[HealthCheck] = []
+    available = 0
 
     if memory.used_memory_change_mb_per_sec is not None:
         checks.append(
@@ -28,7 +30,7 @@ def analyze_memory_growth(
                 ),
             )
         )
-
+        available += 1
     # ==========================================================
     # Available Memory Change
     # ==========================================================
@@ -44,6 +46,7 @@ def analyze_memory_growth(
                 ),
             )
         )
+        available += 1
 
     # ==========================================================
     # Cache Growth
@@ -60,6 +63,7 @@ def analyze_memory_growth(
                 ),
             )
         )
+        available += 1
 
     # ==========================================================
     # Dirty Page Growth
@@ -76,6 +80,7 @@ def analyze_memory_growth(
                 ),
             )
         )
+        available += 1
 
     # ==========================================================
     # Process Memory Growth
@@ -92,6 +97,7 @@ def analyze_memory_growth(
                 ),
             )
         )
+        available += 1
 
     # ==========================================================
     # Container Memory Growth
@@ -108,5 +114,14 @@ def analyze_memory_growth(
                 ),
             )
         )
+        available += 1
 
-    return checks
+    TOTAL = 6
+    if available == TOTAL:
+      state = "COMPLETE"
+    elif available == 0:
+      state = "UNAVAILABLE"
+    else:
+      state = "PARTIAL"
+
+    return build_result("growth", state, checks=checks,)

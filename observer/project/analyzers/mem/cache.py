@@ -7,24 +7,22 @@ No severity decisions. No interpretation logic.
 
 from __future__ import annotations
 from project.models.memory import MemoryData, HealthCheck, AnalyzerResult
+from project.analyzers.mem.data import build_result
 
-get_metadata(x, y, z):
-    return AnalyzerResult(name=x, state=y, checks=z,)
-# AnalyzerResult(name="Paging", state="UNAVAILABLE",checks=checks,)
-
-def analyze_cache(memory: MemoryData) -> list[HealthCheck]:
+def analyze_cache(memory: MemoryData) -> build_result(name, state, checks=list[HealthCheck]):
     checks: list[HealthCheck] = []
 
     cache = memory.page_cache
     dirty = memory.dirty_pages
     writeback = memory.writeback_pages
+    available = 0
 
     # ==========================================================
     # Cache Availability
     # ==========================================================
 
     if cache is None:
-        return get_metadata("cache", "UNAVAILABLE", checks = [
+        return build_result(name="cache", state="UNAVAILABLE", checks = [
             HealthCheck(
                 check="Filesystem Cache",
                 status="PASS",
@@ -47,7 +45,7 @@ def analyze_cache(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
-
+        available += 1
     # ==========================================================
     # Dirty Page State (RAW SIGNAL ONLY)
     # ==========================================================
@@ -63,6 +61,7 @@ def analyze_cache(memory: MemoryData) -> list[HealthCheck]:
                 ),
             )
         )
+        available += 1
 
     # ==========================================================
     # Cache Presence Signal
@@ -76,4 +75,10 @@ def analyze_cache(memory: MemoryData) -> list[HealthCheck]:
         )
     )
 
-    return get_metadata("cache", "COMPLETE", checks)
+    TOTAL=2
+    if TOTAL == available:
+      state="COMPLETED"
+    else:
+      state="PARTIAL"
+
+    return build_result(name="cache", state=state, checks)

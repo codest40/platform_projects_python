@@ -87,6 +87,7 @@ def summarize_memory(
     memory: MemoryData,
     checks: list[HealthCheck],
     signals: list[Signal],
+    metadata: {},
 ) -> MemoryAnalysis:
 
     # ==========================================================
@@ -99,20 +100,60 @@ def summarize_memory(
     pressure = _resolve_pressure(checks)
 
     # ==========================================================
-    # Confidence (simple heuristic for now)
+    # Confidence
     # ==========================================================
-
+    count_complete = 0
+    count_partial = 0
+    count_unavailable = 0
     signal_count = len(signals)
+    signal_score = min(signal_count / 5, 1.0)
+    total_analyzers = len(metadata)
+    collected_failed = (
+        memory.collected_total -
+        memory.collected_successful
+    )
 
-    if signal_count > 40:
-        confidence = "HIGH"
-    elif signal_count > 20:
-        confidence = "MEDIUM"
+    for each, value in metadata.items():
+      if value["state"] == "COMPLETE":
+        count_complete+=1
+      elif value["state"] == "PARTIAL":
+        count_partial+=1
+      else:
+        count_unavailable+=1
+
+
+    collector_score = (
+        memory.collected_successful /
+        memory.collected_total
+    )
+
+    coverage_score = (
+        count_complete + count_partial * 0.5
+    ) / total_analyzers if total_analyzers else 0
+
+
+    failure_penalty = (
+        collected_failed /
+        memory.collected_total
+    )
+
+    score = (
+          collector_score * 0.30
+        + coverage_score  * 0.40
+        + signal_score    * 0.20
+        + (1 - failure_penalty) * 0.10
+    )
+
+    confidence_score = round(score * 100)
+    if score > 0.85:
+        confidence = f"HIGH {confidence_score}"
+    elif score >= 0.75:
+        confidence = f"MEDIUM {confidence_score}"
     else:
-        confidence = "LOW"
+        confidence = f"LOW {confidence_score}"
 
     # ==========================================================
-    # Build recommendations (rule-based, NOT ML)
+    # Build recommendations (rule-based)
     # ==========================================================
 
     recommendations: list[str] = []
@@ -127,7 +168,7 @@ def summarize_memory(
     recommendations = list(dict.fromkeys(recommendations))
 
     # ==========================================================
-    # Summary text generation (deterministic)
+    # Summary text generation
     # ==========================================================
 
     critical_count = sum(1 for c in checks if c.status == "CRITICAL")

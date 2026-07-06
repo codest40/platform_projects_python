@@ -7,8 +7,9 @@ No thresholds. No severity logic. No system interpretation.
 
 from __future__ import annotations
 from project.models.memory import MemoryData, HealthCheck
+from project.analyzers.mem.data import build_result
 
-def analyze_commit(memory: MemoryData) -> list[HealthCheck]:
+def analyze_commit(memory: MemoryData) -> build_result(name, state, checks=list[HealthCheck]:
     checks: list[HealthCheck] = []
 
     commit = memory.commit_percent
@@ -20,7 +21,7 @@ def analyze_commit(memory: MemoryData) -> list[HealthCheck]:
     # ==========================================================
 
     if commit is None or committed is None or limit is None:
-        return [
+        return build_result("commit", "UNAVAILABLE", checks=[
             HealthCheck(
                 check="Commit Accounting",
                 status="PASS",
@@ -59,4 +60,4 @@ def analyze_commit(memory: MemoryData) -> list[HealthCheck]:
         )
     )
 
-    return checks
+    return build_result("capacity", "COMPLETE", checks)
