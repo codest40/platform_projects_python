@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
-
+from typing import Literal
 
 # ==========================================================
 # Collector Selection
@@ -16,6 +16,22 @@ class GetMemType:
     numa: bool = False
     process: bool = False
 
+@dataclass
+class Signal:
+    name: str
+    value: float
+    domain: str          # memory, container, process, kernel
+    type: str            # rate | total | ratio
+    unit: str | None = None
+
+@dataclass(slots=True)
+class HealthCheck:
+
+    check: str
+    reason: str
+    status: Literal["PASS", "WARNING", "CRITICAL"] = "PASS"
+    category: str | None=None
+
 
 # ==========================================================
 # Memory Snapshot
@@ -27,6 +43,7 @@ class MemoryData:
     # ==========================================================
     # Host Memory
     # ==========================================================
+
     total: int = 0
     available: int = 0
     used: int = 0
@@ -52,6 +69,7 @@ class MemoryData:
     # ==========================================================
     # Utilization
     # ==========================================================
+
     percent: float | None = None
 
     available_percent: float | None = None
@@ -63,6 +81,7 @@ class MemoryData:
     # ==========================================================
     # Swap
     # ==========================================================
+
     swap_total: int | None = None
     swap_used: int | None = None
     swap_free: int | None = None
@@ -77,20 +96,21 @@ class MemoryData:
     # ==========================================================
     # Commit Accounting
     # ==========================================================
+
     committed_as: int | None = None
     commit_limit: int | None = None
     commit_percent: float | None = None
 
     # ==========================================================
-    # Paging
+    # Paging (Raw Counters)
     # ==========================================================
+
     major_page_faults: int | None = None
-    major_page_fault_rate: int | None = None
     minor_page_faults: int | None = None
     total_page_faults: int | None = None
 
-    page_scan_rate: float | None = None
-    page_reclaim_rate: float | None = None
+    pages_scanned: int | None = None
+    pages_reclaimed: int | None = None
 
     reclaim_activity: int | None = None
     allocation_failures: int | None = None
@@ -98,6 +118,7 @@ class MemoryData:
     # ==========================================================
     # Memory Pressure (Linux PSI)
     # ==========================================================
+
     psi_some_avg10: float | None = None
     psi_some_avg60: float | None = None
     psi_some_avg300: float | None = None
@@ -112,6 +133,7 @@ class MemoryData:
     # ==========================================================
     # Huge Pages
     # ==========================================================
+
     huge_pages_total: int | None = None
     huge_pages_free: int | None = None
     huge_pages_reserved: int | None = None
@@ -121,6 +143,7 @@ class MemoryData:
     # ==========================================================
     # NUMA
     # ==========================================================
+
     numa_nodes: int | None = None
     numa_remote_accesses: int | None = None
     numa_imbalance: float | None = None
@@ -128,6 +151,7 @@ class MemoryData:
     # ==========================================================
     # Process Memory
     # ==========================================================
+
     rss: int | None = None
     vms: int | None = None
     uss: int | None = None
@@ -145,6 +169,7 @@ class MemoryData:
     # ==========================================================
     # Container / cgroup
     # ==========================================================
+
     cgroup_memory_usage: int | None = None
 
     container_memory_usage: int | None = None
@@ -160,6 +185,7 @@ class MemoryData:
     # ==========================================================
     # Filesystem Cache
     # ==========================================================
+
     page_cache: int | None = None
 
     dirty_pages: int | None = None
@@ -172,36 +198,73 @@ class MemoryData:
     inode_cache: int | None = None
 
     # ==========================================================
-    # Derived Metrics for Analyzer to use
+    # Interval Metrics
     # ==========================================================
-    page_fault_rate: float | None = None
 
-    memory_growth_rate: float | None = None
+    page_faults_per_sec: float | None = None
+    major_page_faults_per_sec: float | None = None
+    minor_page_faults_per_sec: float | None = None
 
-    cache_hit_ratio: float | None = None
-    cache_eviction_rate: float | None = None
+    pages_scanned_per_sec: float | None = None
+    pages_reclaimed_per_sec: float | None = None
 
-    memory_spike_detected: bool | None = None
-    memory_leak_detected: bool | None = None
+    allocation_failures_per_sec: float | None = None
 
-    sustained_high_utilization: bool | None = None
+    swap_in_mb_per_sec: float | None = None
+    swap_out_mb_per_sec: float | None = None
+
+    available_memory_change_mb_per_sec: float | None = None
+    used_memory_change_mb_per_sec: float | None = None
+
+    dirty_growth_mb_per_sec: float | None = None
+    writeback_growth_mb_per_sec: float | None = None
+
+    cache_growth_mb_per_sec: float | None = None
+    buffer_growth_mb_per_sec: float | None = None
+
+    process_memory_growth_mb_per_sec: float | None = None
+    container_memory_growth_mb_per_sec: float | None = None
+
+    oom_events_per_sec: float | None = None
+    container_oom_events_per_sec: float | None = None
 
     # ==========================================================
-    # Analyzer Summary
+    # Metadata
     # ==========================================================
-    collected_at: float | None = None
-    pressure: str | None = None
-    health: str | None = None
+
     comment: str | None = None
+    collectors_total: int | None=None
+    collectors_successful: int | None=None
+    collectors_failed: int | None=None
+
+# ==========================================================
+# Memory Analysis
+# ==========================================================
+@dataclass(slots=True)
+class AnalyzerResult:
+    name: str
+    state: Literal["COMPLETE", "PARTIAL", "UNAVAILABLE"]
+    checks: list[HealthCheck] = field(default_factory=list)
 
 
 @dataclass(slots=True)
 class MemoryAnalysis:
-    health_checks: list[HealthCheck]
-    recommendations: list[str] = field(default_factory=list)
-    component: str | None=None
-    analyzed_at: str | None=None
-    summary: str | None=None
-    severity: str | None=None
+
+    component: str
+
+    summary: str
+
+    analyzed_at: str
+
+    severity: Literal["INFO", "WARNING", "CRITICAL"]
+
     pressure: str | None = None
-    confidence: str | None=None
+
+    confidence: str | None = None
+
+    duration_ms: float | None = None
+
+    recommendations: list[str] = field(default_factory=list)
+
+    health_checks: list[HealthCheck] = field(default_factory=list)
+

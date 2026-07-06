@@ -125,12 +125,13 @@ def run_analysis(
     resource: str,
     success: dict | None = None,
     failure: dict | None = None,
+    **kwargs,
 ):
 
     caller = get_caller_context(inspect.unwrap(func))
 
     try:
-        analysis = func(result)
+        analysis = func(result=result, **kwargs)
 
     except Exception:
         emit_exception(

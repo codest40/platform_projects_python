@@ -8,7 +8,7 @@ from project.collectors.mem.pressure import collect_pressure
 from project.collectors.mem.cgroup import collect_cgroup
 from project.collectors.mem.numa import collect_numa
 from project.collectors.mem.process import collect_process_memory
-from project.analyzers.mem import analyze_memory_metrics
+from project.analyzers.mem.mem import analyze_memory_metrics
 from project.utils.start_event import run_collection, run_analysis
 from project.alerts.activate_alert import activate_run_alert
 
@@ -32,29 +32,36 @@ COLLECTORS = {
     "process": collect_process_memory,
 }
 
-
 def collect_memory() -> MemoryData:
 
     memory = MemoryData()
+    collectors_total = 0
+    collectors_successful = 0
 
     for field in fields(MEMTYPE):
 
         if not getattr(MEMTYPE, field.name):
             continue
 
+        collectors_total += 1
         collector = COLLECTORS.get(field.name)
 
         if collector is not None:
-            #print(line(f"{collector.__name__}"))
-            collector(memory)
+            try:
+                #print(line(f"{collector.__name__}"))
+                collector(memory)
+                collectors_successful += 1
+            except Exception as e:
+                raise RuntimeError(f"[MEM COLLECTOR] ERROR: {e}")
+
+        memory.collectors_total = collectors_total
+        memory.collectors_successful = collectors_successful
     return memory
 
 
 def start_memory_collection():
     result = run_collection(resource="memory", func=collect_memory)
     return result
-
-#start_memory_collection()
 
 def memory_pipeline():
   result = start_memory_collection()
@@ -73,3 +80,5 @@ def memory_pipeline():
           print("✅ Memory Metrics Analysis Passed")
   else:
     print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is veru wrong.. Check codes")
+
+memory_pipeline()

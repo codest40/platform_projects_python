@@ -7,11 +7,8 @@ from project.collectors.disk.mount import collect_mounts
 from project.collectors.disk.usage import collect_usage
 from project.collectors.disk.cgroup import collect_cgroup
 from project.collectors.disk.process import collect_process_disk
-from project.analyzers.disk import analyze_disk_metrics
-#from project.alerts.activate_alert import activate_run_alert
+from project.analyzers.disk.disk import analyze_disk_metrics
 from project.utils.decorators import trace
-#from project.utils.helpers import get_status
-#from project.utils.start_event import run_collection, run_analysis, save_state, load_states
 from project.utils.pipeline import pipeline_runner
 from project.collectors.disk.filter import filter_disk_state, compute_disk_rates
 

@@ -51,7 +51,7 @@ class HealthCheck:
     check: str
     status: str
     reason: str
-
+    category: str | None=None
 
 @dataclass(slots=True)
 class AnalysisEvent:

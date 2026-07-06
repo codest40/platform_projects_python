@@ -1,7 +1,7 @@
 from __future__ import annotations
 from project.models.disk import DiskData
 from project.utils.runners import EventRunner
-from project.utils.helpers import timestamp, get_status
+from project.utils.helpers import get_status
 
 def filter_disk_state(result: EventRunner) -> dict:
 

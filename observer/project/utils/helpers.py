@@ -40,6 +40,19 @@ def get_status(status: str) -> str:
         raise ValueError(f"Invalid status: {status}")
     return status
 
+# ==========================================================
+# Health Status
+# ==========================================================
+
+VALID_HEALTH = frozenset({
+    "PASS", "WARNING", "CRITICAL",
+})
+
+def get_health(health: str) -> str:
+    if health not in VALID_HEALTH:
+        raise ValueError(f"Invalid health status: {health}")
+
+    return health
 
 #==================================================================
 DEFAULT_WIDTH = 80

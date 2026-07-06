@@ -57,8 +57,8 @@ def collect_vmstat(memory: MemoryData) -> None:
         + stats.get("pgsteal_khugepaged", 0)
     )
 
-    memory.page_scan_rate = pgscan
-    memory.page_reclaim_rate = pgsteal
+    memory.pages_scanned = pgscan
+    memory.pages_reclaimed = pgsteal
     memory.reclaim_activity = pgscan
 
     # ==========================================================

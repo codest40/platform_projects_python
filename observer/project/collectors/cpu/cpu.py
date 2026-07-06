@@ -4,7 +4,7 @@ from project.utils.start_event import run_collection, run_analysis
 from project.alerts.activate_alert import activate_run_alert
 from project.utils.helpers import timestamp, get_status
 from project.models.cpu import Cpu_Data as records
-from project.analyzers.cpu import analyze_cpu_metrics
+from project.analyzers.cpu.cpu import analyze_cpu_metrics
 import psutil
 
 def get_cpu_model():
