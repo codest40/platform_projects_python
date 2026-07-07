@@ -1,4 +1,4 @@
-# Python Platform Engineering Projects
+# Python Platform Engineering Projects [in progress..]
 
 This repository contains a collection of independent Python projects focused on platform engineering, DevOps, automation, and observability.
 Each top-level directory represents a **standalone project** with its own purpose, documentation, and README describing its architecture, features, and usage.
