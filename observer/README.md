@@ -9,6 +9,7 @@ Based on its analysis, Observer can trigger configurable actions such as alerts,
 ## Current Focus
 
 * Collect critical system metrics
+* Structure and Compute them
 * Analyze platform health using rule-based logic
 * Generate structured logs and execution traces
 * Execute automated responses through pluggable executors
