@@ -37,12 +37,12 @@ def analyze_memory_pressure(
                 ),
             )
         )
-        return build_result(name="pressure", state="UNAVAILABLE", checks)
+        return build_result(name="pressure", state="UNAVAILABLE", checks=checks)
 
-     result = build_result(name="pressure", state="COMPLETE", checks)
     # ==========================================================
     # Full Stall (Highest Severity)
     # ==========================================================
+    result = build_result(name="pressure", state="COMPLETE", checks=checks)
 
     if full10 > 0:
         checks.append(

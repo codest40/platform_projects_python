@@ -54,15 +54,15 @@ def collect_disk() -> DiskData:
     return disk
 
 
-@trace("run_disk")
+@trace("run_collect_disk")
 def run_collect_disk():
   result = pipeline_runner(
       resource="disk",
-      collect=collect_disk,
-      analyze=analyze_disk_metrics,
-      filter=filter_disk_state,
-      compute=compute_disk_rates,
-      extra=run_collect_disk,
+      collect_func=collect_disk,
+      analyze_func=analyze_disk_metrics,
+      filter_func=filter_disk_state,
+      compute_func=compute_disk_rates,
+      extra_metadata=run_collect_disk,
   )
 
   return result

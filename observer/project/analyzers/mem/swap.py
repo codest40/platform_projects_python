@@ -34,7 +34,7 @@ def analyze_swap(
         else:
           state="UNAVAILABLE"
 
-        return build_result(name="swap", state=state, checks)
+        return build_result(name="swap", state=state, checks=checks)
 
     # ==========================================================
     # Swap Utilization
@@ -169,4 +169,4 @@ def analyze_swap(
     else:
       state="PARTIAL"
 
-    return build_result(name="swap", state=state, checks)
+    return build_result(name="swap", state=state, checks=checks)

@@ -145,9 +145,9 @@ def analyze_process(memory: MemoryData) -> build_result(name, state, checks=list
         count+=1
 
     TOTAL=4
-    if TOTAL=count:
+    if TOTAL==count:
       state="COMPLETE"
     else:
       state="PARTIAL"
 
-    return build_result(name="process", state=state, checks)
+    return build_result(name="process", state=state, checks=checks)

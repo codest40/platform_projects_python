@@ -5,6 +5,7 @@ AnalyzerState = Literal["COMPLETE", "PARTIAL", "UNAVAILABLE"]
 
 
 def build_result(
+    *,
     name: str,
     state: AnalyzerState,
     checks: list[HealthCheck],
@@ -26,16 +27,3 @@ def build_result(
 
 
 
-analyzers = [
-    analyze_cache,
-    analyze_capacity,
-    analyze_memory_growth,
-    analyze_commit,
-    analyze_container,
-    analyze_oom,
-    analyze_memory_pressure,
-    analyze_memory_paging,
-    analyze_memory_reclaim,
-    analyze_swap,
-    analyze_process,
-]

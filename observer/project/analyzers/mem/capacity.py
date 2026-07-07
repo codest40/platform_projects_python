@@ -61,11 +61,11 @@ def analyze_capacity(
                 reason="Memory capacity statistics are unavailable.",
             )
         )
-        return build_result("capacity", "UNAVAILABLE", checks)
+        return build_result(name="capacity", state="UNAVAILABLE", checks=checks)
 
     TOTAL=2
     if TOTAL == count:
-      state="COMPLETED"
+      state="COMPLETE"
     else:
       state="PARTIAL"
-    return build_result("capacity", state, checks)
+    return build_result(name="capacity", state=state, checks=checks)

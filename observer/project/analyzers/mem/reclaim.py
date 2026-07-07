@@ -123,4 +123,4 @@ def analyze_memory_reclaim(
             )
         )
 
-    return build_result(name="reclaim", state="COMPLETE", checks)
+    return build_result(name="reclaim", state="COMPLETE", checks=checks)

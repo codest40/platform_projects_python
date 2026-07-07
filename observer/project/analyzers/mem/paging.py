@@ -30,7 +30,7 @@ def analyze_memory_paging(
                 reason="Page fault statistics are unavailable.",
             )
         )
-        return build_result(name="paging", state="UNAVAILABLE", checks)
+        return build_result(name="paging", state="UNAVAILABLE", checks=checks)
 
     # ==========================================================
     # Major Page Faults
@@ -98,4 +98,4 @@ def analyze_memory_paging(
     else:
       state="PARTIAL"
 
-    return build_result(name="paging", state=state, checks)
+    return build_result(name="paging", state=state, checks=checks)

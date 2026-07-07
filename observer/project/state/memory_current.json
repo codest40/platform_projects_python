@@ -1,0 +1,21 @@
+{
+    "collected_at": 1783440479.5439684,
+    "swap_in": 0,
+    "swap_out": 0,
+    "pages_swapped_in": 0,
+    "pages_swapped_out": 0,
+    "major_page_faults": 13271,
+    "minor_page_faults": 33537991,
+    "total_page_faults": 33551262,
+    "pages_scanned": 0,
+    "pages_reclaimed": 0,
+    "allocation_failures": 0,
+    "oom_events": 0,
+    "container_oom_events": null,
+    "available": 10637668352,
+    "used": 6000619520,
+    "cached": 3727257600,
+    "dirty_pages": 2842624,
+    "rss": 32247808,
+    "container_memory_usage": null
+}

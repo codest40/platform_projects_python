@@ -32,6 +32,11 @@ icon = {
     "CRITICAL": "❌",
 }
 
+ANALYZER_STATE_SCORE = {
+    "COMPLETE": 1.0,
+    "PARTIAL": 0.8,
+    "UNAVAILABLE": 0.0,
+}
 
 def _resolve_severity(checks: list[HealthCheck]) -> str:
     """
@@ -95,62 +100,54 @@ def summarize_memory(
     # ==========================================================
 
     checks = _deduplicate_checks(checks)
-
     severity = _resolve_severity(checks)
     pressure = _resolve_pressure(checks)
 
     # ==========================================================
     # Confidence
     # ==========================================================
-    count_complete = 0
-    count_partial = 0
-    count_unavailable = 0
-    signal_count = len(signals)
-    signal_score = min(signal_count / 5, 1.0)
+    coverage = 0
     total_analyzers = len(metadata)
-    collected_failed = (
-        memory.collected_total -
-        memory.collected_successful
-    )
 
     for each, value in metadata.items():
-      if value["state"] == "COMPLETE":
-        count_complete+=1
-      elif value["state"] == "PARTIAL":
-        count_partial+=1
-      else:
-        count_unavailable+=1
+      coverage += ANALYZER_STATE_SCORE[value["state"]]
+      '''if value["state"] == "COMPLETE":
+      #  coverage+=1
+      #elif value["state"] == "PARTIAL":
+      #  coverage+=0.8'''
 
+    coverage_score = coverage / total_analyzers
 
     collector_score = (
         memory.collected_successful /
         memory.collected_total
     )
 
-    coverage_score = (
-        count_complete + count_partial * 0.5
-    ) / total_analyzers if total_analyzers else 0
-
-
-    failure_penalty = (
-        collected_failed /
-        memory.collected_total
-    )
+    signal_score= (
+        memory.signals_created / memory.signals_expected)
 
     score = (
-          collector_score * 0.30
-        + coverage_score  * 0.40
-        + signal_score    * 0.20
-        + (1 - failure_penalty) * 0.10
+          collector_score * 0.02
+        + coverage_score  * 0.52
+        + signal_score    * 0.46
     )
 
     confidence_score = round(score * 100)
-    if score > 0.85:
-        confidence = f"HIGH {confidence_score}"
-    elif score >= 0.75:
-        confidence = f"MEDIUM {confidence_score}"
+    def add(LEV):
+        return (f"{LEV} {confidence_score}%",
+                f"analysis_score: {round(coverage_score, 2)}",
+                f"signal_score: {round(signal_score, 2)}",
+                f"collector_score: {round(collector_score, 2)}",)
+
+    if score >= 0.75:
+        LEV="HIGH"
+        confidence = add(LEV)
+    elif score >= 0.50:
+        LEV="MEDIUM"
+        confidence = add(LEV)
     else:
-        confidence = f"LOW {confidence_score}"
+        LEV="LOW"
+        confidence = add(LEV)
 
     # ==========================================================
     # Build recommendations (rule-based)

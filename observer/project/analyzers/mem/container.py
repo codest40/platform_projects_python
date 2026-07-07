@@ -46,7 +46,7 @@ def analyze_container(memory: MemoryData) -> build_result(name, state, checks=li
                 ),
             )
         )
-        return build_result(name="container", state="UNAVAILABLE", checks)
+        return build_result(checks=checks, name="container", state="UNAVAILABLE")
 
     utilization = usage / limit * 100
 

@@ -67,6 +67,8 @@ def compute_memory_rates(
     """
     Compute interval metrics between two memory snapshots.
     """
+    if previous["collected_at"] is None:
+        return memory
 
     elapsed = current["collected_at"] - previous["collected_at"]
 
@@ -105,8 +107,8 @@ def compute_memory_rates(
     memory.swap_in_mb_per_sec = rate("swap_in") / MB
     memory.swap_out_mb_per_sec = rate("swap_out") / MB
 
-    memory.pages_swapped_in_per_sec = rate("pages_swapped_in")
-    memory.pages_swapped_out_per_sec = rate("pages_swapped_out")
+    memory.pages_swapped_in_mb_per_sec = rate("pages_swapped_in")
+    memory.pages_swapped_out_mb_per_sec = rate("pages_swapped_out")
 
     # =====================================================
     # Page Faults
@@ -179,5 +181,7 @@ def compute_memory_rates(
     memory.container_memory_growth_mb_per_sec = growth_mb(
         "container_memory_usage"
     )
+
+    memory.seen = True
 
     return memory

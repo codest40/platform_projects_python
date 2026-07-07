@@ -5,9 +5,9 @@ from project.utils.helpers import timestamp, get_status
 
 def analyze_disk_metrics(result) -> DiskAnalysis:
 
-    if result.status != get_status("SUCCESS"):
+    if not result.seen:
         raise RuntimeError(
-            "❌ [DISK ANALYZER] Disk collection did not complete successfully."
+            "❌ [DISK ANALYZER] Disk Pipeline did NOT reach Computation Stage."
         )
 
     disk: DiskData = result

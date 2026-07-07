@@ -1,7 +1,7 @@
 """
 Memory Normalization Layer.
 
-Converts MemoryData → structured Signals
+Converts MemoryData → structured Signals ie add more meaning to each metrics
 This is the ONLY place where:
 - unit normalization happens
 - ratios are derived
@@ -9,12 +9,11 @@ This is the ONLY place where:
 """
 
 from __future__ import annotations
-
+from dataclasses import dataclass
 from project.models.memory import MemoryData, Signal
 
 
 MB = 1024 * 1024
-
 
 def normalize(memory: MemoryData) -> list[Signal]:
     signals: list[Signal] = []
@@ -22,8 +21,8 @@ def normalize(memory: MemoryData) -> list[Signal]:
     # ==========================================================
     # Host Memory (core snapshot signals)
     # ==========================================================
-
-    if memory.total:
+    memory.signals_expected +=1
+    if memory.total is not None:
         signals.append(Signal(
             name="memory.total",
             value=memory.total / MB,
@@ -31,8 +30,10 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="total",
             unit="MB"
         ))
+        memory.signals_created +=1
 
-    if memory.used:
+    memory.signals_expected +=1
+    if memory.used is not None:
         signals.append(Signal(
             name="memory.used",
             value=memory.used / MB,
@@ -40,8 +41,10 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="total",
             unit="MB"
         ))
+        memory.signals_created +=1
 
-    if memory.available:
+    memory.signals_expected +=1
+    if memory.available is not None:
         signals.append(Signal(
             name="memory.available",
             value=memory.available / MB,
@@ -49,12 +52,14 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="total",
             unit="MB"
         ))
+        memory.signals_created +=1
+
 
     # ==========================================================
     # Utilization ratios (normalized, not raw)
     # ==========================================================
-
-    if memory.used and memory.total:
+    memory.signals_expected +=1
+    if memory.used is not None and memory.total is not None:
         signals.append(Signal(
             name="memory.utilization_ratio",
             value=memory.used / memory.total,
@@ -62,8 +67,10 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="ratio",
             unit="ratio"
         ))
+        memory.signals_created +=1
 
-    if memory.available and memory.total:
+    memory.signals_expected +=1
+    if memory.available is not None and memory.total is not None:
         signals.append(Signal(
             name="memory.available_ratio",
             value=memory.available / memory.total,
@@ -71,12 +78,13 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="ratio",
             unit="ratio"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # Swap normalization
     # ==========================================================
-
-    if memory.swap_total:
+    memory.signals_expected +=1
+    if memory.swap_total is not None:
         signals.append(Signal(
             name="swap.total",
             value=memory.swap_total / MB,
@@ -84,8 +92,10 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="total",
             unit="MB"
         ))
+        memory.signals_created +=1
 
-    if memory.swap_used:
+    memory.signals_expected +=1
+    if memory.swap_used is not None:
         signals.append(Signal(
             name="swap.used",
             value=memory.swap_used / MB,
@@ -93,7 +103,9 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="total",
             unit="MB"
         ))
+        memory.signals_created +=1
 
+    memory.signals_expected +=1
     if memory.swap_percent is not None:
         signals.append(Signal(
             name="swap.utilization_ratio",
@@ -102,11 +114,13 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="ratio",
             unit="ratio"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # Commit normalization
     # ==========================================================
 
+    memory.signals_expected +=1
     if memory.commit_percent is not None:
         signals.append(Signal(
             name="commit.utilization_ratio",
@@ -115,11 +129,11 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="ratio",
             unit="ratio"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # PSI (RAW ONLY — NO INTERPRETATION)
     # ==========================================================
-
     psi_fields = [
         ("psi.some.10", memory.psi_some_avg10),
         ("psi.some.60", memory.psi_some_avg60),
@@ -130,6 +144,7 @@ def normalize(memory: MemoryData) -> list[Signal]:
     ]
 
     for name, value in psi_fields:
+        memory.signals_expected +=1
         if value is not None:
             signals.append(Signal(
                 name=name,
@@ -138,11 +153,12 @@ def normalize(memory: MemoryData) -> list[Signal]:
                 type="ratio",
                 unit="ratio"
             ))
+            memory.signals_created +=1
 
     # ==========================================================
-    # Paging signals (rates already normalized)
+    # Paging signals
     # ==========================================================
-
+    memory.signals_expected +=1
     if memory.page_faults_per_sec is not None:
         signals.append(Signal(
             name="paging.page_faults",
@@ -151,7 +167,10 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="events/sec"
         ))
+        memory.signals_created +=1
 
+
+    memory.signals_expected +=1
     if memory.major_page_faults_per_sec is not None:
         signals.append(Signal(
             name="paging.major_faults",
@@ -160,7 +179,9 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="events/sec"
         ))
+        memory.signals_created +=1
 
+    memory.signals_expected +=1
     if memory.minor_page_faults_per_sec is not None:
         signals.append(Signal(
             name="paging.minor_faults",
@@ -169,11 +190,13 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="events/sec"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # Swap activity (already rates)
     # ==========================================================
 
+    memory.signals_expected +=1
     if memory.swap_in_mb_per_sec is not None:
         signals.append(Signal(
             name="swap.in_rate",
@@ -182,7 +205,9 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="MB/s"
         ))
+        memory.signals_created +=1
 
+    memory.signals_expected +=1
     if memory.swap_out_mb_per_sec is not None:
         signals.append(Signal(
             name="swap.out_rate",
@@ -191,11 +216,12 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="MB/s"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # Process memory growth (already rate)
     # ==========================================================
-
+    memory.signals_expected +=1
     if memory.process_memory_growth_mb_per_sec is not None:
         signals.append(Signal(
             name="process.memory_growth",
@@ -204,7 +230,9 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="MB/s"
         ))
+        memory.signals_created +=1
 
+    memory.signals_expected +=1
     if memory.container_memory_growth_mb_per_sec is not None:
         signals.append(Signal(
             name="container.memory_growth",
@@ -213,11 +241,12 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="MB/s"
         ))
+        memory.signals_created +=1
 
     # ==========================================================
     # OOM signals
     # ==========================================================
-
+    memory.signals_expected +=1
     if memory.oom_events_per_sec is not None:
         signals.append(Signal(
             name="oom.kernel_rate",
@@ -226,7 +255,9 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="events/sec"
         ))
+        memory.signals_created +=1
 
+    memory.signals_expected +=1
     if memory.container_oom_events_per_sec is not None:
         signals.append(Signal(
             name="oom.container_rate",
@@ -235,5 +266,6 @@ def normalize(memory: MemoryData) -> list[Signal]:
             type="rate",
             unit="events/sec"
         ))
+        memory.signals_created +=1
 
     return signals

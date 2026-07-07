@@ -1,7 +1,7 @@
 """
 Memory Pipeline Orchestrator.
 
-This is the ONLY entry point for memory analysis.
+This is the entry point for memory analysis.
 It wires all layers together:
 - analyzers
 - normalizer
@@ -22,7 +22,7 @@ from project.analyzers.mem.paging import analyze_memory_paging
 from project.analyzers.mem.reclaim import analyze_memory_reclaim
 from project.analyzers.mem.swap import analyze_swap
 from project.analyzers.mem.process import analyze_process
-from project.analyzers.mem.data import build_result, analyzers
+from project.analyzers.mem.data import build_result
 
 from project.analyzers.mem.normalizer import normalize
 from project.analyzers.mem.summary import summarize_memory
@@ -30,16 +30,22 @@ from project.models.memory import Signal, AnalyzerResult
 from project.utils.runners import EventRunner
 from project.utils.helpers import get_status
 
+analyzers = [
+    analyze_cache, analyze_capacity, analyze_memory_growth,
+    analyze_commit, analyze_container, analyze_oom,
+    analyze_memory_pressure, analyze_memory_paging, analyze_memory_reclaim,
+    analyze_swap, analyze_process,
+]
 
 def analyze_memory_metrics(result: EventRunner) -> MemoryAnalysis:
 
-    if result.status != get_status("SUCCESS"):
+    if not result.seen:
         raise RuntimeError(
-            "❌ [MEMORY ANALYZER] Memory collection did not complete successfully"
+            "❌ [MEMORY ANALYZER] Memory Pipeline did NOT reach Computation stage!"
         )
 
 
-    memory = result.data
+    memory = result
     checks: list[HealthCheck] = []
     metadata: dict = {}
 
@@ -48,7 +54,7 @@ def analyze_memory_metrics(result: EventRunner) -> MemoryAnalysis:
     # ==========================================================
 
     for each in analyzers:
-      result = AnalyzerResult(each(memory))
+      result: AnalyzerResult = each(memory)
       checks.extend(result.checks)
       metadata[result.name] = {"state": result.state, "total_checks": len(result.checks)}
 

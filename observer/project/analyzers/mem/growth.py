@@ -124,4 +124,4 @@ def analyze_memory_growth(
     else:
       state = "PARTIAL"
 
-    return build_result("growth", state, checks=checks,)
+    return build_result(name="growth", state=state, checks=checks,)

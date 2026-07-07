@@ -47,6 +47,9 @@ def compute_disk_rates(
     current: dict,
 ) -> DiskData:
 
+    if previous["collected_at"] is None:
+        return disk
+
     elapsed = current["collected_at"] - previous["collected_at"]
 
     if elapsed <= 0:
@@ -178,5 +181,5 @@ def compute_disk_rates(
         container_write / MB
     ) / elapsed
 
-    disk.status = get_status("SUCCESS")
+    disk.seen = True
     return disk

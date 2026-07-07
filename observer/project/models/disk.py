@@ -157,7 +157,7 @@ class DiskData:
     container_read_mb_per_sec: float | None = None
     container_write_mb_per_sec: float | None = None
     collected_at: float | None = None
-    status: str = "PENDING"
+    seen: bool = False
 
 # ==========================================================
 # Analysis

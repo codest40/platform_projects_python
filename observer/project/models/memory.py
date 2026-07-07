@@ -209,9 +209,10 @@ class MemoryData:
     pages_reclaimed_per_sec: float | None = None
 
     allocation_failures_per_sec: float | None = None
-
-    swap_in_mb_per_sec: float | None = None
+    swap_in_mb_per_sec: float | None=None
     swap_out_mb_per_sec: float | None = None
+    pages_swapped_in_mb_per_sec: float | None = None
+    pages_swapped_out_mb_per_sec: float | None = None
 
     available_memory_change_mb_per_sec: float | None = None
     used_memory_change_mb_per_sec: float | None = None
@@ -233,9 +234,11 @@ class MemoryData:
     # ==========================================================
 
     comment: str | None = None
-    collectors_total: int | None=None
-    collectors_successful: int | None=None
-    collectors_failed: int | None=None
+    collected_total: int | None=None
+    collected_successful: int | None=None
+    signals_expected: int = 0
+    signals_created: int = 0
+    seen: bool = False
 
 # ==========================================================
 # Memory Analysis
@@ -260,7 +263,7 @@ class MemoryAnalysis:
 
     pressure: str | None = None
 
-    confidence: str | None = None
+    confidence: tuple | None = None
 
     duration_ms: float | None = None
 

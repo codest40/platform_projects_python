@@ -77,8 +77,8 @@ def analyze_cache(memory: MemoryData) -> build_result(name, state, checks=list[H
 
     TOTAL=2
     if TOTAL == available:
-      state="COMPLETED"
+      state="COMPLETE"
     else:
       state="PARTIAL"
 
-    return build_result(name="cache", state=state, checks)
+    return build_result(name="cache", state=state, checks=checks)
