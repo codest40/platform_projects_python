@@ -1,6 +1,6 @@
 from project.logging.logger import emit
 from project.utils.helpers import timestamp
-import platform
+import platform, psutil
 
 def get_cpu_model():
     with open("/proc/cpuinfo") as f:
@@ -21,3 +21,5 @@ emit(
 )
 
 print(f"Timestamp: {timestamp(unix=True)}")
+
+print(psutil.cpu_stats())

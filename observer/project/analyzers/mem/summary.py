@@ -12,7 +12,6 @@ It produces:
 """
 
 from __future__ import annotations
-
 from project.models.memory import MemoryData, HealthCheck, MemoryAnalysis, Signal
 from project.utils.helpers import timestamp
 

@@ -1,0 +1,9 @@
+{
+    "collected_at": 1783531491.0954235,
+    "context_switches": 103647812,
+    "interrupts": 54959630,
+    "soft_interrupts": 32380281,
+    "syscalls": 0,
+    "throttled_periods": null,
+    "throttled_usec": null
+}

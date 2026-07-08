@@ -261,9 +261,11 @@ class MemoryAnalysis:
 
     severity: Literal["INFO", "WARNING", "CRITICAL"]
 
-    pressure: str | None = None
+    pressure: list | None = None
 
     confidence: tuple | None = None
+
+    signals: list | None=None
 
     duration_ms: float | None = None
 

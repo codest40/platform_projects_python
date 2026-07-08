@@ -459,7 +459,6 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
         component="Disk",
         summary=summary,
         confidence=confidence,
-        signals=signals,
         severity=severity,
         health_checks=checks,
         analyzed_at=timestamp(),

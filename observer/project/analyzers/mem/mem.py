@@ -27,8 +27,6 @@ from project.analyzers.mem.data import build_result
 from project.analyzers.mem.normalizer import normalize
 from project.analyzers.mem.summary import summarize_memory
 from project.models.memory import Signal, AnalyzerResult
-from project.utils.runners import EventRunner
-from project.utils.helpers import get_status
 
 analyzers = [
     analyze_cache, analyze_capacity, analyze_memory_growth,
@@ -37,7 +35,7 @@ analyzers = [
     analyze_swap, analyze_process,
 ]
 
-def analyze_memory_metrics(result: EventRunner) -> MemoryAnalysis:
+def analyze_memory_metrics(result: MemoryData) -> MemoryAnalysis:
 
     if not result.seen:
         raise RuntimeError(

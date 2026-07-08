@@ -1,10 +1,9 @@
-
 from project.utils.decorators import trace
-from project.utils.start_event import run_collection, run_analysis
-from project.alerts.activate_alert import activate_run_alert
-from project.utils.helpers import timestamp, get_status
+from project.utils.helpers import timestamp
 from project.models.cpu import Cpu_Data as records
 from project.analyzers.cpu.cpu import analyze_cpu_metrics
+from project.utils.pipeline import pipeline_runner
+from project.collectors.cpu.filter_compute import filter_cpu_state, compute_cpu_rates
 import psutil
 
 def get_cpu_model():
@@ -14,98 +13,139 @@ def get_cpu_model():
                 return line.split(":", 1)[1].strip()
     return "Unknown"
 
-@trace("cpu_collected_metrics")
+
+@trace("collect_cpu_metrics")
 def collect_cpu_metrics():
 
-  @trace("cpu_data")
-  def cpu_info():
-    cpu_times = psutil.cpu_times_percent(interval=0.5)
-    freq = psutil.cpu_freq()
-    usage_percent = psutil.cpu_percent(interval=1.5)
+    @trace("cpu_data")
+    def cpu_info():
 
-    if usage_percent < 30:
-      severity = "INFO"
-      summary = (
-          f"CPU utilization is healthy "
-          f"({usage_percent:.1f}% in use)."
-      )
-      comment = "No Comment"
+        cpu_times = psutil.cpu_times_percent(interval=0.5)
+        cpu_stats = psutil.cpu_stats()
+        freq = psutil.cpu_freq()
 
-    elif usage_percent <= 80:
-      severity = "WARNING"
-      summary = (
-          f"CPU utilization is elevated "
-          f"({usage_percent:.1f}% in use)."
-      )
-      comment = "Keep an eye on it henceforth"
+        usage_percent = psutil.cpu_percent(interval=1.5)
 
-    else:
-      severity = "CRITICAL"
-      summary = (
-          f"CPU utilization is critically high !"
-          f"({usage_percent:.1f}% in use); workload performance may be affected."
-      )
-      comment = "Immediate attention Required"
+        if usage_percent < 30:
+            severity = "INFO"
+            summary = (
+                f"CPU utilization is healthy "
+                f"({usage_percent:.1f}% in use)."
+            )
+            comment = "No Comment"
 
-    cpu_model = get_cpu_model()
-    return records(
+        elif usage_percent <= 80:
+            severity = "WARNING"
+            summary = (
+                f"CPU utilization is elevated "
+                f"({usage_percent:.1f}% in use)."
+            )
+            comment = "Keep an eye on it henceforth"
 
-        physical_cores = psutil.cpu_count(logical=False),
-        logical_cores = psutil.cpu_count(logical=True),
+        else:
+            severity = "CRITICAL"
+            summary = (
+                f"CPU utilization is critically high "
+                f"({usage_percent:.1f}% in use); workload performance may be affected."
+            )
+            comment = "Immediate attention Required"
 
-        usage_percent = usage_percent,
-        frequency_mhz = freq.current if freq else 0.0,
-        load_average = psutil.getloadavg(),
-        user_percent = cpu_times.user,
-        system_percent = cpu_times.system,
-        idle_percent = cpu_times.idle,
-        iowait_percent = getattr(cpu_times, "iowait", 0.0),
+        cpu_model = get_cpu_model()
 
-        cpu_model = cpu_model,
-        per_core_util = psutil.cpu_percent(interval=None, percpu=True),
-        severity=severity,
-        summary=summary,
-        comment=comment,
-    )
+        return records(
+
+            # ==================================================
+            # CPU Information
+            # ==================================================
+
+            cpu_model=cpu_model,
+            physical_cores=psutil.cpu_count(logical=False),
+            logical_cores=psutil.cpu_count(logical=True),
+
+            # ==================================================
+            # Utilization
+            # ==================================================
+
+            usage_percent=usage_percent,
+            per_core_util=psutil.cpu_percent(interval=None, percpu=True),
+
+            # ==================================================
+            # CPU Time Breakdown
+            # ==================================================
+
+            user_percent=cpu_times.user,
+            system_percent=cpu_times.system,
+            idle_percent=cpu_times.idle,
+            iowait_percent=getattr(cpu_times, "iowait", 0.0),
+
+            steal_percent=getattr(cpu_times, "steal", 0.0),
+            irq_percent=getattr(cpu_times, "irq", 0.0),
+            softirq_percent=getattr(cpu_times, "softirq", 0.0),
+            nice_percent=getattr(cpu_times, "nice", 0.0),
+
+            # ==================================================
+            # Scheduler
+            # ==================================================
+
+            context_switches=cpu_stats.ctx_switches,
+            interrupts=cpu_stats.interrupts,
+            soft_interrupts=cpu_stats.soft_interrupts,
+            syscalls=getattr(cpu_stats, "syscalls", 0),
+
+            # ==================================================
+            # Frequency / Load
+            # ==================================================
+
+            frequency_mhz=freq.current if freq else 0.0,
+            max_frequency_mhz=freq.max if freq else 0.0,
+            min_frequency_mhz=freq.min if freq else 0.0,
+
+            load_average=psutil.getloadavg(),
+
+            # ==================================================
+            # Summary
+            # ==================================================
+
+            severity=severity,
+            summary=summary,
+            comment=comment,
+        )
 
 
-  #print("Running [Starting Collection function] for CPU...")
-  return run_collection(
-        resource="cpu",
-        func=cpu_info,
+    return cpu_info()
 
-        success={
+
+
+success={
             "event_name": "CPU_Metrics",
             "operation": "Collect",
             "collector": "CPU Metrics Collector",
             "tags": ["cpu", "cpu_info", "load_avg"],
-        },
+}
 
-        failure={
+failure={
             "event_name": "cpu_metrics",
             "summary": "CPU metric collection failed",
             "comment": "Recheck code logic.",
             "tags": ["cpu", "metrics", "cpu_exception"],
-        },
-      )
+}
+
+
+@trace("start_cpu_run")
+def start_cpu_collection():
+  result = pipeline_runner(
+      resource="cpu",
+      collect_func=collect_cpu_metrics,
+      analyze_func=analyze_cpu_metrics,
+      filter_func=filter_cpu_state,
+      compute_func=compute_cpu_rates,
+      extra_metadata={"collect_success": success, "collect_failure": failure},
+  )
+
+  return result
 
 @trace("cpu_pipeline")
 def cpu_pipeline():
-  result = collect_cpu_metrics()
-  if result is None:
-    print(f"❌ ERROR: Emit() response returned: {result}")
-  elif result.status == get_status("FAILED"):
-      print("❌ Collecting Cpu Metrics Failed")
-      activate_run_alert(title="Cpu Metrics collection Alert", message=f"❌ Cpu Metric Collection Failed: {result}", severity="CRITICAL",)
-  elif result.status == get_status("SUCCESS"):
-      print("✅ Cpu Metrics Collection Passed")
-      print(result)
-      #res = run_analysis(resource="cpu", func=analyze_cpu_metrics, result=result)
-      #if not res:
-      #    print("❌ Cpu Analysis Failed")
-      print("✅ Cpu Metrics Analysis Passed")
-  else:
-    print(f"❌ ERROR: Emit() response returned: {result.status} \nSomething is very wrong")
-
+    start_cpu_collection()
 
 cpu_pipeline()
