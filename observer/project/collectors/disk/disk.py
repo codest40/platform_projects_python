@@ -38,19 +38,24 @@ COLLECTORS = {
 def collect_disk() -> DiskData:
 
     disk = DiskData()
+    total=0
+    successful=0
 
     for field in fields(DISKTYPE):
 
         if not getattr(DISKTYPE, field.name):
             continue
-
+        total+=1
         collector = COLLECTORS.get(field.name)
 
         if collector is None:
             continue
 
         collector(disk)
+        successful+=1
 
+    disk.collected_total = total
+    disk.collected_successful = successful
     return disk
 
 

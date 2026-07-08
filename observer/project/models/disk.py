@@ -17,6 +17,13 @@ class GetDiskType:
     process: bool = False
     cgroup: bool = False
 
+@dataclass
+class Signal:
+    name: str
+    value: float
+    domain: str
+    type: str            # rate | total | ratio
+    unit: str | None = None
 
 # ==========================================================
 # Disk Data
@@ -156,7 +163,12 @@ class DiskData:
 
     container_read_mb_per_sec: float | None = None
     container_write_mb_per_sec: float | None = None
+
     collected_at: float | None = None
+    collected_total: int = 0
+    collected_successful: int = 0
+    signals_expected: int = 0
+    signals_created: int = 0
     seen: bool = False
 
 # ==========================================================
@@ -174,7 +186,9 @@ class DiskAnalysis:
 
     analyzed_at: str
 
-    confidence: str | None = None
+    confidence: tuple | None = None
+
+    signals: list | None=None
 
     duration_ms: float | None = None
 

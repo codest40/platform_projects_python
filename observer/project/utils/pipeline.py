@@ -12,12 +12,12 @@ class ObserverError(Exception):
 #===========================================
 # Pipeline runner
 #=============================================
-def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_func, extra_metadata, alert_title=None, message=None, serverity=None):
+def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_func, extra_metadata, alert_title=None, message=None, severity=None):
   result = run_collection(resource=resource, func=collect_func)
   if result is None:
       raise ValueError(f"❌ [PIPELINE RUNNER] {resource} ERROR: Emit() response returned: {result}")
   elif result.status == get_status("FAILED"):
-      if title is None:
+      if alert_title is None:
         title=f"{resource} Metrics collection Alert"
       if message is None:
         message=f"❌ {resource} Metric Collection failed {result}"
