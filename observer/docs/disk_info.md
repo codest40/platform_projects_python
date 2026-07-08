@@ -1,4 +1,4 @@
-# Disk Uasge helper
+# Disk Metrics Reference
 
 | Metric                       | Description                                                          |
 | ---------------------------- | -------------------------------------------------------------------- |
