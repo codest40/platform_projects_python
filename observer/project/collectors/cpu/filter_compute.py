@@ -154,7 +154,7 @@ def compute_cpu_rates(
     cpu.throttled_periods_per_sec = _rate(
         current,
         previous,
-        "throttled_periods",
+        "nr_throttled",
         elapsed,
     )
 
