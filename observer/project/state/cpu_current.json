@@ -1,8 +1,8 @@
 {
-    "collected_at": 1783599960.7144356,
-    "context_switches": 48591034,
-    "interrupts": 31897733,
-    "soft_interrupts": 20002610,
+    "collected_at": 1783600522.5605416,
+    "context_switches": 51057557,
+    "interrupts": 33535698,
+    "soft_interrupts": 21058397,
     "syscalls": 0,
     "cpu_throttled_periods": 0,
     "cpu_throttled_usec": 0

@@ -81,11 +81,11 @@ def analyze_cpu_metrics(
     # ======================================================
     # 2. Normalize Signals
     # ======================================================
-    print("FROM MAIN CPU FIELE:")
-    print(cpu)
-    print(type(cpu))
-    print(cpu.signals_expected)
-    print(type(cpu.signals_expected))
+    #print("FROM MAIN CPU FIELE:")
+    #print(cpu)
+    #print(type(cpu))
+    #print(cpu.signals_expected)
+    #print(type(cpu.signals_expected))
     signals: list[Signal] = normalize(cpu)
 
     # ======================================================
