@@ -224,6 +224,8 @@ def summarize_cpu(
             f"{ICON['INFO']} CPU is operating within normal limits."
         )
 
+    #print("FROM SUMMARY: ")
+    #print(cpu)
     return CpuAnalysis(
         component="cpu",
         summary=summary,

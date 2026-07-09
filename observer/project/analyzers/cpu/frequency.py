@@ -17,7 +17,6 @@ from project.analyzers.cpu.data import build_result
 def analyze_frequency(cpu: CpuData):
 
     checks: list[HealthCheck] = []
-
     count = 0
     TOTAL = 4
 
@@ -75,10 +74,10 @@ def analyze_frequency(cpu: CpuData):
 
     if cpu.frequency_ratio is not None:
 
-        if cpu.frequency_ratio <= 0.30:
+        if cpu.frequency_ratio <= 0.20:
             status = "CRITICAL"
 
-        elif cpu.frequency_ratio <= 0.60:
+        elif cpu.frequency_ratio <= 0.50:
             status = "WARNING"
 
         else:
