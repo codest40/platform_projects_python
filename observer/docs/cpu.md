@@ -3,8 +3,7 @@
 ## Purpose
 
 The CPU pipeline helps determine whether the CPU is contributing to system performance problems.
-
-Rather than relying on a single metric such as CPU utilization, Observer evaluates multiple CPU health indicators before reaching a conclusion. This approach reduces false positives and provides operators with a more reliable assessment of overall CPU health.
+Observer evaluates raw operating system metrics, computes derived CPU indicators, applies specialized analyzers to each aspect of CPU behavior, normalizes the resulting signals, and finally combines them into a single evidence-based assessment of CPU health.
 
 ---
 
