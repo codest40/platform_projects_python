@@ -2,10 +2,8 @@
 
 ## Purpose
 
-The Memory pipeline evaluates the overall health of the system's memory subsystem and determines whether memory is likely contributing to application slowdowns or system instability.
-
+Observer evaluates memory health using multiple independent data sources, derived metrics, and specialized analyzers rather than relying solely on memory utilization. By combining kernel pressure information, paging behavior, reclaim activity, swap usage, commit accounting, container statistics, and process memory usage.
 Unlike simple monitoring tools that focus primarily on memory utilization, Observer examines several kernel-level indicators to distinguish between normal memory usage and genuine memory pressure. This helps operators identify situations where memory is becoming a bottleneck before they result in service failures.
-
 ---
 
 ## Execution Flow
@@ -15,6 +13,14 @@ Memory Pipeline
       │
       ▼
 Collect Memory Metrics
+      │
+      ├── psutil
+      ├── /proc
+      ├── vmstat
+      ├── PSI
+      ├── cgroups
+      ├── NUMA
+      └── Processes
       │
       ▼
 Run Collection
@@ -26,28 +32,41 @@ Run Collection
       └── Exception Handling
       │
       ▼
-Emit Collection Event (log)
+Compute Derived Metrics
+      │
+      ├── Growth Rates
+      ├── Paging Rates
+      ├── Reclaim Rates
+      ├── Commit Ratio
+      ├── Cache Ratios
+      └── Memory Pressure Ratios
       │
       ▼
-Analyze Memory Metrics
+Emit Collection Event
       │
       ▼
-Health Checks
+Run Memory Analyzers
       │
-      ├── Available Memory
-      ├── Swap Activity
-      ├── Memory Pressure (PSI)
-      ├── OOM / Allocation Failures
-      ├── Memory Reclaim
-      ├── Commit Accounting
-      ├── Major Page Faults
-      └── Filesystem Cache
+      ├── Capacity
+      ├── Growth
+      ├── Swap
+      ├── Pressure
+      ├── Reclaim
+      ├── Paging
+      ├── OOM
+      ├── Commit
+      ├── Cache
+      ├── Container
+      └── Process
       │
       ▼
-Generate Analysis
+Normalize Signals
       │
       ▼
-Emit Analysis Event (log)
+Summary Engine
+      │
+      ▼
+Emit Analysis Event
       │
       ▼
 Executors / Alerts / Automation
@@ -58,6 +77,19 @@ Executors / Alerts / Automation
 ## Stage 1 — Metric Collection
 
 The collector gathers memory information from multiple Linux interfaces to build a detailed view of the system's memory state.
+collectors/mem/
+
+```
+├── psutil.py
+├── proc.py
+├── vmstat.py
+├── pressure.py
+├── cgroup.py
+├── numa.py
+├── process.py
+├── filter_compute.py
+└── mem.py
+```
 
 Current data sources include:
 
@@ -147,7 +179,13 @@ Likewise, relatively low memory utilization does not always indicate a healthy s
 
 ## Stage 5 — Overall Verdict
 
-Once every health check has completed, Observer combines the results into an overall memory assessment.
+The Summary Engine combines analyzer results, normalized signals, collection coverage, and analyzer completion status into a single evidence-based assessment of overall memory health. It determines:
+
+- overall severity
+- confidence
+- recommendations
+- health summary
+- final analysis object
 
 Depending on the observed conditions, the analysis may conclude that:
 
@@ -166,27 +204,6 @@ The completed assessment is emitted as a structured analysis event.
 In addition to the overall verdict, the event records the individual health checks, severity, confidence, recommendations, and trace information. This provides an audit trail explaining why the analyzer reached its conclusion.
 
 ---
-
-## Current Scope
-
-The Memory pipeline already evaluates a broad range of Linux memory indicators.
-However, Some metrics are currently evaluated using cumulative counters reported by the Linux kernel. While these values provide useful context, interpreting them as rates over time would produce more accurate diagnostics.
-
-Future improvements would include:
-
-* Page fault rates instead of total page faults since boot.
-* Memory reclaim rates over configurable intervals.
-* Allocation failure rates.
-* Swap-in and swap-out rates.
-* Long-term memory pressure trend analysis.
-* NUMA locality trend analysis.
-* Working set growth over time.
-* Historical memory leak detection.
-
-These enhancements will improve the analyzer's ability to distinguish short-lived spikes from sustained memory problems.
-
----
-
 ## Stage 7 — Response
 
 The Memory pipeline ends after analysis, but its results are designed to be consumed by other parts of Observer.
