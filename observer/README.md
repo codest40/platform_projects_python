@@ -17,6 +17,6 @@ Based on its analysis, Observer can trigger configurable actions such as alerts,
 * Cloud and Kubernetes integrations
 * Alerting and notification channels
 * AI-assisted analysis and recommendations (planned for future releases)
-* Major aim here is to find results enough to exclude resource (mark it healthy) from other debugging factors
+* Major focus of Observer is to spot resources that have potential for production issues and find results enough to exclude/include resource (mark it healthy) from other debugging factors
 
 Observer is being developed as a modular platform engineering tool, allowing collectors, analyzers, executors, and alerting components to evolve independently while working together as a complete observability pipeline.
