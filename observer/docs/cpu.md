@@ -16,6 +16,12 @@ CPU Pipeline
      ▼
 Collect CPU Metrics
      │
+     ├── psutil
+     ├── /proc
+     ├── cgroups
+     ├── PSI
+     └── Scheduler
+     │
      ▼
 Run Collection
      │
@@ -26,26 +32,40 @@ Run Collection
      └── Exception Handling
      │
      ▼
-Emit Collection Event (log)
+Compute Derived Metrics
      │
-     ▼
-Analyze CPU Metrics
-     │
-     ▼
-Health Checks
-     │
-     ├── CPU Utilization
-     ├── Idle CPU
-     ├── Load Average
-     ├── IO Wait
+     ├── Rates/sec
+     ├── Ratios
+     ├── Load/Core
      ├── Core Balance
-     └── Kernel Activity
+     └── Frequency Ratio
      │
      ▼
-Generate Analysis
+Emit Collection Event
      │
      ▼
-Emit Analysis Event (log)
+Run CPU Analyzers
+     │
+     ├── Utilization
+     ├── Idle
+     ├── IO Wait
+     ├── Load
+     ├── Capacity
+     ├── Frequency
+     ├── Balance
+     ├── Kernel
+     ├── Steal
+     ├── Pressure
+     └── Container
+     │
+     ▼
+Normalize Signals
+     │
+     ▼
+Summary Engine
+     │
+     ▼
+Emit Analysis Event
      │
      ▼
 Executors / Alerts / Automation
@@ -55,10 +75,16 @@ Executors / Alerts / Automation
 
 ## Stage 1 — Metric Collection
 
-The collection stage gathers a snapshot of the system's current CPU state from the operating system.
+The CPU collector gathers metrics from multiple operating system interfaces. Each collector is responsible for a specific data source, making the pipeline portable across different Linux distributions and kernel versions.
+
+Current sources include:
+* psutil — utilization, CPU times, frequency, load average, core counts
+* /proc — processor information, cache size, model information
+* cgroups — CPU throttling statistics
+* Linux PSI — CPU pressure metrics
+* Scheduler — scheduler counters and top CPU-consuming process
 
 The collector records metrics such as:
-
 * CPU utilization
 * CPU frequency
 * Physical cores
@@ -74,7 +100,6 @@ The collector records metrics such as:
 At this stage, no health decisions are made. The goal is simply to collect accurate and consistent CPU information.
 
 ---
-
 ## Stage 2 — Collection Runner
 
 Every collector executes through a common collection runner.
@@ -108,8 +133,25 @@ The event contains information such as:
 If collection fails, an exception event is emitted instead. This provides a complete audit trail for every collection attempt.
 
 ---
+## Stage 4 — Derived Metrics
 
-## Stage 4 — CPU Analysis
+After collection, Observer computes higher-level metrics from the raw operating system counters.
+
+Examples include:
+
+- Context switches per second
+- Interrupts per second
+- System calls per second
+- CPU throttling events per second
+- Load normalized per logical core
+- Frequency utilization ratio
+- Kernel activity ratio
+- Core imbalance
+- Core spread
+
+Derived metrics provide a stable foundation for health analysis while keeping the collectors responsible only for raw operating system data.
+
+## Stage 5 — CPU Analysis
 
 Once collection is complete, the analyzer evaluates the collected metrics using predefined operational health checks.
 
@@ -119,8 +161,14 @@ Current health checks include:
 * Idle CPU
 * Load average
 * IO wait
-* Core balance
+* Capacity
 * Kernel activity
+* CPU Frequency
+* Core Balance
+* CPU Steal Time
+* CPU Pressure (PSI)
+* Container / cgroup CPU
+
 
 Each health check produces one of three outcomes:
 
@@ -131,10 +179,23 @@ Each health check produces one of three outcomes:
 Instead of relying on a single metric, Observer combines the results of multiple checks before determining whether the CPU is likely contributing to a performance issue.
 
 ---
+## Stage 6 — Signal Normalization
 
-## Stage 5 — Overall Verdict
+Raw metrics are converted into normalized signals used by the summary engine.
 
-After all health checks complete, the analyzer produces an overall assessment of CPU health.
+Normalization separates metric collection from decision-making, allowing multiple analyzers to contribute evidence without directly determining the final system state.
+
+## Stage 7 — Overall Verdict
+
+After all health checks complete, a summerizer produces an overall assessment of CPU health by combining all analyzer results into a single CPU assessment.
+
+It evaluates:
+
+- Health checks
+- Severity
+- Confidence score
+- Recommendations
+- Overall summary
 
 Possible outcomes include:
 
@@ -142,7 +203,7 @@ Possible outcomes include:
 * CPU shows warning signs but cannot yet be identified as the primary cause.
 * CPU remains a strong candidate for the observed performance issue.
 
-The analyzer also provides recommendations to help guide the next stage of investigation.
+The analyzers also provides recommendations to help guide the next stage of investigation.
 
 ---
 
@@ -162,6 +223,24 @@ The event includes:
 These events create an auditable record explaining how the final assessment was reached.
 
 ---
+## Collector Architecture
+
+Observer separates CPU collection by operating system source rather than by metric type.
+
+Current collectors include:
+
+```text
+collectors/cpu/
+├── psutil.py
+├── proc.py
+├── cgroup.py
+├── pressure.py
+├── sched.py
+├── filter_compute.py
+└── cpu.py
+```
+
+This modular design improves portability across Linux distributions, simplifies testing, and allows new metric sources to be added without modifying existing collectors.
 
 ## Stage 7 — Response
 
