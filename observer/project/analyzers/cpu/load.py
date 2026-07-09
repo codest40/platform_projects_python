@@ -4,11 +4,11 @@ Detects CPU load relative to available logical cores.
 """
 
 from __future__ import annotations
-from project.models.cpu import Cpu_Data, HealthCheck
+from project.models.cpu import CpuData, HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_load(cpu: Cpu_Data):
+def analyze_load(cpu: CpuData):
     """
     Analyze normalized CPU load.
     """

@@ -11,7 +11,7 @@ Produces:
 
 from __future__ import annotations
 
-from project.models.cpu import Cpu_Data, CpuAnalysis, Signal, HealthCheck
+from project.models.cpu import CpuData, CpuAnalysis, Signal, HealthCheck
 from project.utils.helpers import timestamp
 
 
@@ -84,7 +84,7 @@ def _deduplicate(checks: list[HealthCheck]) -> list[HealthCheck]:
 # ==========================================================
 
 def summarize_cpu(
-    cpu: Cpu_Data,
+    cpu: CpuData,
     checks: list[HealthCheck],
     signals: list[Signal],
     metadata: dict,

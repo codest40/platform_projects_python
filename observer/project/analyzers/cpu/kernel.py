@@ -6,11 +6,11 @@ and kernel-space execution.
 
 from __future__ import annotations
 
-from project.models.cpu import Cpu_Data, HealthCheck
+from project.models.cpu import CpuData, HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_kernel(cpu: Cpu_Data):
+def analyze_kernel(cpu: CpuData):
 
     checks: list[HealthCheck] = []
 

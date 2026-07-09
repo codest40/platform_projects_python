@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import fields
 from statistics import mean
-from project.models.cpu import Cpu_Data
+from project.models.cpu import CpuData
 from project.utils.runners import EventRunner
 
 
@@ -32,8 +32,8 @@ def filter_cpu_state(result: EventRunner) -> dict:
         # CPU Throttling Counters
         # --------------------------------------------------
 
-        "throttled_periods": cpu.throttled_periods,
-        "throttled_usec": cpu.throttled_usec,
+        "cpu_throttled_periods": cpu.cpu_throttled_periods,
+        "cpu_throttled_usec": cpu.cpu_throttled_usec,
     }
 
 
@@ -92,10 +92,10 @@ def _ratio(
 # ==========================================================
 
 def compute_cpu_rates(
-    cpu: Cpu_Data,
+    cpu: CpuData,
     previous: dict | None,
     current: dict,
-) -> Cpu_Data:
+) -> CpuData:
     """
     Compute derived CPU metrics.
     Pure computation only.
@@ -151,17 +151,17 @@ def compute_cpu_rates(
     # CPU Throttling Rates
     # =====================================================
 
-    cpu.throttled_periods_per_sec = _rate(
+    cpu.cpu_throttled_periods_per_sec = _rate(
         current,
         previous,
-        "nr_throttled",
+        "cpu_throttled_periods",
         elapsed,
     )
 
-    cpu.throttled_usec_per_sec = _rate(
+    cpu.cpu_throttled_usec_per_sec = _rate(
         current,
         previous,
-        "throttled_usec",
+        "cpu_throttled_usec",
         elapsed,
     )
 
@@ -228,12 +228,17 @@ def compute_cpu_rates(
     # relative to scheduler context switching.
     # =====================================================
 
-    cpu.throttle_event_ratio = _ratio(
-        cpu.throttled_periods_per_sec,
+    cpu.cpu_throttle_ratio = _ratio(
+        cpu.cpu_throttled_periods,
+        cpu.cpu_throttle_periods,
+    )
+
+    cpu.cpu_throttle_event_ratio = _ratio(
+        cpu.cpu_throttled_periods_per_sec,
         cpu.context_switches_per_sec,
     )
 
-    cpu.collected_total = len(fields(cpu))
+    cpu.collected_total = len(fields(CpuData))
     cpu.collected_successful = cpu.collected_total
     cpu.seen = True
 

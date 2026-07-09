@@ -6,12 +6,12 @@ Detects CPU time spent waiting for storage IO.
 
 from __future__ import annotations
 
-from project.models.cpu import Cpu_Data
+from project.models.cpu import CpuData
 from project.models.events import HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_iowait(cpu: Cpu_Data):
+def analyze_iowait(cpu: CpuData):
     checks: list[HealthCheck] = []
     count = 0
 

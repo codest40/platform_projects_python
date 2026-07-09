@@ -3,60 +3,61 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 @dataclass(slots=True)
-class Cpu_Data:
+class CpuData:
 
     # ======================================================
     # CPU Information
     # ======================================================
 
-    cpu_model: str
+    cpu_model: str | None=None
+    cache_size: str | None=None
 
-    physical_cores: int
-    logical_cores: int
+    physical_cores: int | None=None
+    logical_cores: int | None=None
 
     # ======================================================
     # CPU Utilization
     # ======================================================
 
-    usage_percent: float
-    per_core_util: list[float]
+    usage_percent: float | None=None
+    per_core_util: list[float] | None=None
 
     # ======================================================
     # CPU Time Breakdown
     # ======================================================
 
-    user_percent: float
-    system_percent: float
-    idle_percent: float
+    user_percent: float | None=None
+    system_percent: float | None=None
+    idle_percent: float | None=None
 
-    iowait_percent: float
-    steal_percent: float
-    irq_percent: float
-    softirq_percent: float
-    nice_percent: float
+    iowait_percent: float | None=None
+    steal_percent: float | None=None
+    irq_percent: float | None=None
+    softirq_percent: float | None=None
+    nice_percent: float | None=None
 
     # ======================================================
     # Scheduler Statistics
     # ======================================================
 
-    context_switches: int
-    interrupts: int
-    soft_interrupts: int
-    syscalls: int
+    context_switches: int | None=None
+    interrupts: int | None=None
+    soft_interrupts: int | None=None
+    syscalls: int | None=None
 
     # ======================================================
     # Frequency
     # ======================================================
 
-    frequency_mhz: float
-    min_frequency_mhz: float
-    max_frequency_mhz: float
+    frequency_mhz: float | None=None
+    min_frequency_mhz: float | None=None
+    max_frequency_mhz: float | None=None
 
     # ======================================================
     # Load
     # ======================================================
 
-    load_average: tuple[float, float, float]
+    load_average: tuple[float, float, float] | None=None
 
     # ======================================================
     # Linux PSI (optional)
@@ -72,10 +73,10 @@ class Cpu_Data:
     # CPU Throttling (cgroups)
     # ======================================================
 
-    throttled_periods: int | None = None
-    throttled_usec: int | None = None
-    throttle_ratio: float | None = None
-
+    cpu_throttled_periods: int | None = None
+    cpu_throttle_periods: int | None = None
+    cpu_throttled_usec: int | None = None
+    cpu_throttle_ratio: float | None = None
     # ======================================================
     # Top CPU Process
     # ======================================================
@@ -110,9 +111,9 @@ class Cpu_Data:
     frequency_ratio: float | None = None
     kernel_ratio: float | None = None
 
-    throttled_periods_per_sec: float | None = None
-    throttled_usec_per_sec: float | None = None
-    throttle_event_ratio: float | None=None
+    cpu_throttled_periods_per_sec: float | None = None
+    cpu_throttled_usec_per_sec: float | None = None
+    cpu_throttle_event_ratio: float | None=None
     # ======================================================
     # Collection Metadata
     # ======================================================

@@ -10,12 +10,11 @@ No interpretation beyond individual checks.
 
 from __future__ import annotations
 
-from project.models.cpu import Cpu_Data
-from project.models.events import HealthCheck
+from project.models.cpu import CpuData, HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_pressure(cpu: Cpu_Data):
+def analyze_pressure(cpu: CpuData):
 
     checks: list[HealthCheck] = []
 

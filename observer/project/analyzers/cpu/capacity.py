@@ -4,11 +4,11 @@ Detects whether CPU compute capacity is becoming exhausted.
 """
 
 from __future__ import annotations
-from project.models.cpu import Cpu_Data, HealthCheck
+from project.models.cpu import CpuData, HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_capacity(cpu: Cpu_Data):
+def analyze_capacity(cpu: CpuData):
 
     checks: list[HealthCheck] = []
     count = 0
@@ -82,11 +82,11 @@ def analyze_capacity(cpu: Cpu_Data):
     # CPU Throttling
     # =====================================================
 
-    if cpu.throttle_ratio is not None:
+    if cpu.cpu_throttle_ratio is not None:
 
-        if cpu.throttle_ratio >= 0.10:
+        if cpu.cpu_throttle_ratio >= 0.10:
             status = "CRITICAL"
-        elif cpu.throttle_ratio > 0:
+        elif cpu.cpu_throttle_ratio > 0:
             status = "WARNING"
         else:
             status = "PASS"
@@ -95,7 +95,7 @@ def analyze_capacity(cpu: Cpu_Data):
             HealthCheck(
                 check="CPU Throttling",
                 status=status,
-                reason=f"Throttle ratio: {cpu.throttle_ratio:.3f}.",
+                reason=f"Throttle ratio: {cpu.cpu_throttle_ratio:.3f}.",
             )
         )
         count += 1

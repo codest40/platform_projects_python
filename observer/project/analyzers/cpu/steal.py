@@ -10,12 +10,12 @@ No interpretation beyond individual checks.
 
 from __future__ import annotations
 
-from project.models.cpu import Cpu_Data
+from project.models.cpu import CpuData
 from project.models.events import HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_steal(cpu: Cpu_Data):
+def analyze_steal(cpu: CpuData):
 
     checks: list[HealthCheck] = []
 
@@ -51,12 +51,12 @@ def analyze_steal(cpu: Cpu_Data):
     # CPU Throttling
     # =====================================================
 
-    if cpu.throttle_ratio is not None:
+    if cpu.cpu_throttle_ratio is not None:
 
-        if cpu.throttle_ratio >= 0.10:
+        if cpu.cpu_throttle_ratio >= 0.10:
             status = "CRITICAL"
 
-        elif cpu.throttle_ratio >= 0.02:
+        elif cpu.cpu_throttle_ratio >= 0.02:
             status = "WARNING"
 
         else:
@@ -68,7 +68,7 @@ def analyze_steal(cpu: Cpu_Data):
                 status=status,
                 reason=(
                     f"Throttle ratio: "
-                    f"{cpu.throttle_ratio * 100:.2f}%."
+                    f"{cpu.cpu_throttle_ratio * 100:.2f}%."
                 ),
             )
         )
@@ -78,12 +78,12 @@ def analyze_steal(cpu: Cpu_Data):
     # Throttled Periods
     # =====================================================
 
-    if cpu.throttled_periods_per_sec is not None:
+    if cpu.cpu_throttled_periods_per_sec is not None:
 
-        if cpu.throttled_periods_per_sec >= 100:
+        if cpu.cpu_throttled_periods_per_sec >= 100:
           status = "CRITICAL"
 
-        elif cpu.throttled_periods_per_sec >= 20:
+        elif cpu.cpu_throttled_periods_per_sec >= 20:
             status = "WARNING"
 
         else:
@@ -95,7 +95,7 @@ def analyze_steal(cpu: Cpu_Data):
                 status=status,
                 reason=(
                     f"CPU throttling events: "
-                    f"{cpu.throttled_periods_per_sec:.1f} periods/sec."
+                    f"{cpu.cpu_throttled_periods_per_sec:.1f} periods/sec."
                 ),
             )
         )
@@ -105,9 +105,9 @@ def analyze_steal(cpu: Cpu_Data):
     # Throttled Time
     # =====================================================
 
-    if cpu.throttled_usec_per_sec is not None:
+    if cpu.cpu_throttled_usec_per_sec is not None:
 
-        throttled_ms = cpu.throttled_usec_per_sec / 1000
+        throttled_ms = cpu.cpu_throttled_usec_per_sec / 1000
 
         if throttled_ms >= 100:
             status = "CRITICAL"

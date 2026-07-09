@@ -4,11 +4,11 @@ Detects uneven workload distribution across CPU cores.
 """
 
 from __future__ import annotations
-from project.models.cpu import Cpu_Data, HealthCheck
+from project.models.cpu import CpuData, HealthCheck
 from project.analyzers.cpu.data import build_result
 
 
-def analyze_balance(cpu: Cpu_Data):
+def analyze_balance(cpu: CpuData):
 
     checks: list[HealthCheck] = []
 

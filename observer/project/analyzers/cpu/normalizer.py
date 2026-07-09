@@ -9,10 +9,10 @@ This is the place where:
 """
 
 from __future__ import annotations
-from project.models.cpu import Cpu_Data, Signal
+from project.models.cpu import CpuData, Signal
 
 
-def normalize(cpu: Cpu_Data) -> list[Signal]:
+def normalize(cpu: CpuData) -> list[Signal]:
 
     signals: list[Signal] = []
 
@@ -242,10 +242,10 @@ def normalize(cpu: Cpu_Data) -> list[Signal]:
     # ==========================================================
 
     cpu.signals_expected += 1
-    if cpu.throttled_periods_per_sec is not None:
+    if cpu.cpu_throttled_periods_per_sec is not None:
         signals.append(Signal(
             name="cpu.throttled_periods",
-            value=cpu.throttled_periods_per_sec,
+            value=cpu.cpu_throttled_periods_per_sec,
             domain="container",
             type="rate",
             unit="events/sec",
@@ -253,10 +253,10 @@ def normalize(cpu: Cpu_Data) -> list[Signal]:
         cpu.signals_created += 1
 
     cpu.signals_expected += 1
-    if cpu.throttled_usec_per_sec is not None:
+    if cpu.cpu_throttled_usec_per_sec is not None:
         signals.append(Signal(
             name="cpu.throttled_time",
-            value=cpu.throttled_usec_per_sec,
+            value=cpu.cpu_throttled_usec_per_sec,
             domain="container",
             type="rate",
             unit="usec/sec",
@@ -264,10 +264,10 @@ def normalize(cpu: Cpu_Data) -> list[Signal]:
         cpu.signals_created += 1
 
     cpu.signals_expected += 1
-    if cpu.throttle_ratio is not None:
+    if cpu.cpu_throttle_ratio is not None:
         signals.append(Signal(
             name="cpu.throttle_ratio",
-            value=cpu.throttle_ratio,
+            value=cpu.cpu_throttle_ratio,
             domain="container",
             type="ratio",
             unit="ratio",
