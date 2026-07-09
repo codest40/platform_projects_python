@@ -13,9 +13,12 @@ class ObserverError(Exception):
 # Pipeline runner
 #=============================================
 def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_func, extra_metadata=None, alert_title=None, message=None, severity=None):
-    collect_success = extra_metadata.get("collect_success", None)
-    collect_failure = extra_metadata.get("collect_failure", None)
-    message = extra_metadata.get("alert_message", None)
+    extra_metadata = extra_metadata or {}
+    collect_success = extra_metadata.get("collect_success")
+    collect_failure = extra_metadata.get("collect_failure")
+    alert_title = extra_metadata.get("alert_title", alert_title)
+    message = extra_metadata.get("alert_message", message)
+    severity = extra_metadata.get("severity", severity)
 
     result = run_collection(resource=resource, func=collect_func,
       success=collect_success, failure=collect_failure,

@@ -238,8 +238,5 @@ def compute_cpu_rates(
         cpu.context_switches_per_sec,
     )
 
-    cpu.collected_total = len(fields(CpuData))
-    cpu.collected_successful = cpu.collected_total
     cpu.seen = True
-
     return cpu

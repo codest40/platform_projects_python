@@ -1,6 +1,7 @@
 from __future__ import annotations
+from dataclasses import fields
 from project.utils.decorators import trace
-from project.models.cpu import CpuData
+from project.models.cpu import CpuData, GetCpuType
 from project.analyzers.cpu.cpu import analyze_cpu_metrics
 from project.collectors.cpu.psutil import collect_psutil
 from project.collectors.cpu.proc import collect_proc
@@ -14,6 +15,23 @@ from project.collectors.cpu.filter_compute import (
 from project.utils.pipeline import pipeline_runner
 from project.utils.helpers import timestamp
 
+CPUTYPE = GetCpuType(
+    psutil=True,
+    pressure=True,
+    sched=True,
+    proc=True,
+    cgroup=True,
+)
+
+
+COLLECTORS = {
+    "psutil": collect_psutil,
+    "pressure": collect_pressure,
+    "sched": collect_sched,
+    "proc": collect_proc,
+    "cgroup": collect_cgroup,
+}
+
 @trace("collect_cpu_metrics")
 def collect_cpu_metrics() -> CpuData:
 
@@ -21,14 +39,23 @@ def collect_cpu_metrics() -> CpuData:
     def cpu_info(cpu_model) -> CpuData:
 
         cpu = cpu_model()
+        total=0
+        successful=0
+        for field in fields(CPUTYPE):
+            if not getattr(CPUTYPE, field.name):
+              continue
 
-        collect_psutil(cpu)
-        collect_proc(cpu)
-        collect_pressure(cpu)
-        collect_cgroup(cpu)
-        collect_sched(cpu)
+            total+=1
+            collector = COLLECTORS.get(field.name)
+            if collector is None:
+              continue
+
+            collector(cpu)
+            successful+=1
+
         cpu.collected_at = timestamp()
-
+        cpu.collected_total = total
+        cpu.collected_successful = successful
         if cpu.usage_percent is None:
             severity = "INFO"
             summary = "CPU utilization unavailable."

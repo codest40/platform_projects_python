@@ -67,7 +67,7 @@ def run_collect_disk():
       analyze_func=analyze_disk_metrics,
       filter_func=filter_disk_state,
       compute_func=compute_disk_rates,
-      extra_metadata=run_collect_disk,
+      extra_metadata=None,
   )
 
   return result

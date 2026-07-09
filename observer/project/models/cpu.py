@@ -3,6 +3,15 @@ from dataclasses import dataclass, field
 from typing import Literal
 
 @dataclass(slots=True)
+class GetCpuType:
+    psutil: bool = False
+    pressure: bool = False
+    sched: bool = False
+    proc: bool = False
+    cgroup: bool = False
+
+
+@dataclass(slots=True)
 class CpuData:
 
     # ======================================================
