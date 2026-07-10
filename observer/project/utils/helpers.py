@@ -6,6 +6,11 @@ from zoneinfo import ZoneInfo
 from time import perf_counter, time
 import traceback as tb
 import logging
+from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+load_dotenv(Path(".env"))
 
 #===================================================================
 # Time Manager
@@ -122,10 +127,10 @@ ALERT_CONFIG = {
     "email": EmailConfig(
         smtp_server="smtp.gmail.com",
         smtp_port=587,
-        sender=sender,
-        receiver=reciever,
-        username=username,
-        password=password,
+        sender=os.getenv("EMAIL_SENDER"),
+        receiver=os.getenv("EMAIL_RECEIVER"),
+        username=os.getenv("EMAIL_USERNAME"),
+        password=os.getenv("EMAIL_PASSWORD"),
         use_tls=True,
         timeout=10,
     ),
