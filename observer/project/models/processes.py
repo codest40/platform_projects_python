@@ -175,3 +175,4 @@ class ProcessIdentityAnalysis:
     owner_type: str | None = None
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    scheduler_class: str | None = None
