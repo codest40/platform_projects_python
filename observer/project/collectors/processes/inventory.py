@@ -15,6 +15,17 @@ from project.collectors.processes.memory import collect_memory
 from project.collectors.processes.cpu import collect_cpu
 from project.collectors.processes.lifecycle import collect_lifecycle
 from project.collectors.processes.cgroup import collect_cgroup
+from project.collectors.processes.context_switch import collect_context_switches
+from project.collectors.processes.io import collect_io
+from project.collectors.processes.fd import collect_fd
+from project.collectors.processes.filter_compute import (
+    filter_process_state, compute_process_rates,
+  )
+from project.utils.pipeline import pipeline_runner
+from project.utils.helpers import timestamp
+from project.utils.decorators import trace
+
+
 
 PROC = Path("/proc")
 
@@ -39,6 +50,16 @@ def build_cache(proc_dir: Path) -> ProcessCache:
 
     try:
         cache.cgroup = (proc_dir / "cgroup").read_text()
+    except Exception:
+        pass
+
+    try:
+        cache.limits = (proc_dir / "limits").read_text()
+    except Exception:
+        pass
+
+    try:
+        cache.io = (proc_dir / "io").read_text()
     except Exception:
         pass
 
@@ -85,6 +106,14 @@ def collect_process_inventory() -> ProcessInventory:
                 inventory.collector_failures,
             )
             snapshot = collect_cgroup(snapshot, cache, inventory.collector_failures,)
+            snapshot = collect_fd(
+                snapshot,
+                proc_dir,
+                cache,
+                inventory.collector_failures,
+            )
+            snapshot = collect_io(snapshot, cache, inventory.collector_failures,)
+            snapshot = collect_context_switches(snapshot, cache, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1
@@ -121,6 +150,24 @@ def collect_process_inventory() -> ProcessInventory:
 
     return inventory
 
+@trace("start_process_run")
+def start_process_collection():
+  result = pipeline_runner(
+      resource="process",
+      collect_func=collect_process_inventory,
+      analyze_func=analyze_process_metrics,
+      filter_func=filter_process_state,
+      compute_func=compute_process_rates,
+  )
+
+  return result
+
+@trace("process_pipeline")
+def process_pipeline():
+    start_cpu_collection()
+
+#process_pipeline()
+
 if __name__ == "__main__":
     inventory = collect_process_inventory()
 
@@ -129,7 +176,6 @@ if __name__ == "__main__":
         f"Visible: {inventory.total_processes} | "
         f"Accessible: {inventory.accessible_processes} | "
         f"Inaccessible: {inventory.inaccessible_processes} | "
-        #f"Failures: {inventory.collector_failures} "
     )
     for process in inventory.processes[:10]:
         print(process)

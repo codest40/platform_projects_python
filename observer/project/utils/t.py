@@ -3,6 +3,7 @@ from project.utils.helpers import timestamp
 import platform, psutil
 from pathlib import Path
 import os
+from project.analyzers.processes.users import get_user
 
 print("cwd:", Path.cwd())
 print(".env exists:", Path(".env").exists())
@@ -29,3 +30,7 @@ emit(
 print(f"Timestamp: {timestamp(unix=True)}")
 
 print(psutil.cpu_stats())
+
+print("=================================================")
+user = get_user(1000)
+print(user)

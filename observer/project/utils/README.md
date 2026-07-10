@@ -2,7 +2,7 @@
 
 ```
 
-1. The decorator onlt does create span
+1. The decorator creates span
 
 2. ObserverRunner uses span
 

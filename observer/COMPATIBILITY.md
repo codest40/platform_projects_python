@@ -1,10 +1,15 @@
 # Platform Compatibility
-
-Observer is designed for **Linux** and provides a consistent internal data model by normalizing metrics collected from multiple Linux interfaces.
+Observer is a Linux-first observability framework that collects metrics from multiple Linux interfaces and normalizes them into a consistent internal data model for analysis.
 
 ## Supported Metric Sources
+Observer currently targets:
 
-Observer currently collects metrics from:
+- Linux kernels with `/proc` and `/sys`
+- Python 3.12+
+- Read access to standard kernel interfaces
+- Optional support for Linux PSI and cgroups when available
+
+Observer collects metrics from:
 
 * `psutil`
 * `/proc`
@@ -22,7 +27,7 @@ Observer has been primarily developed and validated on:
 * Debian
 
 Many collectors also work on other Linux distributions. However, the availability, naming, and behavior of kernel metrics may differ depending on the system configuration.
-
+Different Linux distributions, kernel versions, and runtime environments may expose different files, counters, or kernel features. As a result, some metrics may be unavailable on certain systems.
 Factors that can affect metric availability include:
 
 * Linux distribution

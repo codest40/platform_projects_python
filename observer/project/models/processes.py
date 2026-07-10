@@ -63,11 +63,64 @@ class ProcessSnapshot:
     container_id: Optional[str] = None
 
     # ==========================================================
+    # File Descriptors
+    # ==========================================================
+
+    open_fds: Optional[int] = None
+    max_fds: Optional[int] = None
+    fd_utilization: Optional[float] = None
+
+    # ==========================================================
+    # Process I/O
+    # ==========================================================
+
+    read_syscalls: Optional[int] = None
+    write_syscalls: Optional[int] = None
+
+    read_chars: Optional[int] = None
+    write_chars: Optional[int] = None
+
+    read_bytes: Optional[int] = None
+    write_bytes: Optional[int] = None
+    cancelled_write_bytes: Optional[int] = None
+
+    # ==========================================================
+    # Context Switching
+    # ==========================================================
+
+    voluntary_context_switches: Optional[int] = None
+    involuntary_context_switches: Optional[int] = None
+
+    # ==========================================================
+    # Derived
+    # ==========================================================
+
+    user_ticks_per_sec: Optional[float] = None
+    system_ticks_per_sec: Optional[float] = None
+
+    read_bytes_per_sec: Optional[float] = None
+    write_bytes_per_sec: Optional[float] = None
+
+    read_syscalls_per_sec: Optional[float] = None
+    write_syscalls_per_sec: Optional[float] = None
+
+    voluntary_context_switches_per_sec: Optional[float] = None
+    involuntary_context_switches_per_sec: Optional[float] = None
+    total_context_switches_per_sec: Optional[float] = None
+    # ==========================================================
+    # ID Metadata
+    # ==========================================================
+    username: str | None
+    groupname: str | None
+    user_shell: str | None
+    user_home: str | None
+    # ==========================================================
     # Collection Metadata
     # ==========================================================
 
     collection_errors: list[str] = field(default_factory=list)
     processor: Optional[int] = None
+
 
 @dataclass(slots=True)
 class InaccessibleProcess:
@@ -103,3 +156,15 @@ class ProcessCache:
     status: Optional[str] = None
     cmdline: Optional[bytes] = None
     cgroup: Optional[str] = None
+    limits: str | None = None
+    io: str | None = None
+
+@dataclass(slots=True)
+class ProcessIdentityAnalysis:
+
+    pid: int
+    process_type: str | None = None
+    executable_state: str | None = None
+    owner_type: str | None = None
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
