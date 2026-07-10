@@ -1,6 +1,12 @@
 from project.logging.logger import emit
 from project.utils.helpers import timestamp
 import platform, psutil
+from pathlib import Path
+import os
+
+print("cwd:", Path.cwd())
+print(".env exists:", Path(".env").exists())
+print("sender:", os.getenv("EMAIL_SENDER"))
 
 def get_cpu_model():
     with open("/proc/cpuinfo") as f:

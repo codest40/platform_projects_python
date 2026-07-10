@@ -5,9 +5,7 @@ Responsible ONLY for CPU cgroup metrics.
 """
 
 from __future__ import annotations
-
 from pathlib import Path
-
 from project.models.cpu import CpuData
 
 
