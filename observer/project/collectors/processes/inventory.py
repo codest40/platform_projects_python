@@ -90,7 +90,7 @@ def collect_process_inventory() -> ProcessInventory:
         proc_dir = entry
         cache = build_cache(proc_dir)
 
-        snapshot = ProcessSnapshot(pid=pid)
+        snapshot = ProcessSnapshot(pid=pid, tid=pid,)
 
         try:
 
@@ -164,7 +164,7 @@ def start_process_collection():
 
 @trace("process_pipeline")
 def process_pipeline():
-    start_cpu_collection()
+    start_process_collection()
 
 #process_pipeline()
 

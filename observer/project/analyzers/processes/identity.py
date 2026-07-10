@@ -21,7 +21,7 @@ def analyze_identity(
     """
 
     analysis = ProcessIdentityAnalysis(
-        pid=process.pid,
+        pid=process.pid, tid=process.tid,
     )
 
     #
@@ -109,11 +109,16 @@ def analyze_identity(
 
     if (
         process.ppid == 1
-        and process.process_type != "kernel_thread"
+        and analysis.process_type != "kernel_thread"
     ):
         analysis.classifications.append(
             "system_daemon"
         )
+
+    if process.tid != process.pid:
+        analysis.classifications.append("thread")
+    else:
+        analysis.classifications.append("process")
 
     #
     # ---------------------------------------------------------

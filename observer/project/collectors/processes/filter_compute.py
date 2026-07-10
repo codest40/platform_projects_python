@@ -1,7 +1,7 @@
 from __future__ import annotations
 from project.models.processes import ProcessInventory
 from project.utils.runners import EventRunner
-
+import os
 
 # ==========================================================
 # Filter State
@@ -53,6 +53,7 @@ def filter_process_state(result: EventRunner) -> dict:
 # ==========================================================
 # Helpers
 # ==========================================================
+CLK_TCK = os.sysconf("SC_CLK_TCK")
 
 def _delta(current, previous):
     """
@@ -99,6 +100,13 @@ def _ratio(numerator, denominator):
 
     return numerator / denominator
 
+def _percent(rate, total):
+    value = _ratio(rate, total)
+
+    if value is None:
+        return None
+
+    return value * 100
 
 # ==========================================================
 # Compute Derived Metrics
@@ -149,6 +157,16 @@ def compute_process_rates(
             process.system_ticks,
             previous_process["system_ticks"],
             elapsed,
+        )
+
+        process.user_cpu_percent = _percent(
+            process.user_ticks_per_sec,
+            CLK_TCK,
+        )
+
+        process.system_cpu_percent = _percent(
+            process.system_ticks_per_sec,
+            CLK_TCK,
         )
 
         #
@@ -206,8 +224,12 @@ def compute_process_rates(
 
     v = process.voluntary_context_switches_per_sec
     i = process.involuntary_context_switches_per_sec
-
     if v is not None and i is not None:
         process.total_context_switches_per_sec = v + i
+
+    u = process.user_cpu_percent
+    s = process.system_cpu_percent
+    if u is not None and s is not None:
+        process.cpu_percent = u + s
 
     return inventory

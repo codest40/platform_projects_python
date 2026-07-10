@@ -32,16 +32,17 @@ def collect_scheduler(
         #
         snapshot.priority = int(fields[15])
 
-        #
         # nice (field 19)
-        #
         snapshot.nice = int(fields[16])
 
-        #
         # last CPU the process executed on
         # processor (field 39)
-        #
         snapshot.processor = int(fields[36])
+        # real-time priority (field 40)
+
+        snapshot.rt_priority = int(fields[37])
+        # scheduling policy (field 41)
+        snapshot.policy = int(fields[38])
 
     except Exception as e:
 

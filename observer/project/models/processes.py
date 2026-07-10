@@ -7,6 +7,7 @@ class ProcessSnapshot:
 
     pid: int
     ppid: Optional[int] = None
+    tid: int | None = None
 
     name: Optional[str] = None
     command: Optional[str] = None
@@ -20,6 +21,8 @@ class ProcessSnapshot:
 
     priority: Optional[int] = None
     nice: Optional[int] = None
+    rt_priority: Optional[int] = None
+    policy: Optional[int] = None
 
     # ==========================================================
     # Ownership
@@ -95,6 +98,9 @@ class ProcessSnapshot:
     # Derived
     # ==========================================================
 
+    user_cpu_percent: Optional[float] = None
+    system_cpu_percent: Optional[float] = None
+    cpu_percent: Optional[float] = None
     user_ticks_per_sec: Optional[float] = None
     system_ticks_per_sec: Optional[float] = None
 
@@ -120,7 +126,8 @@ class ProcessSnapshot:
 
     collection_errors: list[str] = field(default_factory=list)
     processor: Optional[int] = None
-
+    metrics_available: Optional[int] = None
+    metrics_expected: Optional[int] = None
 
 @dataclass(slots=True)
 class InaccessibleProcess:
