@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from project.models.processes import ProcessSnapshot
+from project.models.processes import ProcessSnapshot, CollectorFailure, ProcessCache
 
 
 def collect_owner(
     snapshot: ProcessSnapshot,
-    proc_dir: Path,
+    cache: ProcessCache,
+    collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
     Collect process ownership information.
@@ -15,10 +16,11 @@ def collect_owner(
     """
 
     try:
+        if cache.status is None:
+            raise RuntimeError("/proc/<pid>/stat unavailable")
 
-        with (proc_dir / "status").open() as f:
-
-            for line in f:
+        ff = cache.status.splitlines()
+        for line in ff:
 
                 if line.startswith("Uid:"):
 
@@ -37,7 +39,16 @@ def collect_owner(
     except Exception as e:
 
         snapshot.collection_errors.append(
-            f"owner: {e}"
+            f"ps_owner: {e}"
+        )
+
+        collector_failures.append(
+            CollectorFailure(
+                pid=snapshot.pid,
+                collector="ps_owner",
+                field="status",
+                reason=str(e),
+            )
         )
 
     return snapshot

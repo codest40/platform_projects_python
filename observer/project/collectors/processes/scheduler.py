@@ -1,36 +1,28 @@
 from pathlib import Path
-
-from project.models.processes import ProcessSnapshot
+from project.models.processes import ProcessSnapshot, CollectorFailure, ProcessCache
 
 
 def collect_scheduler(
     snapshot: ProcessSnapshot,
-    proc_dir: Path,
+    cache: ProcessCache,
+    collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
     Collect scheduler-related process attributes.
-
     Source:
         /proc/<pid>/stat
     """
 
     try:
+        if cache.stat is None:
+            raise RuntimeError("/proc/<pid>/stat unavailable")
+        stat = cache.stat
 
-        stat = (proc_dir / "stat").read_text()
-
-        #
         # comm is enclosed in parentheses and may contain spaces.
         # Split after the closing parenthesis.
-        #
         _, remainder = stat.rsplit(")", 1)
 
         fields = remainder.strip().split()
-
-        #
-        # Fields after removing:
-        # pid (already known)
-        # comm (...)
-        #
 
         snapshot.state = fields[0]
         snapshot.ppid = int(fields[1])
@@ -54,7 +46,15 @@ def collect_scheduler(
     except Exception as e:
 
         snapshot.collection_errors.append(
-            f"scheduler: {e}"
+            f"ps_scheduler: {e}"
         )
 
+        collector_failures.append(
+            CollectorFailure(
+              pid=snapshot.pid,
+              collector="ps_scheduler",
+              field="stat",
+              reason=str(e),
+          )
+      )
     return snapshot

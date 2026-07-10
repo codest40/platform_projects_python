@@ -1,23 +1,25 @@
 from pathlib import Path
 
-from project.models.processes import ProcessSnapshot
+from project.models.processes import ProcessSnapshot, CollectorFailure, ProcessCache
 
 
 def collect_cpu(
     snapshot: ProcessSnapshot,
-    proc_dir: Path,
+    cache: ProcessCache,
+    collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
     Collect lightweight CPU accounting information.
-
     Source:
         /proc/<pid>/stat
     """
 
     try:
 
-        stat = (proc_dir / "stat").read_text()
+        if cache.stat is None:
+            raise RuntimeError("/proc/<pid>/stat unavailable")
 
+        stat = cache.stat
         #
         # comm is enclosed in parentheses and may contain spaces.
         #
@@ -38,7 +40,16 @@ def collect_cpu(
     except Exception as e:
 
         snapshot.collection_errors.append(
-            f"cpu: {e}"
+            f"ps_cpu: {e}"
+        )
+
+        collector_failures.append(
+          CollectorFailure(
+            pid=snapshot.pid,
+            collector="ps_cpu",
+            field="stat",
+            reason=str(e),
+          )
         )
 
     return snapshot

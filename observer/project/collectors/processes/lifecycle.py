@@ -1,26 +1,27 @@
 from pathlib import Path
 import os
 
-from project.models.processes import ProcessSnapshot
+from project.models.processes import ProcessSnapshot, CollectorFailure, ProcessCache
 CLK_TCK = os.sysconf(os.sysconf_names["SC_CLK_TCK"])
 
 
 def collect_lifecycle(
     snapshot: ProcessSnapshot,
-    proc_dir: Path,
+    cache: ProcessCache,
+    uptime_seconds: float,
+    collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
     Collect process lifetime information.
-
     Source:
         /proc/<pid>/stat
-        /proc/uptime
-    """
 
+    """
     try:
 
-        stat = (proc_dir / "stat").read_text()
-
+        if cache.stat is None:
+            raise RuntimeError("/proc/<pid>/stat unavailable")
+        stat = cache.stat
         #
         # comm is enclosed in parentheses.
         #
@@ -32,12 +33,6 @@ def collect_lifecycle(
         # Process start time since boot (clock ticks)
         #
         start_ticks = int(fields[19])
-
-        #
-        # System uptime (seconds)
-        #
-        with open("/proc/uptime") as f:
-            uptime_seconds = float(f.readline().split()[0])
 
         #
         # Convert to seconds since boot.
@@ -55,7 +50,15 @@ def collect_lifecycle(
     except Exception as e:
 
         snapshot.collection_errors.append(
-            f"lifecycle: {e}"
+            f"ps_lifecycle: {e}"
+        )
+        collector_failures.append(
+            CollectorFailure(
+                pid=snapshot.pid,
+                collector="ps_lifecycle",
+                field="stat",
+                reason=str(e),
+            )
         )
 
     return snapshot

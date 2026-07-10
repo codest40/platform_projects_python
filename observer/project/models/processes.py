@@ -69,6 +69,18 @@ class ProcessSnapshot:
     collection_errors: list[str] = field(default_factory=list)
     processor: Optional[int] = None
 
+@dataclass(slots=True)
+class InaccessibleProcess:
+
+    pid: int
+    reason: str
+
+@dataclass(slots=True)
+class CollectorFailure:
+    pid: int
+    collector: str
+    field: str
+    reason: str
 
 @dataclass(slots=True)
 class ProcessInventory:
@@ -76,8 +88,18 @@ class ProcessInventory:
 
     total_processes: int = 0
     accessible_processes: int = 0
-    inaccessible_processes: int = 0
-
+    inaccessible_processes: list[InaccessibleProcess] = field(
+        default_factory=list
+    )
+    collector_failures: list[CollectorFailure] = field(default_factory=list)
     collected_total: int = 0
     collected_successful: int = 0
 
+
+@dataclass(slots=True)
+class ProcessCache:
+
+    stat: Optional[str] = None
+    status: Optional[str] = None
+    cmdline: Optional[bytes] = None
+    cgroup: Optional[str] = None

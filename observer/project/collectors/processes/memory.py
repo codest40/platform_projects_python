@@ -1,14 +1,12 @@
 from pathlib import Path
-
-from project.models.processes import ProcessSnapshot
-
+from project.models.processes import ProcessSnapshot, CollectorFailure, ProcessCache
 
 KB = 1024
 
-
 def collect_memory(
     snapshot: ProcessSnapshot,
-    proc_dir: Path,
+    cache: ProcessCache,
+    collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
     Collect lightweight process memory information.
@@ -17,10 +15,10 @@ def collect_memory(
     """
 
     try:
-
-        with (proc_dir / "status").open() as f:
-
-            for line in f:
+        if cache.status is None:
+            raise RuntimeError("/proc/<pid>/status unavailable")
+        status = cache.status.splitlines()
+        for line in status:
 
                 if line.startswith("VmRSS:"):
 
@@ -43,7 +41,14 @@ def collect_memory(
     except Exception as e:
 
         snapshot.collection_errors.append(
-            f"memory: {e}"
+            f"ps_memory: {e}"
         )
-
+        collector_failures.append(
+            CollectorFailure(
+                pid=snapshot.pid,
+                collector="ps_memory",
+                field="status",
+                reason=str(e),
+            )
+        )
     return snapshot
