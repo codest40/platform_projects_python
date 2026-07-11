@@ -4,8 +4,8 @@ from typing import Optional
 @dataclass
 class ObserverState:
     NIL = None
-    NA = "N/A"       # Not applicable
-    UNSEEN = "N/S"   # Metric/source was not observed
+    NA = "N/A"        # Not applicable
+    UNSEEN = "N/S"    # Metric/source was not observed
 
 @dataclass(slots=True)
 class ProcessSnapshot:
