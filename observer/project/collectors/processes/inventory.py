@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from project.models.processes import (
     ProcessInventory,
     ProcessSnapshot,
@@ -18,6 +17,8 @@ from project.collectors.processes.cgroup import collect_cgroup
 from project.collectors.processes.context_switch import collect_context_switches
 from project.collectors.processes.io import collect_io
 from project.collectors.processes.fd import collect_fd
+from project.collectors.processes.limit import collect_limits
+from project.collectors.processes.wait_channel import collect_wait_channel
 from project.collectors.processes.filter_compute import (
     filter_process_state, compute_process_rates,
   )
@@ -54,21 +55,16 @@ def build_cache(proc_dir: Path) -> ProcessCache:
         pass
 
     try:
-        cache.limits = (proc_dir / "limits").read_text()
-    except Exception:
-        pass
-
-    try:
         cache.io = (proc_dir / "io").read_text()
     except Exception:
         pass
 
     return cache
 
+
 def collect_process_inventory() -> ProcessInventory:
     """
     Build a lightweight inventory of all running processes.
-
     This is the only module responsible for walking /proc.
     All snapshot collectors populate a shared ProcessSnapshot.
     """
@@ -109,11 +105,12 @@ def collect_process_inventory() -> ProcessInventory:
             snapshot = collect_fd(
                 snapshot,
                 proc_dir,
-                cache,
                 inventory.collector_failures,
             )
             snapshot = collect_io(snapshot, cache, inventory.collector_failures,)
             snapshot = collect_context_switches(snapshot, cache, inventory.collector_failures,)
+            snapshot = collect_limits(snapshot, proc_dir, inventory.collector_failures,)
+            snapshot = collect_wait_channel(snapshot, proc_dir, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1
@@ -177,5 +174,10 @@ if __name__ == "__main__":
         f"Accessible: {inventory.accessible_processes} | "
         f"Inaccessible: {inventory.inaccessible_processes} | "
     )
-    for process in inventory.processes[:10]:
+    for process in inventory.processes[-5:]:
         print(process)
+    for failure in inventory.collector_failures[:5]:
+        print(failure)
+    #for x in inventory.processes[-15:]:
+    #    print(x.wchan)
+

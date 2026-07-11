@@ -15,6 +15,10 @@ class Coverage:
         if condition:
             self.available += 1
 
+    def apply(self, target) -> None:
+        target.metrics_available = self.available
+        target.metrics_expected = self.expected
+
     @property
     def score(self) -> float:
         if self.expected == 0:
@@ -24,3 +28,4 @@ class Coverage:
             self.available / self.expected * 100,
             1,
         )
+

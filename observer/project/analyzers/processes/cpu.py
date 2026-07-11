@@ -11,9 +11,6 @@ def analyze_cpu(
 ) -> ProcessCpuAnalysis:
     """
     Analyze CPU behaviour for a single process.
-
-    Uses normalized values only.
-    Performs no health scoring.
     """
 
     analysis = ProcessCpuAnalysis(
@@ -161,7 +158,6 @@ def analyze_cpu(
             f"Scheduler state: {process.state}"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
+    coverage.apply(process)
 
     return analysis

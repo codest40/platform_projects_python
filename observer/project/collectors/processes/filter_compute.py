@@ -54,6 +54,25 @@ def filter_process_state(result: EventRunner) -> dict:
 # Helpers
 # ==========================================================
 CLK_TCK = os.sysconf("SC_CLK_TCK")
+UNLIMITED = float("inf")
+
+def parse_limit(value):
+    """
+    Normalize a Linux resource limit.
+    Returns:
+        None          -> unavailable
+        float("inf")  -> unlimited
+        int           -> finite limit
+    """
+    UNLIMITED = float("inf")
+
+    if value is None:
+        return None
+    if value == "unlimited":
+        return UNLIMITED
+    if isinstance(value, (int, float)):
+        return value
+    return int(value)
 
 def _delta(current, previous):
     """
@@ -94,9 +113,10 @@ def _ratio(numerator, denominator):
 
     if numerator is None:
         return None
-
     if denominator in (None, 0):
         return None
+    if math.isinf(denominator) or math.isinf(numerator):
+        return "N/A"
 
     return numerator / denominator
 
@@ -143,9 +163,9 @@ def compute_process_rates(
         if previous_process is None:
             continue
 
-        #
+        # ======================================================
         # CPU Accounting
-        #
+        # ======================================================
 
         process.user_ticks_per_sec = _rate(
             process.user_ticks,
@@ -169,9 +189,24 @@ def compute_process_rates(
             CLK_TCK,
         )
 
-        #
+        u = process.user_cpu_percent
+        s = process.system_cpu_percent
+
+        if u is not None and s is not None:
+            process.cpu_percent = u + s
+
+        # ======================================================
+        # Memory
+        # ======================================================
+
+        process.resident_ratio = _ratio(
+            process.rss_bytes,
+            process.vms_bytes,
+        )
+
+        # ======================================================
         # I/O
-        #
+        # ======================================================
 
         process.read_bytes_per_sec = _rate(
             process.read_bytes,
@@ -197,9 +232,46 @@ def compute_process_rates(
             elapsed,
         )
 
-        #
+        r = process.read_bytes_per_sec
+        w = process.write_bytes_per_sec
+
+        if r is not None and w is not None:
+            process.io_bytes_per_sec = r + w
+
+        r = process.read_syscalls_per_sec
+        w = process.write_syscalls_per_sec
+
+        if r is not None and w is not None:
+            process.io_syscalls_per_sec = r + w
+
+        process.read_write_ratio = _ratio(
+            process.read_bytes_per_sec,
+            process.write_bytes_per_sec,
+        )
+
+        process.average_read_size = _ratio(
+            process.read_bytes_per_sec,
+            process.read_syscalls_per_sec,
+        )
+
+        process.average_write_size = _ratio(
+            process.write_bytes_per_sec,
+            process.write_syscalls_per_sec,
+        )
+
+        process.lifetime_average_read_size = _ratio(
+            process.read_bytes,
+            process.read_syscalls,
+        )
+
+        process.lifetime_average_write_size = _ratio(
+            process.write_bytes,
+            process.write_syscalls,
+        )
+
+        # ======================================================
         # Context Switching
-        #
+        # ======================================================
 
         process.voluntary_context_switches_per_sec = _rate(
             process.voluntary_context_switches,
@@ -213,23 +285,30 @@ def compute_process_rates(
             elapsed,
         )
 
-        #
-        # FD Utilization
-        #
+        v = process.voluntary_context_switches_per_sec
+        i = process.involuntary_context_switches_per_sec
+
+        if v is not None and i is not None:
+            process.total_context_switches_per_sec = v + i
+
+        process.voluntary_context_switch_ratio = _ratio(
+            process.voluntary_context_switches_per_sec,
+            process.total_context_switches_per_sec,
+        )
+
+        process.involuntary_context_switch_ratio = _ratio(
+            process.involuntary_context_switches_per_sec,
+            process.total_context_switches_per_sec,
+        )
+
+        # ======================================================
+        # File Descriptors
+        # ======================================================
 
         process.fd_utilization = _ratio(
             process.open_fds,
-            process.max_fds,
+            parse_limit(process.max_fds_soft),
         )
 
-    v = process.voluntary_context_switches_per_sec
-    i = process.involuntary_context_switches_per_sec
-    if v is not None and i is not None:
-        process.total_context_switches_per_sec = v + i
-
-    u = process.user_cpu_percent
-    s = process.system_cpu_percent
-    if u is not None and s is not None:
-        process.cpu_percent = u + s
-
     return inventory
+

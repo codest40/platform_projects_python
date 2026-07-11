@@ -7,7 +7,7 @@ from project.models.processes import (
 )
 
 SCHED_POLICY = {
-    0: "other",
+    0: "others",
     1: "fifo",
     2: "rr",
     3: "batch",
@@ -21,10 +21,6 @@ def analyze_scheduler(
 ) -> ProcessSchedulerAnalysis:
     """
     Analyze Linux scheduler behaviour for a process.
-
-    This analyzer performs no health assessment.
-    It simply describes how the Linux scheduler currently
-    sees this process.
     """
 
     analysis = ProcessSchedulerAnalysis(
@@ -118,13 +114,12 @@ def analyze_scheduler(
     coverage.check(process.policy is not None)
 
     if process.policy is not None:
-
+        analysis.policy = process.policy
         scheduler_class = SCHED_POLICY.get(
             process.policy,
             "unknown",
         )
-
-        analysis.schedulr_class = scheduler_class
+        analysis.scheduler_class = scheduler_class
         analysis.classifications.append(
             f"{scheduler_class}_scheduler"
         )
@@ -164,7 +159,7 @@ def analyze_scheduler(
     # Facts
     # ---------------------------------------------------------
     #
-
+    if analysis.state is not None:
     if analysis.state:
         analysis.facts.append(f"State: {analysis.state}")
 
@@ -183,9 +178,10 @@ def analyze_scheduler(
             f"RT priority: {analysis.rt_priority}"
         )
 
-    if analysis.policy:
+    if analysis.policy is not None:
+      if analysis.policy:
         analysis.facts.append(
-            f"Scheduling policy: {analysis.policy}"
+            f"Scheduling policy: {analysis.scheduler_class} {analysis.policy}"
         )
 
     if analysis.processor is not None:
@@ -193,7 +189,14 @@ def analyze_scheduler(
             f"Last CPU: {analysis.processor}"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
+    if analysis.runtime_seconds is not None:
+        analysis.facts.append(
+            f"Runtime: {analysis.runtime_seconds:.1f}s"
+        )
+    if analysis.start_time is not None:
+        analysis.facts.append(
+            f"Started at: {analysis.start_time:.2f}s"
+        )
 
+    coverage.apply(process)
     return analysis

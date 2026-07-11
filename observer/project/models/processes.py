@@ -1,6 +1,11 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+@dataclass
+class ObserverState:
+    NIL = None
+    NA = "N/A"       # Not applicable
+    UNSEEN = "N/S"   # Metric/source was not observed
 
 @dataclass(slots=True)
 class ProcessSnapshot:
@@ -23,6 +28,7 @@ class ProcessSnapshot:
     nice: Optional[int] = None
     rt_priority: Optional[int] = None
     policy: Optional[int] = None
+    wchan: str | None = None
 
     # ==========================================================
     # Ownership
@@ -70,8 +76,7 @@ class ProcessSnapshot:
     # ==========================================================
 
     open_fds: Optional[int] = None
-    max_fds: Optional[int] = None
-    fd_utilization: Optional[float] = None
+    fd_utilization: Optional[float | str] = None
 
     # ==========================================================
     # Process I/O
@@ -104,6 +109,10 @@ class ProcessSnapshot:
     user_ticks_per_sec: Optional[float] = None
     system_ticks_per_sec: Optional[float] = None
 
+    # Mem
+    resident_ratio: Optional[float] = None
+
+    # ps
     read_bytes_per_sec: Optional[float] = None
     write_bytes_per_sec: Optional[float] = None
 
@@ -113,13 +122,54 @@ class ProcessSnapshot:
     voluntary_context_switches_per_sec: Optional[float] = None
     involuntary_context_switches_per_sec: Optional[float] = None
     total_context_switches_per_sec: Optional[float] = None
+    voluntary_context_switch_ratio: Optional[float] = None
+    involuntary_context_switch_ratio: Optional[float] = None
+
+    # io
+    io_bytes_per_sec: Optional[float] = None
+    io_syscalls_per_sec: Optional[float] = None
+    read_write_ratio: Optional[float] = None
+    average_read_size: Optional[float] = None
+    average_write_size: Optional[float] = None
+    lifetime_average_read_size: Optional[float] = None
+    lifetime_average_write_size: Optional[float] = None
+
     # ==========================================================
     # ID Metadata
     # ==========================================================
-    username: str | None
-    groupname: str | None
-    user_shell: str | None
-    user_home: str | None
+    username: str | None=None
+    groupname: str | None=None
+    user_shell: str | None=None
+    user_home: str | None=None
+
+    # ==========================================================
+    # Resource Limits (/proc/<pid>/limits)
+    # ==========================================================
+
+    max_fds_soft: int | float | str | None = None
+    max_fds_hard: int | float | str | None = None
+
+    max_processes_soft: int | float | str | None = None
+    max_processes_hard: int | float | str | None = None
+
+    max_stack_size_soft: int | float | str | None = None
+    max_stack_size_hard: int | float | str | None = None
+
+    max_address_space_soft: int | float | str | None = None
+    max_address_space_hard: int | float | str | None = None
+
+    max_locked_memory_soft: int | float | str | None = None
+    max_locked_memory_hard: int | float | str | None = None
+
+    max_core_file_size_soft: int | float | str | None = None
+    max_core_file_size_hard: int | float | str | None = None
+
+    max_cpu_time_soft: int | float | str | None = None
+    max_cpu_time_hard: int | float | str | None = None
+
+    max_file_size_soft: int | float | str | None = None
+    max_file_size_hard: int | float | str | None = None
+
     # ==========================================================
     # Collection Metadata
     # ==========================================================
@@ -176,3 +226,36 @@ class ProcessIdentityAnalysis:
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
     scheduler_class: str | None = None
+
+
+@dataclass(slots=True)
+class ProcessWaitChannelAnalysis:
+    pid: int
+    tid: int
+    wait_channel: str | None = None
+    wait_type: str | None = None
+    facts: list[str] = field(default_factory=list)
+    classifications: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class ProcessSchedulerAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    state: str | None = None
+    priority: int | None = None
+    nice: int | None = None
+    rt_priority: int | None = None
+
+    policy: int | None = None
+    scheduler_class: str | None = None
+
+    processor: int | None = None
+
+    start_time: float | None = None
+    runtime_seconds: float | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
