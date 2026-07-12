@@ -214,11 +214,13 @@ def serialize_model(
 
     payload = model_to_dict(obj)
 
-    payload.update({
+    return {
         "type": event_type,
+        "timestamp": timestamp(),
+        "payload": payload,
         "caller": caller,
         "system": get_system_context(),
-    })
+    }
 
     return payload
 

@@ -1,6 +1,7 @@
 
 def analyze_process_metrics(**kwargs):
   print("DONE")
+  return {}
 
 def analyze_process(process):
 

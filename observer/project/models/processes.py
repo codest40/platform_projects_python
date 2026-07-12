@@ -440,3 +440,28 @@ class ProcessMemoryAnalysis:
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
 
+
+@dataclass(slots=True)
+class ProcessSummary:
+
+    pid: int
+    tid: int | None = None
+
+    healthy: bool | None = None
+    cpu_bound: bool | None = None
+    io_bound: bool | None = None
+    blocked: bool | None = None
+    multithreaded: bool | None = None
+    interactive: bool | None = None
+    daemon: bool | None = None
+    container: bool | None = None
+    resource_constrained: bool | None = None
+    approaching_limits: bool | None = None
+
+    severity: str | None = None
+    confidence: str | None = None
+
+    facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    classifications: list[str] = field(default_factory=list)
+
