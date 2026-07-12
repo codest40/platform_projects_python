@@ -23,12 +23,9 @@ def analyze_threads(
 
     coverage = Coverage()
 
-    #
     # ---------------------------------------------------------
     # Thread count
     # ---------------------------------------------------------
-    #
-
     coverage.check(process.thread_count is not None)
 
     if process.thread_count is not None:
@@ -173,12 +170,9 @@ def analyze_threads(
             f"State: {process.state}"
         )
 
-    #
     # ---------------------------------------------------------
     # Priority
     # ---------------------------------------------------------
-    #
-
     coverage.check(process.priority is not None)
 
     if process.priority is not None:
@@ -199,12 +193,9 @@ def analyze_threads(
             process.rt_priority
         )
 
-    #
     # ---------------------------------------------------------
     # Runtime
     # ---------------------------------------------------------
-    #
-
     coverage.check(
         process.runtime_seconds is not None
     )
