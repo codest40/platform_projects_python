@@ -19,6 +19,7 @@ import json
 # Process Lock
 LOCK_DIR = Path("/tmp/observer-locks")
 LOCK_DIR.mkdir(exist_ok=True)
+this_script = sys.argv[0]
 
 def acquire_process_lock(resource: str):
     file = open(LOCK_DIR / f"{resource}.lock", "w")
@@ -31,6 +32,7 @@ LOCKS = {
     "memory": Lock(),
     "disk": Lock(),
     "network": Lock(),
+    "process": Lock(),
     "alert": Lock(),
 }
 
@@ -40,7 +42,10 @@ def compiler(resource, func, args=(), kwargs=None,):
     process_lock = None
 
     if lock is None:
-        raise ValueError(f"[COMPILER] Unknown resource: {resource}.")
+        raise ValueError(f"[COMPILER] Unknown resource: {resource} \n"
+                     f"Reason: '{resource}' is NOT Found inside the Custom Resource Lock List defined in file \n"
+                     f"File: {this_script} \n"
+                     f"Suggsetion: Open the file and add '{resource}' to the dict or use a valid resource name already inside the dict.")
     if not lock.acquire(blocking=False):
         raise RuntimeError(f"[COMPILER] Another {resource} event is already running in this thread.") from None
     try:
@@ -56,10 +61,10 @@ def compiler(resource, func, args=(), kwargs=None,):
 
         return obj, caller
     except BlockingIOError:
-        print(f"[COMPILER] [Errno 11 (LOCKED)]: Another {resource} process is already running")
+        print(f"❌ [COMPILER] [Errno 11 (LOCKED)]: Another {resource} process is already running")
         return None, None
     except Exception as e:
-      print(f"[COMPILER] ERROR: {e}")
+      print(f"❌ [COMPILER] ERROR: {e}")
 
     finally:
       if process_lock is not None:

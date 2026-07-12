@@ -23,6 +23,7 @@ from project.collectors.processes.threads import collect_threads
 from project.collectors.processes.filter_compute import (
     filter_process_state, compute_process_rates,
   )
+from project.analyzers.processes.ps import analyze_process_metrics
 from project.utils.pipeline import pipeline_runner
 from project.utils.helpers import timestamp
 from project.utils.decorators import trace
@@ -62,7 +63,7 @@ def build_cache(proc_dir: Path) -> ProcessCache:
 
     return cache
 
-
+@trace("ps_inv")
 def collect_process_inventory() -> ProcessInventory:
     """
     Build a lightweight inventory of all running processes.
@@ -161,12 +162,13 @@ def start_process_collection():
 
 @trace("process_pipeline")
 def process_pipeline():
-    start_process_collection()
+    return start_process_collection()
 
-#process_pipeline()
+process_pipeline()
 
-if __name__ == "__main__":
-    inventory = collect_process_inventory()
+def nothing():
+#if __name__ == "__main__":
+    inventory = process_pipeline()
 
     print(f"Collected {inventory.collected_successful}/{inventory.collected_total}")
     print(
@@ -176,11 +178,11 @@ if __name__ == "__main__":
     )
     for process in inventory.processes[-2:]:
         print(process)
-    for failure in inventory.collector_failures[:2]:
+    for failure in inventory.collector_failures[:1]:
         print(failure)
     for ps in inventory.processes:
       if ps.pid == 3526:
         print("Process 3526 Found!")
         print(ps.thread_count)
-        print(ps.threads[:10])
+        print(ps.threads[:2])
         print(len(ps.threads))

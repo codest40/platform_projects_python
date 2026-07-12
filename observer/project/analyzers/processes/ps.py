@@ -1,4 +1,7 @@
 
+def analyze_process_metrics(**kwargs):
+  print("DONE")
+
 def analyze_process(process):
 
     analyses = []

@@ -1,6 +1,8 @@
 from project.utils.helpers import get_status
 from project.alerts.activate_alert import activate_run_alert
 from project.utils.start_event import run_collection, run_analysis, save_state, load_states
+from pathlib import Path
+import inspect
 
 #============================================
 # Observer ID Error
@@ -38,7 +40,8 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
     elif result.status == get_status("SUCCESS"):
         print(f"✅ {resource} Metrics Collection Passed")
         if not result.collected_at:
-            print(f"❌ {resource} collected Result Does Not have collected_at filed")
+            print(f"❌ {resource} collected Result Does Not have collected_at filed \n"
+                  f"Action: It is Needed Fo Computation to work")
             return
 
         payload = filter_func(result)
@@ -47,7 +50,7 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
 
         def create_sample():
             print("First sample Run.")
-            time.sleep(5)
+            time.sleep(2)
             result = run_collection()
             payload = filter_func(result)
             save_state(resource, payload)
@@ -66,8 +69,12 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
         save_state(resource, payload)
 
         res = run_analysis(resource=resource, func=analyze_func, result=result)
-        if not res:
-            print(f"❌ {resource} Analysis Failed")
+        if res is None:
+            file = Path(inspect.getsourcefile(analyze_func))
+            print(f"❌ [PIPELINE RUNNER] {resource} analyzer Function returned {res} \n"
+                f"Action: Check what {analyze_func.__name__} returns \n"
+                f"File: {file}")
+            return
         print(f"✅ {resource} Metrics Analysis Passed")
     else:
       raise ObserverError(f"❌ [PIPELINE RUNNER] Unknown ERROR: Emit() response returned: {result.status}")
