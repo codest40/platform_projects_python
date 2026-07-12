@@ -7,7 +7,7 @@ from project.models.processes import (
 )
 
 SCHED_POLICY = {
-    0: "others",
+    0: "other",
     1: "fifo",
     2: "rr",
     3: "batch",
@@ -160,7 +160,6 @@ def analyze_scheduler(
     # ---------------------------------------------------------
     #
     if analysis.state is not None:
-    if analysis.state:
         analysis.facts.append(f"State: {analysis.state}")
 
     if analysis.priority is not None:

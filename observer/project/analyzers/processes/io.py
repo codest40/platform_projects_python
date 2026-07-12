@@ -248,7 +248,5 @@ def analyze_io(
             f"{analysis.cancelled_write_bytes:,} bytes"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis

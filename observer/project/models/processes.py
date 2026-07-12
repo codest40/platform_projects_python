@@ -7,6 +7,26 @@ class ObserverState:
     NA = "N/A"        # Not applicable
     UNSEEN = "N/S"    # Metric/source was not observed
 
+@dataclass
+class ThreadSnapshot:
+
+    tid: int
+    name: str | None = None
+    state: str | None = None
+    processor: int | None = None
+    priority: int | None = None
+    nice: int | None = None
+    rt_priority: int | None = None
+    policy: int | None = None
+    wchan: str | None = None
+    uid: int | None = None
+    user_ticks: int | None = None
+    system_ticks: int | None = None
+    voluntary_context_switches: int | None = None
+    involuntary_context_switches: int | None = None
+    start_time: float | None = None
+
+
 @dataclass(slots=True)
 class ProcessSnapshot:
 
@@ -48,6 +68,7 @@ class ProcessSnapshot:
     # Threads
     # ==========================================================
 
+    threads: list[ThreadSnapshot] | None=None
     thread_count: Optional[int] = None
 
     # ==========================================================
@@ -171,13 +192,22 @@ class ProcessSnapshot:
     max_file_size_hard: int | float | str | None = None
 
     # ==========================================================
+    # Threads Metadata
+    # ==========================================================
+    idle_threads: int | None = None
+    running_threads: int | None = None
+    sleeping_threads: int | None = None
+    uninterruptible_threads: int | None = None
+    zombie_threads: int | None = None
+
+    # ==========================================================
     # Collection Metadata
     # ==========================================================
-
     collection_errors: list[str] = field(default_factory=list)
     processor: Optional[int] = None
     metrics_available: Optional[int] = None
     metrics_expected: Optional[int] = None
+
 
 @dataclass(slots=True)
 class InaccessibleProcess:
@@ -215,6 +245,7 @@ class ProcessCache:
     cgroup: Optional[str] = None
     limits: str | None = None
     io: str | None = None
+
 
 @dataclass(slots=True)
 class ProcessIdentityAnalysis:
@@ -259,3 +290,153 @@ class ProcessSchedulerAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+
+@dataclass(slots=True)
+class ProcessContextSwitchAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    voluntary_context_switches_per_sec: float | None = None
+    involuntary_context_switches_per_sec: float | None = None
+    total_context_switches_per_sec: float | None = None
+
+    voluntary_ratio: float | None = None
+    facts: list[str] = field(default_factory=list)
+
+@dataclass(slots=True)
+class ProcessCpuAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    cpu_percent: float | None = None
+    user_cpu_percent: float | None = None
+    system_cpu_percent: float | None = None
+
+    cpu_type: str | None = None
+
+    runtime_seconds: float | None = None
+    last_processor: int | None = None
+
+    priority: int | None = None
+    nice: int | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
+
+@dataclass(slots=True)
+class ProcessThreadAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    thread_count: int | None = None
+
+    session: int | None = None
+    process_group: int | None = None
+    foreground_process_group: int | None = None
+
+    state: str | None = None
+
+    priority: int | None = None
+    nice: int | None = None
+    rt_priority: int | None = None
+
+    runtime_seconds: float | None = None
+
+    processor: int | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
+
+@dataclass(slots=True)
+class ProcessFdAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    open_fds: int | None = None
+    max_fds: int | None = None
+    fd_utilization: float | None = None
+
+    facts: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class ProcessLimitsAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    max_cpu_time_soft: int | str | None = None
+    max_cpu_time_hard: int | str | None = None
+
+    max_file_size_soft: int | str | None = None
+    max_file_size_hard: int | str | None = None
+
+    max_stack_size_soft: int | str | None = None
+    max_stack_size_hard: int | str | None = None
+
+    max_core_file_size_soft: int | str | None = None
+    max_core_file_size_hard: int | str | None = None
+
+    max_locked_memory_soft: int | str | None = None
+    max_locked_memory_hard: int | str | None = None
+
+    max_processes_soft: int | str | None = None
+    max_processes_hard: int | str | None = None
+
+    max_fds_soft: int | str | None = None
+    max_fds_hard: int | str | None = None
+
+    max_address_space_soft: int | str | None = None
+    max_address_space_hard: int | str | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class ProcessIoAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    read_bytes_per_sec: float | None = None
+    write_bytes_per_sec: float | None = None
+    io_bytes_per_sec: float | None = None
+
+    read_write_ratio: float | None = None
+
+    read_syscalls_per_sec: float | None = None
+    write_syscalls_per_sec: float | None = None
+    io_syscalls_per_sec: float | None = None
+
+    cancelled_write_bytes: int | None = None
+
+    average_read_size: float | None = None
+    average_write_size: float | None = None
+
+    lifetime_average_read_size: float | None = None
+    lifetime_average_write_size: float | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
+
+@dataclass(slots=True)
+class ProcessMemoryAnalysis:
+
+    pid: int
+    tid: int | None = None
+
+    rss_bytes: int | None = None
+    vms_bytes: int | None = None
+
+    thread_count: int | None = None
+
+    resident_ratio: float | None = None
+
+    classifications: list[str] = field(default_factory=list)
+    facts: list[str] = field(default_factory=list)
+

@@ -84,7 +84,5 @@ def analyze_fd(
             f"{analysis.fd_utilization:.2%}"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis

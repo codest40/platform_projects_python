@@ -12,9 +12,6 @@ def analyze_context_switch(
 ) -> ProcessContextSwitchAnalysis:
     """
     Analyze scheduler context-switch behaviour.
-
-    Uses normalized values only.
-    Performs no health assessment.
     """
 
     analysis = ProcessContextSwitchAnalysis(
@@ -24,11 +21,9 @@ def analyze_context_switch(
 
     coverage = Coverage()
 
-    #
     # ---------------------------------------------------------
     # Voluntary Context Switches
     # ---------------------------------------------------------
-    #
 
     coverage.check(
         process.voluntary_context_switches_per_sec is not None
@@ -40,11 +35,9 @@ def analyze_context_switch(
             process.voluntary_context_switches_per_sec
         )
 
-    #
     # ---------------------------------------------------------
     # Involuntary Context Switches
     # ---------------------------------------------------------
-    #
 
     coverage.check(
         process.involuntary_context_switches_per_sec is not None
@@ -56,11 +49,9 @@ def analyze_context_switch(
             process.involuntary_context_switches_per_sec
         )
 
-    #
     # ---------------------------------------------------------
     # Total Context Switch Rate
     # ---------------------------------------------------------
-    #
 
     coverage.check(
         process.total_context_switches_per_sec is not None
@@ -72,11 +63,9 @@ def analyze_context_switch(
             process.total_context_switches_per_sec
         )
 
-    #
     # ---------------------------------------------------------
     # Voluntary Ratio
     # ---------------------------------------------------------
-    #
 
     coverage.check(
         process.voluntary_ratio is not None
@@ -88,11 +77,9 @@ def analyze_context_switch(
             process.voluntary_ratio
         )
 
-    #
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-    #
 
     if analysis.voluntary_context_switches_per_sec is not None:
 
@@ -108,7 +95,7 @@ def analyze_context_switch(
             f"{analysis.involuntary_context_switches_per_sec:.2f}/sec"
         )
 
-    if analysis.context_switches_per_sec is not None:
+    if analysis.total_context_switches_per_sec is not None:
 
         analysis.facts.append(
             "Total switches: "
@@ -121,7 +108,5 @@ def analyze_context_switch(
             f"Voluntary ratio: {analysis.voluntary_ratio:.2%}"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis

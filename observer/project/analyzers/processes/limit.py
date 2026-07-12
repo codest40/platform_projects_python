@@ -94,7 +94,5 @@ def analyze_limits(
                 f"{label} hard limit: {hard}"
             )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis

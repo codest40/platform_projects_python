@@ -4,6 +4,7 @@ from project.analyzers.utils.coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessWaitChannelAnalysis,
+    ObserverState as OB,
 )
 
 def analyze_wait_channel(
@@ -21,8 +22,8 @@ def analyze_wait_channel(
 
     if process.wchan is not None:
 
-      if process.wchan == "-":
-        analysis.wait_channel = "N/A"
+      if process.wchan in (None, "-", "0", "0000000000000000"):
+        analysis.wait_channel = OB.NA
         analysis.classifications.append("not_waiting")
         analysis.facts.append(
             f"Process is NOT Waiting"
@@ -34,7 +35,5 @@ def analyze_wait_channel(
         )
         analysis.classifications.append("waiting")
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis

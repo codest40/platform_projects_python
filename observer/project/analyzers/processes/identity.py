@@ -1,5 +1,6 @@
 from __future__ import annotations
 from project.analyzers.processes.users import get_user
+from project.analyzers.utils.coverage import Coverage
 
 from project.models.processes import (
     ProcessSnapshot,
@@ -12,7 +13,6 @@ def analyze_identity(
 ) -> ProcessIdentityAnalysis:
     """
     Classify process identity.
-    This analyzer performs no health assessment.
     It simply answers:
         • What is this process?
         • Who owns it?
@@ -24,17 +24,22 @@ def analyze_identity(
         pid=process.pid, tid=process.tid,
     )
 
-    #
+    coverage = Coverage()
     # ---------------------------------------------------------
     # Process type
     # ---------------------------------------------------------
-    #
 
     user = get_user(process.uid)
+
+    coverage.check(
+        process.command is not None or
+        process.executable is not None
+    )
 
     if not process.command and process.executable is None:
         analysis.process_type = "kernel_thread"
         analysis.classifications.append("kernel_thread")
+
 
     elif process.container_id:
         analysis.process_type = "container_process"
@@ -49,7 +54,7 @@ def analyze_identity(
     # Executable state
     # ---------------------------------------------------------
     #
-
+    coverage.check(process.executable is not None)
     if process.executable:
 
         if process.executable.endswith(" (deleted)"):
@@ -161,4 +166,5 @@ def analyze_identity(
             f"Cgroup: {process.cgroup}"
         )
 
+    coverage.apply(process)
     return analysis

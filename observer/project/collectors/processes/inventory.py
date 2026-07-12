@@ -19,6 +19,7 @@ from project.collectors.processes.io import collect_io
 from project.collectors.processes.fd import collect_fd
 from project.collectors.processes.limit import collect_limits
 from project.collectors.processes.wait_channel import collect_wait_channel
+from project.collectors.processes.threads import collect_threads
 from project.collectors.processes.filter_compute import (
     filter_process_state, compute_process_rates,
   )
@@ -71,7 +72,6 @@ def collect_process_inventory() -> ProcessInventory:
 
     inventory = ProcessInventory()
 
-    # Read system uptime once.
     with open("/proc/uptime") as f:
         uptime_seconds = float(f.readline().split()[0])
 
@@ -111,12 +111,13 @@ def collect_process_inventory() -> ProcessInventory:
             snapshot = collect_context_switches(snapshot, cache, inventory.collector_failures,)
             snapshot = collect_limits(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_wait_channel(snapshot, proc_dir, inventory.collector_failures,)
+            snapshot = collect_threads(snapshot, proc_dir, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1
             inventory.processes.append(snapshot)
         except (ProcessLookupError, FileNotFoundError) as both:
-            #
+
             # Process exited while collecting.
             if isinstance(both, ProcessLookupError):
                   reason="process exited during collection",
@@ -144,7 +145,6 @@ def collect_process_inventory() -> ProcessInventory:
                     reason=str(e),
                 )
             )
-
     return inventory
 
 @trace("start_process_run")
@@ -174,10 +174,13 @@ if __name__ == "__main__":
         f"Accessible: {inventory.accessible_processes} | "
         f"Inaccessible: {inventory.inaccessible_processes} | "
     )
-    for process in inventory.processes[-5:]:
+    for process in inventory.processes[-2:]:
         print(process)
-    for failure in inventory.collector_failures[:5]:
+    for failure in inventory.collector_failures[:2]:
         print(failure)
-    #for x in inventory.processes[-15:]:
-    #    print(x.wchan)
-
+    for ps in inventory.processes:
+      if ps.pid == 3526:
+        print("Process 3526 Found!")
+        print(ps.thread_count)
+        print(ps.threads[:10])
+        print(len(ps.threads))

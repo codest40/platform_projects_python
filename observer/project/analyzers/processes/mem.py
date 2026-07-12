@@ -86,22 +86,9 @@ def analyze_memory(
     if process.resident_ratio is not None:
         analysis.resident_ratio = process.resident_ratio
 
-        if analysis.resident_ratio > 0.90:
-            analysis.classifications.append(
-              "memory_resident"
-            )
-
-        elif analysis.resident_ratio < 0.20:
-            analysis.classifications.append(
-              "mostly_virtual"
-            )
-
-    #
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-    #
-
     if analysis.rss_bytes is not None:
 
         analysis.facts.append(
@@ -126,7 +113,5 @@ def analyze_memory(
             f"Resident ratio: {analysis.resident_ratio:.2f}"
         )
 
-    analysis.metrics_available = coverage.available
-    analysis.metrics_expected = coverage.expected
-
+    coverage.apply(process)
     return analysis
