@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Type
 
-
 # ==========================================================
 # Analysis Lookup
 # ==========================================================
@@ -100,13 +99,17 @@ from project.models.processes import (
     ProcessThreadAnalysis,
 )
 
-
 def is_multithreaded(
-    threads: ProcessThreadAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is multithreaded.
     """
+
+    threads = get_analysis(
+        analyses,
+        ProcessThreadAnalysis,
+    )
 
     if threads is None:
         return None
@@ -118,17 +121,23 @@ def is_multithreaded(
 
 
 
+
 from project.models.processes import (
     ProcessIdentityAnalysis,
 )
 
 
 def is_interactive(
-    identity: ProcessIdentityAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is interactive.
     """
+
+    identity = get_analysis(
+        analyses,
+        ProcessIdentityAnalysis,
+    )
 
     if identity is None:
         return None
@@ -138,18 +147,22 @@ def is_interactive(
         "interactive_shell",
     )
 
-
 from project.models.processes import (
     ProcessIdentityAnalysis,
 )
 
 
 def is_daemon(
-    identity: ProcessIdentityAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is a system daemon.
     """
+
+    identity = get_analysis(
+        analyses,
+        ProcessIdentityAnalysis,
+    )
 
     if identity is None:
         return None
@@ -160,18 +173,23 @@ def is_daemon(
     )
 
 
-
 from project.models.processes import (
     ProcessIdentityAnalysis,
 )
 
 
 def is_container(
-    identity: ProcessIdentityAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
-    Determine whether the process is running inside a container.
+    Determine whether the process is running inside
+    a container.
     """
+
+    identity = get_analysis(
+        analyses,
+        ProcessIdentityAnalysis,
+    )
 
     if identity is None:
         return None
@@ -189,19 +207,31 @@ from project.models.processes import (
 
 
 def is_blocked(
-    scheduler: ProcessSchedulerAnalysis | None,
-    wait: ProcessWaitChannelAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is blocked waiting
     for a kernel resource.
     """
 
-    if scheduler is None and wait is None:
+    scheduler = get_analysis(
+        analyses,
+        ProcessSchedulerAnalysis,
+    )
+
+    wait = get_analysis(
+        analyses,
+        ProcessWaitChannelAnalysis,
+    )
+
+    if (
+        scheduler is None
+        and wait is None
+    ):
         return None
 
     #
-    # Uninterruptible sleep
+    # Uninterruptible sleep (D state)
     #
 
     if (
@@ -211,12 +241,15 @@ def is_blocked(
         return True
 
     #
-    # Waiting in kernel
+    # Waiting in the kernel
     #
 
     if (
         wait is not None
-        and "waiting" in wait.classifications
+        and has_classification(
+            wait,
+            "waiting",
+        )
     ):
         return True
 
@@ -231,14 +264,27 @@ from project.models.processes import (
 
 
 def is_resource_constrained(
-    memory: ProcessMemoryAnalysis | None,
-    fd: ProcessFdAnalysis | None,
-    limits: ProcessLimitsAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process appears to be
     constrained by system resources.
     """
+
+    memory = get_analysis(
+        analyses,
+        ProcessMemoryAnalysis,
+    )
+
+    fd = get_analysis(
+        analyses,
+        ProcessFdAnalysis,
+    )
+
+    limits = get_analysis(
+        analyses,
+        ProcessLimitsAnalysis,
+    )
 
     if (
         memory is None
@@ -248,19 +294,18 @@ def is_resource_constrained(
         return None
 
     #
-    # High FD usage
+    # High file descriptor utilization
     #
 
     if (
         fd is not None
-        and fd.fd_utilization is not None
-        and fd.fd_utilization != "N/A"
+        and isinstance(fd.fd_utilization, float)
         and fd.fd_utilization >= 0.90
     ):
         return True
 
     #
-    # Finite resource limits
+    # Resource limits reached/fixed
     #
 
     if limits is not None:
@@ -280,13 +325,22 @@ from project.models.processes import (
 
 
 def is_approaching_limits(
-    fd: ProcessFdAnalysis | None,
-    limits: ProcessLimitsAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is approaching one
     or more configured resource limits.
     """
+
+    fd = get_analysis(
+        analyses,
+        ProcessFdAnalysis,
+    )
+
+    limits = get_analysis(
+        analyses,
+        ProcessLimitsAnalysis,
+    )
 
     if (
         fd is None
@@ -295,7 +349,7 @@ def is_approaching_limits(
         return None
 
     #
-    # File descriptors
+    # File descriptor utilization
     #
 
     if (
@@ -305,7 +359,18 @@ def is_approaching_limits(
     ):
         return True
 
+    #
+    # Future:
+    #
+    # - Stack utilization
+    # - Process count utilization
+    # - Address space utilization
+    # - Locked memory utilization
+    # - CPU time utilization
+    #
+
     return False
+
 
 from project.models.processes import (
     ProcessIoAnalysis,
@@ -313,31 +378,32 @@ from project.models.processes import (
 
 
 def is_io_bound(
-    io: ProcessIoAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process is I/O bound.
     """
 
+    io = get_analysis(
+        analyses,
+        ProcessIoAnalysis,
+    )
+
     if io is None:
         return None
 
-    #
-    # Active I/O
-    #
-
+    # Active I/O throughput
     if (
         io.io_bytes_per_sec is not None
         and io.io_bytes_per_sec > 0
     ):
         return True
-
+    # Active I/O syscalls
     if (
         io.io_syscalls_per_sec is not None
         and io.io_syscalls_per_sec > 0
     ):
         return True
-
     return False
 
 
@@ -348,15 +414,27 @@ from project.models.processes import (
 
 
 def is_cpu_bound(
-    cpu: ProcessCpuAnalysis | None,
-    io: ProcessIoAnalysis | None,
+    analyses: list,
 ) -> bool | None:
     """
     Determine whether the process appears to be
     CPU bound.
     """
 
-    if cpu is None and io is None:
+    cpu = get_analysis(
+        analyses,
+        ProcessCpuAnalysis,
+    )
+
+    io = get_analysis(
+        analyses,
+        ProcessIoAnalysis,
+    )
+
+    if (
+        cpu is None
+        and io is None
+    ):
         return None
 
     #
@@ -371,8 +449,8 @@ def is_cpu_bound(
         return False
 
     #
-    # Significant I/O means it is probably
-    # not CPU-bound.
+    # Significant I/O activity usually means
+    # the process is not CPU-bound.
     #
 
     if io is not None:
@@ -392,14 +470,8 @@ def is_cpu_bound(
     return True
 
 
-
 def is_process_healthy(
-    *,
-    cpu_bound: bool | None,
-    io_bound: bool | None,
-    blocked: bool | None,
-    resource_constrained: bool | None,
-    approaching_limits: bool | None,
+    summary,
 ) -> bool | None:
     """
     Determine the overall health of a process.
@@ -408,11 +480,11 @@ def is_process_healthy(
     if all(
         value is None
         for value in (
-            cpu_bound,
-            io_bound,
-            blocked,
-            resource_constrained,
-            approaching_limits,
+            summary.cpu_bound,
+            summary.io_bound,
+            summary.blocked,
+            summary.resource_constrained,
+            summary.approaching_limits,
         )
     ):
         return None
@@ -421,17 +493,17 @@ def is_process_healthy(
     # Definitely unhealthy
     #
 
-    if blocked:
+    if summary.blocked:
         return False
 
-    if resource_constrained:
+    if summary.resource_constrained:
         return False
 
     #
     # Warning state
     #
 
-    if approaching_limits:
+    if summary.approaching_limits:
         return True
 
     return True
@@ -443,32 +515,24 @@ def calculate_confidence(
     """
     Estimate confidence in the process summary.
 
-    Confidence reflects how much evidence was available,
-    not whether the process is healthy.
+    Confidence reflects how much evidence was
+    successfully collected and analyzed.
     """
 
     if not analyses:
         return "LOW"
 
-    total = len(analyses)
-
-    complete = 0.0
+    score = 0.0
 
     for analysis in analyses:
 
-        coverage = getattr(
-            analysis,
-            "coverage",
-            None,
-        )
+        if analysis.coverage == "COMPLETE":
+            score += 1.0
 
-        if coverage == "COMPLETE":
-            complete += 1.0
+        elif analysis.coverage == "PARTIAL":
+            score += 0.5
 
-        elif coverage == "PARTIAL":
-            complete += 0.5
-
-    score = complete / total
+    score /= len(analyses)
 
     if score >= 0.80:
         return "HIGH"
@@ -480,23 +544,19 @@ def calculate_confidence(
 
 
 def calculate_severity(
-    *,
-    healthy: bool | None,
-    blocked: bool | None,
-    resource_constrained: bool | None,
-    approaching_limits: bool | None,
+    summary,
 ) -> str:
     """
-    Determine the overall process severity.
+    Determine the overall severity of the process.
     """
 
     if all(
         value is None
         for value in (
-            healthy,
-            blocked,
-            resource_constrained,
-            approaching_limits,
+            summary.healthy,
+            summary.blocked,
+            summary.resource_constrained,
+            summary.approaching_limits,
         )
     ):
         return "UNKNOWN"
@@ -505,26 +565,24 @@ def calculate_severity(
     # Critical
     #
 
-    if blocked:
+    if summary.blocked:
         return "CRITICAL"
 
-    if resource_constrained:
+    if summary.resource_constrained:
         return "CRITICAL"
 
     #
     # Warning
     #
 
-    if approaching_limits:
+    if summary.approaching_limits:
         return "WARNING"
 
     #
     # Healthy
     #
 
-    if healthy:
+    if summary.healthy:
         return "PASS"
 
     return "WARNING"
-
-

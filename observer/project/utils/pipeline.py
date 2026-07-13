@@ -44,6 +44,7 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
                   f"Action: It is Needed Fo Computation to work")
             return
 
+        #print([x for x in dir(result.data) if not x.startswith("_")])
         payload = filter_func(result)
         save_state(resource, payload)
         previous, current = load_states(resource)
@@ -66,8 +67,8 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
                 previous,
                 payload,
                 )
-        save_state(resource, payload)
 
+        save_state(resource, payload)
         res = run_analysis(resource=resource, func=analyze_func, result=result)
         if res is None:
             file = Path(inspect.getsourcefile(analyze_func))

@@ -134,9 +134,9 @@ def coverage_percent(
 ) -> float:
 
     if not instance(available, int):
-        raise
+        return None
     if not instance(expected, int):
-        raise
+        return None
     if expected == 0:
         return 0.0
 

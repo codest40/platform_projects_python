@@ -465,3 +465,17 @@ class ProcessSummary:
     recommendations: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
 
+
+@dataclass(slots=True)
+class ProcessSummaryInventory:
+
+    processes: list[ProcessSummary] = field(
+        default_factory=list
+    )
+    analyzed_total: int = 0
+    analyzed_successful: int = 0
+    analyzed_failed: int = 0
+    analysis_errors: list[str] = field(
+        default_factory=list
+    )
+

@@ -1,49 +1,34 @@
+from __future__ import annotations
+from project.models.processes import (
+    ProcessSnapshot,
+    ProcessSummary,
+    ProcessSummaryInventory,
+)
+
+from project.analyzers.processes.summary import (
+    summarize_process,
+)
+
+
+def analyze_processes(
+    inventory: ProcessInventory,
+) -> ProcessAnalysis:
+
+    result = ProcessSummaryInventory()
+    for process in inventory.processes:
+
+        try:
+            summary = summarize_process(process)
+            result.processes.append(summary)
+            result.analyzed_successful += 1
+        except Exception:
+            result.analyzed_failed += 1
+
+    result.analyzed_total = len(inventory.processes)
+    return result
 
 def analyze_process_metrics(**kwargs):
-  print("DONE")
+
+  print("Recieved By analyzer!")
   return {}
 
-def analyze_process(process):
-
-    analyses = []
-
-    analyses.append(
-        analyze_identity(process)
-    )
-
-    analyses.append(
-        analyze_cpu(process)
-    )
-
-    analyses.append(
-        analyze_memory(process)
-    )
-
-    analyses.append(
-        analyze_io(process)
-    )
-
-    analyses.append(
-        analyze_scheduler(process)
-    )
-
-    analyses.append(
-        analyze_threads(process)
-    )
-
-    analyses.append(
-        analyze_fd(process)
-    )
-
-    analyses.append(
-        analyze_limits(process)
-    )
-
-    analyses.append(
-        analyze_wait_channel(process)
-    )
-
-    return summarize_process(
-        process,
-        analyses,
-    )

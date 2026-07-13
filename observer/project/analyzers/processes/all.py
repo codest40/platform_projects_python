@@ -1,43 +1,41 @@
- rules.py
+from project.analyzers.processes.identity import (
+    analyze_identity,
+)
 
-# ------------------------------------------
-# Helpers
-# ------------------------------------------
+from project.analyzers.processes.cpu import (
+    analyze_cpu,
+)
+from project.analyzers.processes.mem import (
+    analyze_memory,
+)
+from project.analyzers.processes.io import (
+    analyze_io,
+)
+from project.analyzers.processes.sched import (
+    analyze_scheduler,
+)
+from project.analyzers.processes.threads import (
+    analyze_threads,
+)
+from project.analyzers.processes.fd import (
+    analyze_fd,
+)
+from project.analyzers.processes.limit import (
+    analyze_limits,
+)
+from project.analyzers.processes.wait_channels import (
+    analyze_wait_channel,
+)
 
-get_analysis()
 
-has_classification()
-
-has_fact()
-
-# ------------------------------------------
-# Operational Questions
-# ------------------------------------------
-
-is_process_healthy()
-
-is_cpu_bound()
-
-is_io_bound()
-
-is_blocked()
-
-is_multithreaded()
-
-is_interactive()
-
-is_daemon()
-
-is_container()
-
-is_resource_constrained()
-
-is_approaching_limits()
-
-# ------------------------------------------
-# Overall Assessment
-# ------------------------------------------
-
-calculate_severity()
-
-calculate_confidence()
+analyses = [
+    analyze_identity,
+    analyze_cpu,
+    analyze_memory,
+    analyze_io,
+    analyze_scheduler,
+    analyze_threads,
+    analyze_fd,
+    analyze_limits,
+    analyze_wait_channel,
+]

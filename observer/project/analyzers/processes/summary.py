@@ -5,140 +5,36 @@ from project.models.processes import (
     ProcessSummary,
 )
 
+from project.analyzers.processes.all import analyses
+from project.analyzers.processes import rules
 
-# ==========================================================
-# Health
-# ==========================================================
 
-def process_health(summary, analyses):
+def merge_analysis(
+    summary: ProcessSummary,
+    analysis,
+) -> None:
     """
-    Overall process health.
-    """
-    pass
-
-
-# ==========================================================
-# CPU
-# ==========================================================
-
-def process_cpu_behavior(summary, analyses):
-    """
-    Is this process CPU bound?
-    """
-    pass
-
-
-# ==========================================================
-# I/O
-# ==========================================================
-
-def process_io_behavior(summary, analyses):
-    """
-    Is this process I/O bound?
-    """
-    pass
-
-
-# ==========================================================
-# Waiting
-# ==========================================================
-
-def process_wait_behavior(summary, analyses):
-    """
-    Is the process blocked?
-    """
-    pass
-
-
-# ==========================================================
-# Threading
-# ==========================================================
-
-def process_threading(summary, analyses):
-    """
-    Thread topology.
-    """
-    pass
-
-
-# ==========================================================
-# Identity
-# ==========================================================
-
-def process_identity(summary, analyses):
-    """
-    Container / daemon / shell / kernel thread.
-    """
-    pass
-
-
-# ==========================================================
-# Resources
-# ==========================================================
-
-def process_resources(summary, analyses):
-    """
-    Memory / FD resource usage.
-    """
-    pass
-
-
-# ==========================================================
-# Limits
-# ==========================================================
-
-def process_limits(summary, analyses):
-    """
-    Resource limits.
-    """
-    pass
-
-
-# ==========================================================
-# Coverage
-# ==========================================================
-
-def process_coverage(summary, analyses):
-    """
-    Analyzer coverage.
-    """
-    pass
-
-
-def find_analysis(
-    analyses: list,
-    analysis_type,
-):
-    """
-    Return the first analysis matching a type.
+    Merge analyzer output into the process summary.
     """
 
-    for analysis in analyses:
+    summary.facts.extend(
+        analysis.facts
+    )
 
-        if isinstance(analysis, analysis_type):
-            return analysis
+    summary.recommendations.extend(
+        analysis.recommendations
+    )
 
-    return None
+    summary.classifications.extend(
+        analysis.classifications
+    )
+
 
 def summarize_process(
     process: ProcessSnapshot,
-    analyses: list,
 ) -> ProcessSummary:
     """
     Produce a high-level diagnosis for a process.
-
-    This answers questions such as:
-
-        Is this process healthy?
-        Is it CPU-bound?
-        Is it I/O-bound?
-        Is it blocked?
-        Is it multithreaded?
-        Is it interactive?
-        Is it a daemon?
-        Is it a container process?
-        Is it resource constrained?
-        Is it approaching limits?
     """
 
     summary = ProcessSummary(
@@ -146,22 +42,80 @@ def summarize_process(
         tid=process.tid,
     )
 
-    process_health(summary, analyses)
+    #
+    # ---------------------------------------------------------
+    # Run analyzers
+    # ---------------------------------------------------------
+    #
 
-    process_cpu_behavior(summary, analyses)
+    results = []
 
-    process_io_behavior(summary, analyses)
+    for analyzer in analyses:
 
-    process_wait_behavior(summary, analyses)
+        analysis = analyzer(process)
 
-    process_threading(summary, analyses)
+        results.append(
+            analysis
+        )
 
-    process_identity(summary, analyses)
+        merge_analysis(
+            summary,
+            analysis,
+        )
 
-    process_resources(summary, analyses)
+    # ---------------------------------------------------------
+    # High-level process behavior
+    # ---------------------------------------------------------
 
-    process_limits(summary, analyses)
+    summary.multithreaded = (
+        rules.is_multithreaded(results)
+    )
 
-    process_coverage(summary, analyses)
+    summary.interactive = (
+        rules.is_interactive(results)
+    )
+
+    summary.daemon = (
+        rules.is_daemon(results)
+    )
+
+    summary.container = (
+        rules.is_container(results)
+    )
+
+    summary.blocked = (
+        rules.is_blocked(results)
+    )
+
+    summary.cpu_bound = (
+        rules.is_cpu_bound(results)
+    )
+
+    summary.io_bound = (
+        rules.is_io_bound(results)
+    )
+
+    summary.resource_constrained = (
+        rules.is_resource_constrained(results)
+    )
+
+    summary.approaching_limits = (
+        rules.is_approaching_limits(results)
+    )
+
+    # ---------------------------------------------------------
+    # Overall diagnosis
+    # ---------------------------------------------------------
+    summary.healthy = (
+        rules.is_process_healthy(summary)
+    )
+
+    summary.confidence = (
+        rules.calculate_confidence(results)
+    )
+
+    summary.severity = (
+        rules.calculate_severity(summary)
+    )
 
     return summary
