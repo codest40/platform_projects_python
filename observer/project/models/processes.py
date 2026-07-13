@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
-@dataclass
 class ObserverState:
     NIL = None
     NA = "N/A"        # Not applicable
     UNSEEN = "N/S"    # Metric/source was not observed
+
+    values = frozenset({NIL, NA, UNSEEN})
 
 @dataclass
 class ThreadSnapshot:
@@ -265,6 +266,7 @@ class ProcessIdentityAnalysis:
     facts: list[str] = field(default_factory=list)
     scheduler_class: str | None = None
     recommendations: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
@@ -276,6 +278,7 @@ class ProcessWaitChannelAnalysis:
     facts: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
     recommendations: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
@@ -299,6 +302,7 @@ class ProcessSchedulerAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -314,6 +318,8 @@ class ProcessContextSwitchAnalysis:
 
     voluntary_ratio: float | None = None
     facts: list[str] = field(default_factory=list)
+    classifications: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -339,6 +345,7 @@ class ProcessCpuAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -366,6 +373,8 @@ class ProcessThreadAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
+
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -382,6 +391,7 @@ class ProcessFdAnalysis:
 
     facts: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -418,6 +428,7 @@ class ProcessLimitsAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -447,6 +458,7 @@ class ProcessIoAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -465,6 +477,7 @@ class ProcessMemoryAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    signals: dict[str, bool] = field(default_factory=dict)
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 

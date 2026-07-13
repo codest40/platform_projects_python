@@ -12,9 +12,7 @@ def get_analysis(
     """
     Return the requested analysis object.
     """
-
     for analysis in analyses:
-
         if isinstance(
             analysis,
             analysis_type,
@@ -27,7 +25,6 @@ def get_analysis(
 # ==========================================================
 # Classification Helpers
 # ==========================================================
-
 def has_classification(
     analysis,
     classification: str,
@@ -125,7 +122,6 @@ def is_multithreaded(
 from project.models.processes import (
     ProcessIdentityAnalysis,
 )
-
 
 def is_interactive(
     analyses: list,
@@ -230,20 +226,14 @@ def is_blocked(
     ):
         return None
 
-    #
     # Uninterruptible sleep (D state)
-    #
-
     if (
         scheduler is not None
         and scheduler.state == "D"
     ):
         return True
 
-    #
     # Waiting in the kernel
-    #
-
     if (
         wait is not None
         and has_classification(
@@ -437,21 +427,12 @@ def is_cpu_bound(
     ):
         return None
 
-    #
-    # No CPU activity
-    #
-
     if (
         cpu is None
         or cpu.cpu_ticks_per_sec is None
         or cpu.cpu_ticks_per_sec <= 0
     ):
         return False
-
-    #
-    # Significant I/O activity usually means
-    # the process is not CPU-bound.
-    #
 
     if io is not None:
 
@@ -489,20 +470,14 @@ def is_process_healthy(
     ):
         return None
 
-    #
     # Definitely unhealthy
-    #
-
     if summary.blocked:
         return False
 
     if summary.resource_constrained:
         return False
 
-    #
     # Warning state
-    #
-
     if summary.approaching_limits:
         return True
 
