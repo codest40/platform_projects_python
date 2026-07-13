@@ -11,9 +11,7 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
         )
 
     disk: DiskData = result
-
     checks: list[HealthCheck] = []
-
     analyzer_state = {
       "total": 0,
       "complete": 0,
@@ -183,6 +181,7 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
     # ==========================================================
     # IO Latency
     # ==========================================================
+    latency=None
     if (disk.average_read_latency_ms is not None) and (disk.average_write_latency_ms is not None):
       add_state("total")
 
@@ -316,7 +315,7 @@ def analyze_disk_metrics(result) -> DiskAnalysis:
         if (disk.device_utilization_percent or 0) >= 95:
           evidence.append("utilization")
 
-    if latency is not None:
+    if latency is not None and latency != "N/A":
       if latency >= 50:
           evidence.append("latency")
 

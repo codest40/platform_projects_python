@@ -96,6 +96,6 @@ if not logger.handlers:
 
     logger.addHandler(json_handler)
 
-    logger.addHandler(pretty_handler)
+    #logger.addHandler(pretty_handler)
 
-    logger.addHandler(console_handler)
+    #logger.addHandler(console_handler)

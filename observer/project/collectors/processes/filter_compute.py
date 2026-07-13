@@ -1,7 +1,9 @@
 from __future__ import annotations
 from project.models.processes import ProcessInventory
 from project.utils.runners import EventRunner
+#from project.logging.logger import emit
 import os
+import math
 
 # ==========================================================
 # Filter State
@@ -12,9 +14,7 @@ def filter_process_state(result: EventRunner) -> dict:
     Snapshot only cumulative process counters needed for
     interval computation.
     """
-
     inventory: ProcessInventory = result.data
-
     return {
         "collected_at": result.collected_at,
 
@@ -94,9 +94,7 @@ def _rate(current, previous, elapsed):
     """
     Convert cumulative counter into per-second rate.
     """
-
     delta = _delta(current, previous)
-
     if delta is None:
         return None
 
@@ -144,8 +142,8 @@ def compute_process_rates(
     if previous is None:
         return inventory
 
-    previous_time = previous.get("collected_at")
 
+    previous_time = previous.get("collected_at")
     if previous_time is None:
         return inventory
 
@@ -154,19 +152,19 @@ def compute_process_rates(
     if elapsed <= 0:
         return inventory
 
-    previous_processes = previous["processes"]
+    previous_processes = { int(pid): data for pid, data in previous["processes"].items() }
 
     for process in inventory.processes:
 
         previous_process = previous_processes.get(process.pid)
 
         if previous_process is None:
+            #emit(f"{process.pid}: no previous snapshot found")
             continue
 
         # ======================================================
         # CPU Accounting
         # ======================================================
-
         process.user_ticks_per_sec = _rate(
             process.user_ticks,
             previous_process["user_ticks"],
@@ -310,5 +308,13 @@ def compute_process_rates(
             parse_limit(process.max_fds_soft),
         )
 
+    #print(f"Current processes : {len(inventory.processes)}")
+    #print(f"Previous processes: {len(previous_processes)}")
+    #current_pids = {p.pid for p in inventory.processes}
+    #previous_pids = set(previous_processes.keys())
+
+    #print("Common:", len(current_pids & previous_pids))
+    #print("New:", len(current_pids - previous_pids))
+    #print("Gone:", len(previous_pids - current_pids))
     return inventory
 

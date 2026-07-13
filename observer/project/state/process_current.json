@@ -1,27 +1,27 @@
 {
-    "collected_at": 1783937397.4980094,
+    "collected_at": 1783955870.4930713,
     "processes": {
         "1": {
-            "user_ticks": 164,
-            "system_ticks": 143,
+            "user_ticks": 204,
+            "system_ticks": 176,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 4247,
-            "involuntary_context_switches": 1878
+            "voluntary_context_switches": 5912,
+            "involuntary_context_switches": 1993
         },
         "2": {
             "user_ticks": 0,
-            "system_ticks": 0,
+            "system_ticks": 1,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 189,
-            "involuntary_context_switches": 3
+            "voluntary_context_switches": 311,
+            "involuntary_context_switches": 4
         },
         "3": {
             "user_ticks": 0,
@@ -113,25 +113,25 @@
         },
         "14": {
             "user_ticks": 0,
-            "system_ticks": 728,
+            "system_ticks": 2034,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 201133,
-            "involuntary_context_switches": 18066
+            "voluntary_context_switches": 528804,
+            "involuntary_context_switches": 58478
         },
         "15": {
             "user_ticks": 0,
-            "system_ticks": 554,
+            "system_ticks": 1522,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 400913,
-            "involuntary_context_switches": 248
+            "voluntary_context_switches": 1075185,
+            "involuntary_context_switches": 500
         },
         "16": {
             "user_ticks": 0,
@@ -152,18 +152,18 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 502,
+            "voluntary_context_switches": 553,
             "involuntary_context_switches": 11
         },
         "18": {
             "user_ticks": 0,
-            "system_ticks": 6,
+            "system_ticks": 17,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 3127,
+            "voluntary_context_switches": 9072,
             "involuntary_context_switches": 0
         },
         "19": {
@@ -212,36 +212,25 @@
         },
         "23": {
             "user_ticks": 0,
-            "system_ticks": 18,
+            "system_ticks": 28,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 2946,
+            "voluntary_context_switches": 8577,
             "involuntary_context_switches": 0
         },
         "24": {
             "user_ticks": 0,
-            "system_ticks": 52,
+            "system_ticks": 147,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 25316,
-            "involuntary_context_switches": 102
-        },
-        "25": {
-            "user_ticks": 0,
-            "system_ticks": 283,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 56565,
-            "involuntary_context_switches": 3929
+            "voluntary_context_switches": 63472,
+            "involuntary_context_switches": 243
         },
         "26": {
             "user_ticks": 0,
@@ -278,36 +267,36 @@
         },
         "29": {
             "user_ticks": 0,
-            "system_ticks": 17,
+            "system_ticks": 26,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 2673,
+            "voluntary_context_switches": 7922,
             "involuntary_context_switches": 0
         },
         "30": {
             "user_ticks": 0,
-            "system_ticks": 54,
+            "system_ticks": 165,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 32150,
-            "involuntary_context_switches": 126
+            "voluntary_context_switches": 87388,
+            "involuntary_context_switches": 309
         },
         "32": {
             "user_ticks": 0,
-            "system_ticks": 47,
+            "system_ticks": 115,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 28852,
-            "involuntary_context_switches": 125
+            "voluntary_context_switches": 77651,
+            "involuntary_context_switches": 135
         },
         "33": {
             "user_ticks": 0,
@@ -333,25 +322,25 @@
         },
         "35": {
             "user_ticks": 0,
-            "system_ticks": 17,
+            "system_ticks": 25,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 2648,
+            "voluntary_context_switches": 7750,
             "involuntary_context_switches": 0
         },
         "36": {
             "user_ticks": 0,
-            "system_ticks": 38,
+            "system_ticks": 105,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 18475,
-            "involuntary_context_switches": 139
+            "voluntary_context_switches": 45792,
+            "involuntary_context_switches": 291
         },
         "38": {
             "user_ticks": 0,
@@ -372,7 +361,7 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 256,
+            "voluntary_context_switches": 271,
             "involuntary_context_switches": 0
         },
         "40": {
@@ -427,18 +416,18 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 131,
+            "voluntary_context_switches": 133,
             "involuntary_context_switches": 0
         },
         "45": {
-            "user_ticks": 1,
+            "user_ticks": 3,
             "system_ticks": 0,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 76,
+            "voluntary_context_switches": 226,
             "involuntary_context_switches": 0
         },
         "47": {
@@ -464,15 +453,15 @@
             "involuntary_context_switches": 0
         },
         "50": {
-            "user_ticks": 37,
+            "user_ticks": 116,
             "system_ticks": 0,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 18143,
-            "involuntary_context_switches": 15
+            "voluntary_context_switches": 54796,
+            "involuntary_context_switches": 35
         },
         "51": {
             "user_ticks": 0,
@@ -531,25 +520,14 @@
         },
         "56": {
             "user_ticks": 0,
-            "system_ticks": 9531,
+            "system_ticks": 28888,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1232329,
-            "involuntary_context_switches": 1
-        },
-        "59": {
-            "user_ticks": 0,
-            "system_ticks": 282,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 52722,
-            "involuntary_context_switches": 2146
+            "voluntary_context_switches": 3724509,
+            "involuntary_context_switches": 2
         },
         "60": {
             "user_ticks": 0,
@@ -641,14 +619,14 @@
         },
         "68": {
             "user_ticks": 0,
-            "system_ticks": 99,
+            "system_ticks": 247,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 63818,
-            "involuntary_context_switches": 99
+            "voluntary_context_switches": 161348,
+            "involuntary_context_switches": 127
         },
         "69": {
             "user_ticks": 0,
@@ -707,14 +685,14 @@
         },
         "76": {
             "user_ticks": 0,
-            "system_ticks": 5,
+            "system_ticks": 17,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1134,
-            "involuntary_context_switches": 2
+            "voluntary_context_switches": 3304,
+            "involuntary_context_switches": 4
         },
         "77": {
             "user_ticks": 0,
@@ -729,14 +707,14 @@
         },
         "78": {
             "user_ticks": 0,
-            "system_ticks": 101,
+            "system_ticks": 233,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 68144,
-            "involuntary_context_switches": 105
+            "voluntary_context_switches": 163617,
+            "involuntary_context_switches": 111
         },
         "79": {
             "user_ticks": 0,
@@ -773,14 +751,14 @@
         },
         "122": {
             "user_ticks": 0,
-            "system_ticks": 125,
+            "system_ticks": 322,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 75765,
-            "involuntary_context_switches": 312
+            "voluntary_context_switches": 201468,
+            "involuntary_context_switches": 582
         },
         "148": {
             "user_ticks": 0,
@@ -839,14 +817,14 @@
         },
         "223": {
             "user_ticks": 0,
-            "system_ticks": 78,
+            "system_ticks": 195,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 12071,
-            "involuntary_context_switches": 2036
+            "voluntary_context_switches": 31238,
+            "involuntary_context_switches": 4453
         },
         "224": {
             "user_ticks": 0,
@@ -860,26 +838,26 @@
             "involuntary_context_switches": 0
         },
         "273": {
-            "user_ticks": 39,
-            "system_ticks": 45,
+            "user_ticks": 61,
+            "system_ticks": 64,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 2345,
-            "involuntary_context_switches": 1243
+            "voluntary_context_switches": 3625,
+            "involuntary_context_switches": 1348
         },
         "333": {
-            "user_ticks": 27,
-            "system_ticks": 12,
+            "user_ticks": 30,
+            "system_ticks": 16,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1070,
-            "involuntary_context_switches": 465
+            "voluntary_context_switches": 1320,
+            "involuntary_context_switches": 487
         },
         "380": {
             "user_ticks": 0,
@@ -916,58 +894,58 @@
         },
         "530": {
             "user_ticks": 0,
-            "system_ticks": 593,
+            "system_ticks": 1407,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 151501,
+            "voluntary_context_switches": 360637,
             "involuntary_context_switches": 1
         },
         "616": {
-            "user_ticks": 202,
-            "system_ticks": 176,
+            "user_ticks": 603,
+            "system_ticks": 560,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 7532,
-            "involuntary_context_switches": 267
+            "voluntary_context_switches": 22386,
+            "involuntary_context_switches": 604
         },
         "621": {
-            "user_ticks": 45,
-            "system_ticks": 28,
+            "user_ticks": 87,
+            "system_ticks": 60,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1807,
-            "involuntary_context_switches": 355
+            "voluntary_context_switches": 3937,
+            "involuntary_context_switches": 557
         },
         "625": {
-            "user_ticks": 8,
-            "system_ticks": 6,
+            "user_ticks": 13,
+            "system_ticks": 10,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 196,
-            "involuntary_context_switches": 136
+            "voluntary_context_switches": 476,
+            "involuntary_context_switches": 142
         },
         "774": {
-            "user_ticks": 3,
-            "system_ticks": 3,
+            "user_ticks": 5,
+            "system_ticks": 5,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 581,
-            "involuntary_context_switches": 31
+            "voluntary_context_switches": 924,
+            "involuntary_context_switches": 43
         },
         "775": {
             "user_ticks": 5,
@@ -981,15 +959,15 @@
             "involuntary_context_switches": 135
         },
         "776": {
-            "user_ticks": 155,
-            "system_ticks": 36,
+            "user_ticks": 268,
+            "system_ticks": 60,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 6780,
-            "involuntary_context_switches": 2392
+            "voluntary_context_switches": 11266,
+            "involuntary_context_switches": 3076
         },
         "780": {
             "user_ticks": 4,
@@ -1003,26 +981,26 @@
             "involuntary_context_switches": 103
         },
         "783": {
-            "user_ticks": 63,
-            "system_ticks": 5053,
+            "user_ticks": 167,
+            "system_ticks": 15472,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1030536,
-            "involuntary_context_switches": 3065
+            "voluntary_context_switches": 3119481,
+            "involuntary_context_switches": 8095
         },
         "785": {
-            "user_ticks": 78,
-            "system_ticks": 48,
+            "user_ticks": 104,
+            "system_ticks": 68,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1875,
-            "involuntary_context_switches": 1164
+            "voluntary_context_switches": 2034,
+            "involuntary_context_switches": 1166
         },
         "786": {
             "user_ticks": 5,
@@ -1032,12 +1010,12 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 194,
+            "voluntary_context_switches": 196,
             "involuntary_context_switches": 103
         },
         "792": {
-            "user_ticks": 182,
-            "system_ticks": 189,
+            "user_ticks": 294,
+            "system_ticks": 202,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
@@ -1047,8 +1025,8 @@
             "involuntary_context_switches": 411
         },
         "794": {
-            "user_ticks": 18,
-            "system_ticks": 14,
+            "user_ticks": 36,
+            "system_ticks": 34,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
@@ -1058,15 +1036,15 @@
             "involuntary_context_switches": 153
         },
         "795": {
-            "user_ticks": 0,
-            "system_ticks": 2,
+            "user_ticks": 2,
+            "system_ticks": 6,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 180,
-            "involuntary_context_switches": 16
+            "voluntary_context_switches": 530,
+            "involuntary_context_switches": 18
         },
         "796": {
             "user_ticks": 6,
@@ -1080,37 +1058,37 @@
             "involuntary_context_switches": 89
         },
         "800": {
-            "user_ticks": 15,
-            "system_ticks": 18,
+            "user_ticks": 18,
+            "system_ticks": 22,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 2591,
-            "involuntary_context_switches": 278
+            "voluntary_context_switches": 3510,
+            "involuntary_context_switches": 288
         },
         "801": {
-            "user_ticks": 28,
-            "system_ticks": 26,
+            "user_ticks": 74,
+            "system_ticks": 77,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 407,
+            "voluntary_context_switches": 595,
             "involuntary_context_switches": 67
         },
         "802": {
-            "user_ticks": 163,
-            "system_ticks": 12,
+            "user_ticks": 442,
+            "system_ticks": 16,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 468,
-            "involuntary_context_switches": 209
+            "voluntary_context_switches": 592,
+            "involuntary_context_switches": 210
         },
         "809": {
             "user_ticks": 0,
@@ -1124,26 +1102,26 @@
             "involuntary_context_switches": 0
         },
         "886": {
-            "user_ticks": 76,
-            "system_ticks": 78,
+            "user_ticks": 182,
+            "system_ticks": 233,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 4438,
-            "involuntary_context_switches": 933
+            "voluntary_context_switches": 12277,
+            "involuntary_context_switches": 1126
         },
         "888": {
-            "user_ticks": 6,
-            "system_ticks": 6,
+            "user_ticks": 13,
+            "system_ticks": 16,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1144,
-            "involuntary_context_switches": 49
+            "voluntary_context_switches": 3168,
+            "involuntary_context_switches": 58
         },
         "895": {
             "user_ticks": 0,
@@ -1157,14 +1135,14 @@
             "involuntary_context_switches": 0
         },
         "898": {
-            "user_ticks": 10,
-            "system_ticks": 8,
+            "user_ticks": 15,
+            "system_ticks": 12,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 42,
+            "voluntary_context_switches": 73,
             "involuntary_context_switches": 173
         },
         "901": {
@@ -1224,13 +1202,13 @@
         },
         "1108": {
             "user_ticks": 0,
-            "system_ticks": 9,
+            "system_ticks": 22,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 1792,
+            "voluntary_context_switches": 4236,
             "involuntary_context_switches": 1
         },
         "1361": {
@@ -1252,7 +1230,7 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 270,
+            "voluntary_context_switches": 325,
             "involuntary_context_switches": 45
         },
         "1373": {
@@ -1267,8 +1245,8 @@
             "involuntary_context_switches": 116
         },
         "1386": {
-            "user_ticks": 664,
-            "system_ticks": 564,
+            "user_ticks": 2026,
+            "system_ticks": 1747,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
@@ -1289,8 +1267,8 @@
             "involuntary_context_switches": 78
         },
         "1497": {
-            "user_ticks": 5,
-            "system_ticks": 11,
+            "user_ticks": 8,
+            "system_ticks": 28,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
@@ -1311,41 +1289,41 @@
             "involuntary_context_switches": 0
         },
         "1656": {
-            "user_ticks": 13,
-            "system_ticks": 5,
+            "user_ticks": 17,
+            "system_ticks": 8,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 201,
-            "involuntary_context_switches": 147
+            "voluntary_context_switches": 302,
+            "involuntary_context_switches": 282
         },
         "1704": {
-            "user_ticks": 32,
-            "system_ticks": 33,
+            "user_ticks": 79,
+            "system_ticks": 92,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 482,
-            "involuntary_context_switches": 272
+            "voluntary_context_switches": 1177,
+            "involuntary_context_switches": 346
         },
         "2022": {
-            "user_ticks": 3,
+            "user_ticks": 4,
             "system_ticks": 2,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 277,
-            "involuntary_context_switches": 44
+            "voluntary_context_switches": 441,
+            "involuntary_context_switches": 51
         },
         "2027": {
-            "user_ticks": 163,
-            "system_ticks": 25,
+            "user_ticks": 471,
+            "system_ticks": 46,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
@@ -1355,26 +1333,26 @@
             "involuntary_context_switches": 75
         },
         "2029": {
-            "user_ticks": 0,
-            "system_ticks": 0,
+            "user_ticks": 2,
+            "system_ticks": 1,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 155,
-            "involuntary_context_switches": 8
+            "voluntary_context_switches": 458,
+            "involuntary_context_switches": 9
         },
         "2032": {
-            "user_ticks": 0,
-            "system_ticks": 0,
+            "user_ticks": 1,
+            "system_ticks": 1,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 155,
-            "involuntary_context_switches": 4
+            "voluntary_context_switches": 458,
+            "involuntary_context_switches": 5
         },
         "2061": {
             "user_ticks": 2,
@@ -1395,8 +1373,8 @@
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 861,
-            "involuntary_context_switches": 510
+            "voluntary_context_switches": 873,
+            "involuntary_context_switches": 511
         },
         "2289": {
             "user_ticks": 0,
@@ -1410,26 +1388,26 @@
             "involuntary_context_switches": 0
         },
         "2300": {
-            "user_ticks": 175,
-            "system_ticks": 413,
+            "user_ticks": 519,
+            "system_ticks": 1270,
             "read_bytes": 565248,
-            "write_bytes": 188416,
-            "cancelled_write_bytes": 61440,
-            "read_syscalls": 174267,
-            "write_syscalls": 32826,
-            "voluntary_context_switches": 16151,
-            "involuntary_context_switches": 694
+            "write_bytes": 458752,
+            "cancelled_write_bytes": 151552,
+            "read_syscalls": 527308,
+            "write_syscalls": 99146,
+            "voluntary_context_switches": 48896,
+            "involuntary_context_switches": 1832
         },
         "2301": {
-            "user_ticks": 7,
-            "system_ticks": 4,
+            "user_ticks": 13,
+            "system_ticks": 9,
             "read_bytes": 86016,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1319,
-            "write_syscalls": 875,
-            "voluntary_context_switches": 696,
-            "involuntary_context_switches": 231
+            "read_syscalls": 3241,
+            "write_syscalls": 2079,
+            "voluntary_context_switches": 1310,
+            "involuntary_context_switches": 302
         },
         "2303": {
             "user_ticks": 1,
@@ -1443,59 +1421,59 @@
             "involuntary_context_switches": 16
         },
         "2307": {
-            "user_ticks": 17,
+            "user_ticks": 22,
             "system_ticks": 6,
             "read_bytes": 290816,
-            "write_bytes": 12288,
+            "write_bytes": 24576,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 954,
-            "write_syscalls": 555,
-            "voluntary_context_switches": 352,
-            "involuntary_context_switches": 384
+            "read_syscalls": 1112,
+            "write_syscalls": 848,
+            "voluntary_context_switches": 431,
+            "involuntary_context_switches": 410
         },
         "2318": {
-            "user_ticks": 5,
-            "system_ticks": 3,
+            "user_ticks": 12,
+            "system_ticks": 7,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 207,
-            "write_syscalls": 82,
-            "voluntary_context_switches": 371,
-            "involuntary_context_switches": 152
+            "read_syscalls": 495,
+            "write_syscalls": 356,
+            "voluntary_context_switches": 916,
+            "involuntary_context_switches": 210
         },
         "2319": {
-            "user_ticks": 124,
-            "system_ticks": 73,
+            "user_ticks": 283,
+            "system_ticks": 174,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3183,
-            "write_syscalls": 1990,
-            "voluntary_context_switches": 10056,
-            "involuntary_context_switches": 2431
+            "read_syscalls": 7435,
+            "write_syscalls": 5937,
+            "voluntary_context_switches": 22124,
+            "involuntary_context_switches": 3339
         },
         "2326": {
-            "user_ticks": 6,
-            "system_ticks": 2,
-            "read_bytes": 3067904,
+            "user_ticks": 8,
+            "system_ticks": 3,
+            "read_bytes": 3379200,
             "write_bytes": 4096,
             "cancelled_write_bytes": 4096,
-            "read_syscalls": 1049,
-            "write_syscalls": 1828,
-            "voluntary_context_switches": 577,
-            "involuntary_context_switches": 49
+            "read_syscalls": 1358,
+            "write_syscalls": 2387,
+            "voluntary_context_switches": 690,
+            "involuntary_context_switches": 51
         },
         "2367": {
-            "user_ticks": 4,
-            "system_ticks": 2,
+            "user_ticks": 6,
+            "system_ticks": 3,
             "read_bytes": 8192,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 920,
-            "write_syscalls": 1381,
-            "voluntary_context_switches": 492,
-            "involuntary_context_switches": 26
+            "read_syscalls": 1234,
+            "write_syscalls": 1874,
+            "voluntary_context_switches": 652,
+            "involuntary_context_switches": 29
         },
         "2371": {
             "user_ticks": 0,
@@ -1564,15 +1542,15 @@
             "involuntary_context_switches": 4
         },
         "2493": {
-            "user_ticks": 3,
-            "system_ticks": 1,
-            "read_bytes": 348160,
+            "user_ticks": 5,
+            "system_ticks": 2,
+            "read_bytes": 483328,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 435,
-            "write_syscalls": 418,
-            "voluntary_context_switches": 139,
-            "involuntary_context_switches": 80
+            "read_syscalls": 3216,
+            "write_syscalls": 1814,
+            "voluntary_context_switches": 220,
+            "involuntary_context_switches": 131
         },
         "2499": {
             "user_ticks": 0,
@@ -1580,8 +1558,8 @@
             "read_bytes": 49152,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 107,
-            "write_syscalls": 101,
+            "read_syscalls": 140,
+            "write_syscalls": 156,
             "voluntary_context_switches": 4,
             "involuntary_context_switches": 2
         },
@@ -1608,15 +1586,15 @@
             "involuntary_context_switches": 99
         },
         "2544": {
-            "user_ticks": 64087,
-            "system_ticks": 22993,
-            "read_bytes": 9279488,
-            "write_bytes": 102400,
+            "user_ticks": 202640,
+            "system_ticks": 70878,
+            "read_bytes": 9291776,
+            "write_bytes": 266240,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3706113,
-            "write_syscalls": 7152173,
-            "voluntary_context_switches": 1781919,
-            "involuntary_context_switches": 119728
+            "read_syscalls": 11423982,
+            "write_syscalls": 22331210,
+            "voluntary_context_switches": 5514807,
+            "involuntary_context_switches": 321007
         },
         "2556": {
             "user_ticks": 0,
@@ -1663,26 +1641,26 @@
             "involuntary_context_switches": 124
         },
         "2702": {
-            "user_ticks": 21,
-            "system_ticks": 4,
+            "user_ticks": 35,
+            "system_ticks": 6,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 797,
-            "write_syscalls": 1100,
-            "voluntary_context_switches": 251,
-            "involuntary_context_switches": 226
+            "read_syscalls": 1656,
+            "write_syscalls": 2386,
+            "voluntary_context_switches": 523,
+            "involuntary_context_switches": 284
         },
         "2708": {
-            "user_ticks": 3556,
-            "system_ticks": 906,
+            "user_ticks": 12996,
+            "system_ticks": 3433,
             "read_bytes": 225280,
             "write_bytes": 8192,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 276561,
-            "write_syscalls": 449301,
-            "voluntary_context_switches": 120943,
-            "involuntary_context_switches": 4958
+            "read_syscalls": 1032282,
+            "write_syscalls": 1672798,
+            "voluntary_context_switches": 453386,
+            "involuntary_context_switches": 13695
         },
         "2709": {
             "user_ticks": 3,
@@ -1696,15 +1674,15 @@
             "involuntary_context_switches": 26
         },
         "2720": {
-            "user_ticks": 14,
-            "system_ticks": 5,
+            "user_ticks": 21,
+            "system_ticks": 8,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 2725,
-            "write_syscalls": 1090,
-            "voluntary_context_switches": 346,
-            "involuntary_context_switches": 115
+            "read_syscalls": 3033,
+            "write_syscalls": 1706,
+            "voluntary_context_switches": 654,
+            "involuntary_context_switches": 117
         },
         "2724": {
             "user_ticks": 3,
@@ -1718,15 +1696,15 @@
             "involuntary_context_switches": 54
         },
         "2725": {
-            "user_ticks": 33,
-            "system_ticks": 12,
+            "user_ticks": 89,
+            "system_ticks": 28,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3444,
+            "read_syscalls": 8970,
             "write_syscalls": 759,
-            "voluntary_context_switches": 339,
-            "involuntary_context_switches": 82
+            "voluntary_context_switches": 651,
+            "involuntary_context_switches": 127
         },
         "2727": {
             "user_ticks": 13,
@@ -1740,15 +1718,15 @@
             "involuntary_context_switches": 88
         },
         "2728": {
-            "user_ticks": 16,
-            "system_ticks": 3,
+            "user_ticks": 17,
+            "system_ticks": 4,
             "read_bytes": 12288,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 2898,
-            "write_syscalls": 1378,
-            "voluntary_context_switches": 273,
-            "involuntary_context_switches": 225
+            "read_syscalls": 3153,
+            "write_syscalls": 1886,
+            "voluntary_context_switches": 374,
+            "involuntary_context_switches": 237
         },
         "2730": {
             "user_ticks": 18,
@@ -1756,31 +1734,31 @@
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3196,
-            "write_syscalls": 1868,
-            "voluntary_context_switches": 372,
+            "read_syscalls": 3202,
+            "write_syscalls": 1878,
+            "voluntary_context_switches": 374,
             "involuntary_context_switches": 241
         },
         "2736": {
-            "user_ticks": 3,
+            "user_ticks": 4,
             "system_ticks": 2,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
             "read_syscalls": 532,
             "write_syscalls": 743,
-            "voluntary_context_switches": 220,
-            "involuntary_context_switches": 42
+            "voluntary_context_switches": 239,
+            "involuntary_context_switches": 43
         },
         "2737": {
-            "user_ticks": 3,
+            "user_ticks": 4,
             "system_ticks": 2,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 556,
-            "write_syscalls": 848,
-            "voluntary_context_switches": 220,
+            "read_syscalls": 586,
+            "write_syscalls": 900,
+            "voluntary_context_switches": 232,
             "involuntary_context_switches": 21
         },
         "2739": {
@@ -1795,15 +1773,15 @@
             "involuntary_context_switches": 49
         },
         "2740": {
-            "user_ticks": 31,
-            "system_ticks": 8,
+            "user_ticks": 88,
+            "system_ticks": 20,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3802,
-            "write_syscalls": 6229,
-            "voluntary_context_switches": 1400,
-            "involuntary_context_switches": 69
+            "read_syscalls": 10427,
+            "write_syscalls": 17311,
+            "voluntary_context_switches": 3797,
+            "involuntary_context_switches": 88
         },
         "2741": {
             "user_ticks": 3,
@@ -1839,57 +1817,57 @@
             "involuntary_context_switches": 235
         },
         "2748": {
-            "user_ticks": 30,
-            "system_ticks": 4,
+            "user_ticks": 32,
+            "system_ticks": 5,
             "read_bytes": 3239936,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
             "read_syscalls": 2713,
             "write_syscalls": 609,
-            "voluntary_context_switches": 270,
+            "voluntary_context_switches": 578,
             "involuntary_context_switches": 153
         },
         "2759": {
-            "user_ticks": 2,
+            "user_ticks": 3,
             "system_ticks": 0,
             "read_bytes": 24576,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 138,
-            "write_syscalls": 262,
-            "voluntary_context_switches": 55,
+            "read_syscalls": 231,
+            "write_syscalls": 417,
+            "voluntary_context_switches": 117,
             "involuntary_context_switches": 31
         },
         "2821": {
-            "user_ticks": 3,
+            "user_ticks": 4,
             "system_ticks": 2,
             "read_bytes": 929792,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 270,
-            "write_syscalls": 246,
-            "voluntary_context_switches": 64,
-            "involuntary_context_switches": 60
+            "read_syscalls": 317,
+            "write_syscalls": 330,
+            "voluntary_context_switches": 87,
+            "involuntary_context_switches": 63
         },
         "2889": {
-            "user_ticks": 41,
-            "system_ticks": 12,
+            "user_ticks": 98,
+            "system_ticks": 29,
             "read_bytes": 188416,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 5660,
-            "write_syscalls": 415,
-            "voluntary_context_switches": 93,
-            "involuntary_context_switches": 156
+            "read_syscalls": 12170,
+            "write_syscalls": 570,
+            "voluntary_context_switches": 155,
+            "involuntary_context_switches": 195
         },
         "2914": {
-            "user_ticks": 1,
-            "system_ticks": 2,
+            "user_ticks": 2,
+            "system_ticks": 4,
             "read_bytes": 299008,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 686,
-            "write_syscalls": 928,
+            "read_syscalls": 1333,
+            "write_syscalls": 1826,
             "voluntary_context_switches": 18,
             "involuntary_context_switches": 24
         },
@@ -1910,9 +1888,9 @@
             "read_bytes": 4575232,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 667,
-            "write_syscalls": 839,
-            "voluntary_context_switches": 226,
+            "read_syscalls": 705,
+            "write_syscalls": 911,
+            "voluntary_context_switches": 244,
             "involuntary_context_switches": 62
         },
         "2940": {
@@ -1927,26 +1905,26 @@
             "involuntary_context_switches": 20
         },
         "2941": {
-            "user_ticks": 759,
-            "system_ticks": 106,
+            "user_ticks": 1419,
+            "system_ticks": 263,
             "read_bytes": 1126400,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 43899,
-            "write_syscalls": 72948,
-            "voluntary_context_switches": 17372,
-            "involuntary_context_switches": 1703
+            "read_syscalls": 106886,
+            "write_syscalls": 181377,
+            "voluntary_context_switches": 43592,
+            "involuntary_context_switches": 3076
         },
         "2944": {
-            "user_ticks": 2,
+            "user_ticks": 4,
             "system_ticks": 1,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 521,
-            "write_syscalls": 819,
-            "voluntary_context_switches": 267,
-            "involuntary_context_switches": 14
+            "read_syscalls": 788,
+            "write_syscalls": 1265,
+            "voluntary_context_switches": 397,
+            "involuntary_context_switches": 15
         },
         "2969": {
             "user_ticks": 2,
@@ -1954,14 +1932,14 @@
             "read_bytes": 315392,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 228,
-            "write_syscalls": 152,
-            "voluntary_context_switches": 44,
-            "involuntary_context_switches": 20
+            "read_syscalls": 279,
+            "write_syscalls": 254,
+            "voluntary_context_switches": 94,
+            "involuntary_context_switches": 30
         },
         "2976": {
-            "user_ticks": 17,
-            "system_ticks": 23,
+            "user_ticks": 38,
+            "system_ticks": 84,
             "read_bytes": 98304,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
@@ -1972,25 +1950,25 @@
         },
         "2988": {
             "user_ticks": 4,
-            "system_ticks": 1,
+            "system_ticks": 2,
             "read_bytes": 4866048,
             "write_bytes": 45056,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 410,
-            "write_syscalls": 437,
-            "voluntary_context_switches": 88,
+            "read_syscalls": 456,
+            "write_syscalls": 517,
+            "voluntary_context_switches": 108,
             "involuntary_context_switches": 17
         },
         "2989": {
-            "user_ticks": 1,
-            "system_ticks": 0,
+            "user_ticks": 2,
+            "system_ticks": 1,
             "read_bytes": 98304,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 226,
-            "write_syscalls": 156,
-            "voluntary_context_switches": 33,
-            "involuntary_context_switches": 13
+            "read_syscalls": 318,
+            "write_syscalls": 298,
+            "voluntary_context_switches": 87,
+            "involuntary_context_switches": 44
         },
         "2997": {
             "user_ticks": 0,
@@ -2004,15 +1982,15 @@
             "involuntary_context_switches": 15
         },
         "3024": {
-            "user_ticks": 1132,
-            "system_ticks": 314,
+            "user_ticks": 4539,
+            "system_ticks": 1221,
             "read_bytes": 139264,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 102552,
-            "write_syscalls": 158216,
-            "voluntary_context_switches": 29069,
-            "involuntary_context_switches": 2444
+            "read_syscalls": 390546,
+            "write_syscalls": 593517,
+            "voluntary_context_switches": 106189,
+            "involuntary_context_switches": 7144
         },
         "3045": {
             "user_ticks": 0,
@@ -2037,48 +2015,48 @@
             "involuntary_context_switches": 11
         },
         "3089": {
-            "user_ticks": 20,
-            "system_ticks": 13,
+            "user_ticks": 39,
+            "system_ticks": 41,
             "read_bytes": 1012736,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1624,
-            "write_syscalls": 2184,
-            "voluntary_context_switches": 420,
-            "involuntary_context_switches": 336
+            "read_syscalls": 2027,
+            "write_syscalls": 2930,
+            "voluntary_context_switches": 669,
+            "involuntary_context_switches": 367
         },
         "3101": {
-            "user_ticks": 17,
-            "system_ticks": 6,
+            "user_ticks": 21,
+            "system_ticks": 8,
             "read_bytes": 11849728,
             "write_bytes": 557056,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1521,
-            "write_syscalls": 945,
-            "voluntary_context_switches": 667,
-            "involuntary_context_switches": 105
+            "read_syscalls": 1689,
+            "write_syscalls": 1227,
+            "voluntary_context_switches": 1330,
+            "involuntary_context_switches": 139
         },
         "3102": {
-            "user_ticks": 77,
-            "system_ticks": 16,
+            "user_ticks": 138,
+            "system_ticks": 30,
             "read_bytes": 954368,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 4937,
-            "write_syscalls": 6374,
-            "voluntary_context_switches": 1122,
-            "involuntary_context_switches": 540
+            "read_syscalls": 9641,
+            "write_syscalls": 12854,
+            "voluntary_context_switches": 2249,
+            "involuntary_context_switches": 821
         },
         "3145": {
-            "user_ticks": 138,
-            "system_ticks": 22,
+            "user_ticks": 253,
+            "system_ticks": 35,
             "read_bytes": 3739648,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 4819,
-            "write_syscalls": 3878,
-            "voluntary_context_switches": 1064,
-            "involuntary_context_switches": 813
+            "read_syscalls": 6712,
+            "write_syscalls": 7066,
+            "voluntary_context_switches": 1915,
+            "involuntary_context_switches": 1032
         },
         "3185": {
             "user_ticks": 21,
@@ -2136,92 +2114,92 @@
             "involuntary_context_switches": 6
         },
         "3369": {
-            "user_ticks": 9345,
-            "system_ticks": 1121,
-            "read_bytes": 4214784,
-            "write_bytes": 9965568,
-            "cancelled_write_bytes": 4427776,
-            "read_syscalls": 228211,
-            "write_syscalls": 51603,
-            "voluntary_context_switches": 181287,
-            "involuntary_context_switches": 30447
+            "user_ticks": 35885,
+            "system_ticks": 4799,
+            "read_bytes": 4247552,
+            "write_bytes": 25067520,
+            "cancelled_write_bytes": 10387456,
+            "read_syscalls": 690544,
+            "write_syscalls": 269966,
+            "voluntary_context_switches": 720811,
+            "involuntary_context_switches": 85826
         },
         "3376": {
-            "user_ticks": 1,
-            "system_ticks": 1,
-            "read_bytes": 765952,
-            "write_bytes": 12288,
+            "user_ticks": 2,
+            "system_ticks": 3,
+            "read_bytes": 7618560,
+            "write_bytes": 233472,
             "cancelled_write_bytes": 4096,
-            "read_syscalls": 1328,
-            "write_syscalls": 315,
-            "voluntary_context_switches": 116,
-            "involuntary_context_switches": 6
+            "read_syscalls": 2574,
+            "write_syscalls": 772,
+            "voluntary_context_switches": 224,
+            "involuntary_context_switches": 23
         },
         "3471": {
-            "user_ticks": 5,
-            "system_ticks": 6,
-            "read_bytes": 4739072,
-            "write_bytes": 63819776,
-            "cancelled_write_bytes": 16384,
-            "read_syscalls": 273449,
-            "write_syscalls": 2357,
-            "voluntary_context_switches": 431,
-            "involuntary_context_switches": 43
+            "user_ticks": 22,
+            "system_ticks": 26,
+            "read_bytes": 6135808,
+            "write_bytes": 211783680,
+            "cancelled_write_bytes": 3055616,
+            "read_syscalls": 839862,
+            "write_syscalls": 94182,
+            "voluntary_context_switches": 1987,
+            "involuntary_context_switches": 226
         },
         "3478": {
-            "user_ticks": 1,
-            "system_ticks": 1,
+            "user_ticks": 3,
+            "system_ticks": 3,
             "read_bytes": 749568,
-            "write_bytes": 53248,
-            "cancelled_write_bytes": 16384,
-            "read_syscalls": 2073,
-            "write_syscalls": 2836,
-            "voluntary_context_switches": 68,
-            "involuntary_context_switches": 13
+            "write_bytes": 327680,
+            "cancelled_write_bytes": 86016,
+            "read_syscalls": 16371,
+            "write_syscalls": 24093,
+            "voluntary_context_switches": 220,
+            "involuntary_context_switches": 22
         },
         "3486": {
-            "user_ticks": 5,
-            "system_ticks": 3,
+            "user_ticks": 6,
+            "system_ticks": 6,
             "read_bytes": 176128,
-            "write_bytes": 184320,
-            "cancelled_write_bytes": 81920,
-            "read_syscalls": 26518,
-            "write_syscalls": 17136,
-            "voluntary_context_switches": 320,
-            "involuntary_context_switches": 45
+            "write_bytes": 335872,
+            "cancelled_write_bytes": 147456,
+            "read_syscalls": 37799,
+            "write_syscalls": 29915,
+            "voluntary_context_switches": 480,
+            "involuntary_context_switches": 57
         },
         "3492": {
-            "user_ticks": 1,
-            "system_ticks": 0,
-            "read_bytes": 8192,
-            "write_bytes": 4096,
-            "cancelled_write_bytes": 0,
-            "read_syscalls": 530,
-            "write_syscalls": 623,
-            "voluntary_context_switches": 58,
-            "involuntary_context_switches": 4
+            "user_ticks": 4,
+            "system_ticks": 5,
+            "read_bytes": 20480,
+            "write_bytes": 630784,
+            "cancelled_write_bytes": 147456,
+            "read_syscalls": 32945,
+            "write_syscalls": 50733,
+            "voluntary_context_switches": 270,
+            "involuntary_context_switches": 40
         },
         "3500": {
-            "user_ticks": 3,
-            "system_ticks": 2,
+            "user_ticks": 4,
+            "system_ticks": 3,
             "read_bytes": 4096,
-            "write_bytes": 331776,
-            "cancelled_write_bytes": 167936,
-            "read_syscalls": 12386,
-            "write_syscalls": 15411,
-            "voluntary_context_switches": 111,
-            "involuntary_context_switches": 19
+            "write_bytes": 389120,
+            "cancelled_write_bytes": 192512,
+            "read_syscalls": 16343,
+            "write_syscalls": 20896,
+            "voluntary_context_switches": 159,
+            "involuntary_context_switches": 23
         },
         "3526": {
-            "user_ticks": 88869,
-            "system_ticks": 30560,
-            "read_bytes": 440913920,
-            "write_bytes": 538812416,
-            "cancelled_write_bytes": 7241728,
-            "read_syscalls": 1704341,
-            "write_syscalls": 749360,
-            "voluntary_context_switches": 1022599,
-            "involuntary_context_switches": 111757
+            "user_ticks": 238230,
+            "system_ticks": 89400,
+            "read_bytes": 441634816,
+            "write_bytes": 1194319872,
+            "cancelled_write_bytes": 17711104,
+            "read_syscalls": 4588754,
+            "write_syscalls": 1770960,
+            "voluntary_context_switches": 3016269,
+            "involuntary_context_switches": 232293
         },
         "3610": {
             "user_ticks": 0,
@@ -2246,191 +2224,191 @@
             "involuntary_context_switches": 40
         },
         "3708": {
-            "user_ticks": 695,
-            "system_ticks": 519,
+            "user_ticks": 2208,
+            "system_ticks": 1653,
             "read_bytes": 534528,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 36176,
-            "write_syscalls": 36036,
-            "voluntary_context_switches": 291,
-            "involuntary_context_switches": 36
+            "read_syscalls": 111933,
+            "write_syscalls": 111793,
+            "voluntary_context_switches": 949,
+            "involuntary_context_switches": 91
         },
         "3726": {
-            "user_ticks": 1630,
-            "system_ticks": 467,
+            "user_ticks": 4413,
+            "system_ticks": 1390,
             "read_bytes": 4320256,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 106657,
-            "write_syscalls": 56047,
-            "voluntary_context_switches": 28741,
-            "involuntary_context_switches": 4210
+            "read_syscalls": 323083,
+            "write_syscalls": 167744,
+            "voluntary_context_switches": 85739,
+            "involuntary_context_switches": 8641
         },
         "3735": {
-            "user_ticks": 8,
-            "system_ticks": 9,
+            "user_ticks": 16,
+            "system_ticks": 15,
             "read_bytes": 8662016,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1217,
-            "write_syscalls": 1018,
-            "voluntary_context_switches": 763,
-            "involuntary_context_switches": 57
+            "read_syscalls": 2254,
+            "write_syscalls": 2055,
+            "voluntary_context_switches": 1324,
+            "involuntary_context_switches": 90
         },
         "3778": {
-            "user_ticks": 44,
-            "system_ticks": 4,
+            "user_ticks": 104,
+            "system_ticks": 7,
             "read_bytes": 303104,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
             "read_syscalls": 1711,
             "write_syscalls": 148,
-            "voluntary_context_switches": 359,
-            "involuntary_context_switches": 91
+            "voluntary_context_switches": 485,
+            "involuntary_context_switches": 93
         },
         "3849": {
-            "user_ticks": 98,
-            "system_ticks": 32,
+            "user_ticks": 128,
+            "system_ticks": 51,
             "read_bytes": 757760,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 7276,
-            "write_syscalls": 2422,
-            "voluntary_context_switches": 1478,
-            "involuntary_context_switches": 954
+            "read_syscalls": 11640,
+            "write_syscalls": 4114,
+            "voluntary_context_switches": 2440,
+            "involuntary_context_switches": 1063
         },
         "3978": {
-            "user_ticks": 9,
-            "system_ticks": 6,
+            "user_ticks": 16,
+            "system_ticks": 12,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1000,
-            "write_syscalls": 808,
-            "voluntary_context_switches": 711,
-            "involuntary_context_switches": 188
+            "read_syscalls": 2033,
+            "write_syscalls": 1841,
+            "voluntary_context_switches": 1264,
+            "involuntary_context_switches": 227
         },
         "3984": {
-            "user_ticks": 131340,
-            "system_ticks": 6644,
+            "user_ticks": 230712,
+            "system_ticks": 13364,
             "read_bytes": 4885504,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1063577,
-            "write_syscalls": 928284,
-            "voluntary_context_switches": 492274,
-            "involuntary_context_switches": 144406
+            "read_syscalls": 2404525,
+            "write_syscalls": 1963241,
+            "voluntary_context_switches": 1004142,
+            "involuntary_context_switches": 215597
         },
         "3992": {
-            "user_ticks": 1349,
-            "system_ticks": 454,
+            "user_ticks": 2876,
+            "system_ticks": 1345,
             "read_bytes": 1137664,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 106536,
-            "write_syscalls": 54969,
-            "voluntary_context_switches": 28491,
-            "involuntary_context_switches": 4945
+            "read_syscalls": 322959,
+            "write_syscalls": 163726,
+            "voluntary_context_switches": 84503,
+            "involuntary_context_switches": 7597
         },
         "4066": {
-            "user_ticks": 30604,
-            "system_ticks": 2575,
+            "user_ticks": 34541,
+            "system_ticks": 4006,
             "read_bytes": 1334272,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 463394,
-            "write_syscalls": 348731,
-            "voluntary_context_switches": 182197,
-            "involuntary_context_switches": 45238
+            "read_syscalls": 876887,
+            "write_syscalls": 521076,
+            "voluntary_context_switches": 258954,
+            "involuntary_context_switches": 48439
         },
         "4196": {
-            "user_ticks": 30,
-            "system_ticks": 9,
+            "user_ticks": 59,
+            "system_ticks": 27,
             "read_bytes": 66027520,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 18165,
-            "write_syscalls": 337,
-            "voluntary_context_switches": 160,
+            "read_syscalls": 18183,
+            "write_syscalls": 373,
+            "voluntary_context_switches": 289,
             "involuntary_context_switches": 24
         },
         "4414": {
-            "user_ticks": 103,
-            "system_ticks": 25,
+            "user_ticks": 160,
+            "system_ticks": 36,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 9734,
-            "involuntary_context_switches": 57
+            "voluntary_context_switches": 9920,
+            "involuntary_context_switches": 79
         },
         "4842": {
-            "user_ticks": 41004,
-            "system_ticks": 3406,
+            "user_ticks": 108829,
+            "system_ticks": 9206,
             "read_bytes": 325632,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 629628,
-            "write_syscalls": 514890,
-            "voluntary_context_switches": 264496,
-            "involuntary_context_switches": 56031
+            "read_syscalls": 1804401,
+            "write_syscalls": 1425738,
+            "voluntary_context_switches": 717660,
+            "involuntary_context_switches": 118834
         },
         "4848": {
-            "user_ticks": 5637,
-            "system_ticks": 977,
+            "user_ticks": 159771,
+            "system_ticks": 12379,
             "read_bytes": 122880,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 222096,
-            "write_syscalls": 120642,
-            "voluntary_context_switches": 55880,
-            "involuntary_context_switches": 17940
+            "read_syscalls": 2357362,
+            "write_syscalls": 1991196,
+            "voluntary_context_switches": 999499,
+            "involuntary_context_switches": 153230
         },
         "5117": {
-            "user_ticks": 10,
-            "system_ticks": 5,
+            "user_ticks": 19,
+            "system_ticks": 12,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1145,
-            "write_syscalls": 733,
-            "voluntary_context_switches": 418,
-            "involuntary_context_switches": 118
+            "read_syscalls": 2405,
+            "write_syscalls": 1993,
+            "voluntary_context_switches": 1147,
+            "involuntary_context_switches": 164
         },
         "5354": {
-            "user_ticks": 10,
-            "system_ticks": 5,
+            "user_ticks": 17,
+            "system_ticks": 14,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1132,
-            "write_syscalls": 720,
-            "voluntary_context_switches": 425,
-            "involuntary_context_switches": 120
+            "read_syscalls": 2402,
+            "write_syscalls": 1990,
+            "voluntary_context_switches": 1218,
+            "involuntary_context_switches": 165
         },
         "5360": {
-            "user_ticks": 10,
-            "system_ticks": 5,
+            "user_ticks": 17,
+            "system_ticks": 12,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1123,
-            "write_syscalls": 711,
-            "voluntary_context_switches": 405,
-            "involuntary_context_switches": 123
+            "read_syscalls": 2387,
+            "write_syscalls": 1975,
+            "voluntary_context_switches": 1126,
+            "involuntary_context_switches": 171
         },
         "5990": {
-            "user_ticks": 4579,
-            "system_ticks": 1781,
-            "read_bytes": 275996672,
-            "write_bytes": 389685248,
-            "cancelled_write_bytes": 0,
-            "read_syscalls": 216313,
-            "write_syscalls": 171222,
-            "voluntary_context_switches": 119156,
-            "involuntary_context_switches": 12378
+            "user_ticks": 10478,
+            "system_ticks": 3990,
+            "read_bytes": 276082688,
+            "write_bytes": 1128185856,
+            "cancelled_write_bytes": 3260416,
+            "read_syscalls": 446712,
+            "write_syscalls": 325831,
+            "voluntary_context_switches": 174542,
+            "involuntary_context_switches": 14946
         },
         "5996": {
             "user_ticks": 0,
@@ -2500,58 +2478,58 @@
         },
         "6014": {
             "user_ticks": 0,
-            "system_ticks": 3,
-            "read_bytes": 43724800,
-            "write_bytes": 4096,
+            "system_ticks": 5,
+            "read_bytes": 71081984,
+            "write_bytes": 56221696,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 1734,
-            "write_syscalls": 1738,
-            "voluntary_context_switches": 54,
-            "involuntary_context_switches": 13
+            "read_syscalls": 20878,
+            "write_syscalls": 14817,
+            "voluntary_context_switches": 127,
+            "involuntary_context_switches": 24
         },
         "6043": {
-            "user_ticks": 12503,
-            "system_ticks": 5772,
+            "user_ticks": 39351,
+            "system_ticks": 21598,
             "read_bytes": 40026112,
             "write_bytes": 131072,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 3295,
-            "write_syscalls": 743,
-            "voluntary_context_switches": 48265,
-            "involuntary_context_switches": 7552
+            "read_syscalls": 5887,
+            "write_syscalls": 871,
+            "voluntary_context_switches": 54659,
+            "involuntary_context_switches": 8251
         },
         "6046": {
-            "user_ticks": 21,
-            "system_ticks": 19,
+            "user_ticks": 34,
+            "system_ticks": 37,
             "read_bytes": 110592,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
             "read_syscalls": 730,
-            "write_syscalls": 9305,
-            "voluntary_context_switches": 2792,
-            "involuntary_context_switches": 439
+            "write_syscalls": 18289,
+            "voluntary_context_switches": 5730,
+            "involuntary_context_switches": 688
         },
         "6047": {
-            "user_ticks": 647,
-            "system_ticks": 373,
-            "read_bytes": 19009536,
-            "write_bytes": 53956608,
-            "cancelled_write_bytes": 331776,
-            "read_syscalls": 8674,
-            "write_syscalls": 19509,
-            "voluntary_context_switches": 2353,
-            "involuntary_context_switches": 92
+            "user_ticks": 1381,
+            "system_ticks": 724,
+            "read_bytes": 19460096,
+            "write_bytes": 114204672,
+            "cancelled_write_bytes": 438272,
+            "read_syscalls": 10781,
+            "write_syscalls": 31879,
+            "voluntary_context_switches": 7310,
+            "involuntary_context_switches": 185
         },
         "6064": {
-            "user_ticks": 27,
-            "system_ticks": 16,
+            "user_ticks": 84,
+            "system_ticks": 44,
             "read_bytes": 3686400,
-            "write_bytes": 86016,
+            "write_bytes": 135168,
             "cancelled_write_bytes": 0,
             "read_syscalls": 154,
-            "write_syscalls": 148,
-            "voluntary_context_switches": 2499,
-            "involuntary_context_switches": 42
+            "write_syscalls": 180,
+            "voluntary_context_switches": 7530,
+            "involuntary_context_switches": 75
         },
         "6079": {
             "user_ticks": 30,
@@ -2576,259 +2554,259 @@
             "involuntary_context_switches": 266
         },
         "6135": {
-            "user_ticks": 29,
-            "system_ticks": 11,
+            "user_ticks": 45,
+            "system_ticks": 16,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
             "read_syscalls": 619,
-            "write_syscalls": 749,
-            "voluntary_context_switches": 1444,
-            "involuntary_context_switches": 449
+            "write_syscalls": 1404,
+            "voluntary_context_switches": 3123,
+            "involuntary_context_switches": 677
         },
         "6178": {
-            "user_ticks": 84,
-            "system_ticks": 24,
+            "user_ticks": 101,
+            "system_ticks": 36,
             "read_bytes": 1822720,
             "write_bytes": 24576,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 2366,
-            "write_syscalls": 524,
-            "voluntary_context_switches": 1822,
-            "involuntary_context_switches": 592
+            "read_syscalls": 2578,
+            "write_syscalls": 736,
+            "voluntary_context_switches": 2340,
+            "involuntary_context_switches": 633
         },
         "6310": {
-            "user_ticks": 49089,
-            "system_ticks": 6337,
-            "read_bytes": 22704128,
-            "write_bytes": 12611584,
+            "user_ticks": 144847,
+            "system_ticks": 20269,
+            "read_bytes": 23511040,
+            "write_bytes": 12906496,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 180698,
-            "write_syscalls": 178803,
-            "voluntary_context_switches": 292558,
-            "involuntary_context_switches": 36003
+            "read_syscalls": 550629,
+            "write_syscalls": 548721,
+            "voluntary_context_switches": 930810,
+            "involuntary_context_switches": 75789
         },
         "6321": {
-            "user_ticks": 1209,
-            "system_ticks": 103,
+            "user_ticks": 16072,
+            "system_ticks": 472,
             "read_bytes": 393216,
             "write_bytes": 110592,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 10686,
-            "write_syscalls": 615,
-            "voluntary_context_switches": 19411,
-            "involuntary_context_switches": 1063
+            "read_syscalls": 44467,
+            "write_syscalls": 2484,
+            "voluntary_context_switches": 82451,
+            "involuntary_context_switches": 12500
         },
         "6350": {
-            "user_ticks": 24,
-            "system_ticks": 15,
+            "user_ticks": 44,
+            "system_ticks": 32,
             "read_bytes": 409600,
             "write_bytes": 16384,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 886,
-            "write_syscalls": 360,
-            "voluntary_context_switches": 836,
-            "involuntary_context_switches": 169
+            "read_syscalls": 2190,
+            "write_syscalls": 704,
+            "voluntary_context_switches": 1522,
+            "involuntary_context_switches": 253
         },
         "6366": {
-            "user_ticks": 30,
-            "system_ticks": 18,
+            "user_ticks": 93,
+            "system_ticks": 54,
             "read_bytes": 45056,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 384,
-            "write_syscalls": 232,
-            "voluntary_context_switches": 2425,
-            "involuntary_context_switches": 29
-        },
-        "6391": {
-            "user_ticks": 377,
-            "system_ticks": 57,
-            "read_bytes": 200704,
-            "write_bytes": 868352,
-            "cancelled_write_bytes": 0,
-            "read_syscalls": 3478,
-            "write_syscalls": 641,
-            "voluntary_context_switches": 2444,
-            "involuntary_context_switches": 571
+            "read_syscalls": 691,
+            "write_syscalls": 539,
+            "voluntary_context_switches": 7693,
+            "involuntary_context_switches": 52
         },
         "6407": {
-            "user_ticks": 19,
-            "system_ticks": 11,
+            "user_ticks": 38,
+            "system_ticks": 24,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 903,
-            "write_syscalls": 388,
-            "voluntary_context_switches": 470,
-            "involuntary_context_switches": 163
+            "read_syscalls": 2220,
+            "write_syscalls": 743,
+            "voluntary_context_switches": 1161,
+            "involuntary_context_switches": 239
         },
         "6432": {
-            "user_ticks": 14,
-            "system_ticks": 10,
+            "user_ticks": 32,
+            "system_ticks": 25,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 778,
-            "write_syscalls": 271,
-            "voluntary_context_switches": 419,
-            "involuntary_context_switches": 83
-        },
-        "6546": {
-            "user_ticks": 100,
-            "system_ticks": 23,
-            "read_bytes": 0,
-            "write_bytes": 446464,
-            "cancelled_write_bytes": 0,
-            "read_syscalls": 1241,
-            "write_syscalls": 1128,
-            "voluntary_context_switches": 1017,
-            "involuntary_context_switches": 336
+            "read_syscalls": 2104,
+            "write_syscalls": 651,
+            "voluntary_context_switches": 1111,
+            "involuntary_context_switches": 188
         },
         "6703": {
+            "user_ticks": 2,
+            "system_ticks": 0,
+            "read_bytes": 12288,
+            "write_bytes": 16384,
+            "cancelled_write_bytes": 4096,
+            "read_syscalls": 2370,
+            "write_syscalls": 3142,
+            "voluntary_context_switches": 72,
+            "involuntary_context_switches": 8
+        },
+        "24023": {
             "user_ticks": 1,
             "system_ticks": 0,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 16,
+            "involuntary_context_switches": 0
+        },
+        "38251": {
+            "user_ticks": 4,
+            "system_ticks": 3,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 71,
-            "write_syscalls": 8,
-            "voluntary_context_switches": 5,
-            "involuntary_context_switches": 3
+            "read_syscalls": 322,
+            "write_syscalls": 374,
+            "voluntary_context_switches": 63,
+            "involuntary_context_switches": 10
         },
-        "6833": {
-            "user_ticks": 32,
+        "49348": {
+            "user_ticks": 0,
+            "system_ticks": 154,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 45082,
+            "involuntary_context_switches": 322
+        },
+        "49594": {
+            "user_ticks": 0,
+            "system_ticks": 930,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 317269,
+            "involuntary_context_switches": 33506
+        },
+        "49815": {
+            "user_ticks": 0,
+            "system_ticks": 410,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 116252,
+            "involuntary_context_switches": 9598
+        },
+        "50691": {
+            "user_ticks": 85,
             "system_ticks": 13,
-            "read_bytes": 57344,
-            "write_bytes": 118784,
-            "cancelled_write_bytes": 0,
-            "read_syscalls": 874,
-            "write_syscalls": 375,
-            "voluntary_context_switches": 500,
-            "involuntary_context_switches": 259
-        },
-        "6848": {
-            "user_ticks": 9,
-            "system_ticks": 7,
             "read_bytes": 0,
             "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 539,
-            "write_syscalls": 106,
-            "voluntary_context_switches": 233,
-            "involuntary_context_switches": 39
+            "read_syscalls": 457,
+            "write_syscalls": 178,
+            "voluntary_context_switches": 258,
+            "involuntary_context_switches": 130
         },
-        "8773": {
+        "53255": {
             "user_ticks": 0,
-            "system_ticks": 395,
+            "system_ticks": 92,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 113575,
-            "involuntary_context_switches": 12489
+            "voluntary_context_switches": 20584,
+            "involuntary_context_switches": 740
         },
-        "10621": {
+        "53824": {
             "user_ticks": 0,
-            "system_ticks": 1381,
+            "system_ticks": 355,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 472498,
-            "involuntary_context_switches": 61532
+            "voluntary_context_switches": 95514,
+            "involuntary_context_switches": 6092
         },
-        "13074": {
-            "user_ticks": 0,
-            "system_ticks": 185,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 39941,
-            "involuntary_context_switches": 1317
-        },
-        "13580": {
+        "56621": {
             "user_ticks": 0,
             "system_ticks": 0,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 3,
+            "involuntary_context_switches": 0
+        },
+        "57447": {
+            "user_ticks": 0,
+            "system_ticks": 67,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 25137,
+            "involuntary_context_switches": 98
+        },
+        "57913": {
+            "user_ticks": 3,
+            "system_ticks": 2,
             "read_bytes": 0,
-            "write_bytes": 4096,
+            "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 147,
-            "write_syscalls": 46,
+            "read_syscalls": 132,
+            "write_syscalls": 43,
+            "voluntary_context_switches": 56,
+            "involuntary_context_switches": 23
+        },
+        "58049": {
+            "user_ticks": 0,
+            "system_ticks": 50,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 11243,
+            "involuntary_context_switches": 255
+        },
+        "58706": {
+            "user_ticks": 0,
+            "system_ticks": 0,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
+            "voluntary_context_switches": 2,
+            "involuntary_context_switches": 0
+        },
+        "59028": {
+            "user_ticks": 0,
+            "system_ticks": 0,
+            "read_bytes": null,
+            "write_bytes": null,
+            "cancelled_write_bytes": null,
+            "read_syscalls": null,
+            "write_syscalls": null,
             "voluntary_context_switches": 5,
-            "involuntary_context_switches": 6
-        },
-        "14944": {
-            "user_ticks": 0,
-            "system_ticks": 157,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 95718,
-            "involuntary_context_switches": 1576
-        },
-        "15535": {
-            "user_ticks": 0,
-            "system_ticks": 114,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 66362,
-            "involuntary_context_switches": 779
-        },
-        "16776": {
-            "user_ticks": 0,
-            "system_ticks": 96,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 53254,
-            "involuntary_context_switches": 949
-        },
-        "17643": {
-            "user_ticks": 0,
-            "system_ticks": 326,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 93462,
-            "involuntary_context_switches": 9749
-        },
-        "18918": {
-            "user_ticks": 0,
-            "system_ticks": 0,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 4,
             "involuntary_context_switches": 0
         },
-        "21267": {
-            "user_ticks": 0,
-            "system_ticks": 0,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 7,
-            "involuntary_context_switches": 0
-        },
-        "22024": {
+        "59241": {
             "user_ticks": 0,
             "system_ticks": 0,
             "read_bytes": null,
@@ -2839,40 +2817,29 @@
             "voluntary_context_switches": 2,
             "involuntary_context_switches": 0
         },
-        "22317": {
+        "59949": {
             "user_ticks": 0,
-            "system_ticks": 0,
+            "system_ticks": 13,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 4,
-            "involuntary_context_switches": 0
+            "voluntary_context_switches": 4148,
+            "involuntary_context_switches": 22
         },
-        "22339": {
+        "60418": {
             "user_ticks": 0,
-            "system_ticks": 19,
+            "system_ticks": 10,
             "read_bytes": null,
             "write_bytes": null,
             "cancelled_write_bytes": null,
             "read_syscalls": null,
             "write_syscalls": null,
-            "voluntary_context_switches": 7537,
-            "involuntary_context_switches": 73
+            "voluntary_context_switches": 2244,
+            "involuntary_context_switches": 114
         },
-        "23289": {
-            "user_ticks": 0,
-            "system_ticks": 0,
-            "read_bytes": null,
-            "write_bytes": null,
-            "cancelled_write_bytes": null,
-            "read_syscalls": null,
-            "write_syscalls": null,
-            "voluntary_context_switches": 2,
-            "involuntary_context_switches": 0
-        },
-        "23575": {
+        "60731": {
             "user_ticks": 0,
             "system_ticks": 0,
             "read_bytes": null,
@@ -2883,7 +2850,7 @@
             "voluntary_context_switches": 2,
             "involuntary_context_switches": 0
         },
-        "23934": {
+        "61320": {
             "user_ticks": null,
             "system_ticks": null,
             "read_bytes": null,
@@ -2894,16 +2861,16 @@
             "voluntary_context_switches": null,
             "involuntary_context_switches": null
         },
-        "23935": {
+        "61321": {
             "user_ticks": 52,
-            "system_ticks": 14,
+            "system_ticks": 10,
             "read_bytes": 0,
-            "write_bytes": 4096,
+            "write_bytes": 0,
             "cancelled_write_bytes": 0,
-            "read_syscalls": 11147,
-            "write_syscalls": 3,
-            "voluntary_context_switches": 0,
-            "involuntary_context_switches": 97
+            "read_syscalls": 10993,
+            "write_syscalls": 2,
+            "voluntary_context_switches": 1,
+            "involuntary_context_switches": 19
         }
     }
 }

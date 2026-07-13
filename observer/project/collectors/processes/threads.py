@@ -52,6 +52,11 @@ def collect_threads(
                 right = stat.rfind(")")
                 rest = stat[right + 2:].split()
                 thread.state = rest[0]
+                thread.process_group = int(rest[2])
+                thread.session = int(rest[3])
+                thread.tty_nr = int(rest[4])
+                thread.foreground_process_group = int(rest[5])
+
                 thread.user_ticks = int(rest[11])
                 thread.system_ticks = int(rest[12])
                 thread.priority = int(rest[15])

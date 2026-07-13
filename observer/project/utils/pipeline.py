@@ -69,12 +69,14 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
                 )
 
         save_state(resource, payload)
+
         res = run_analysis(resource=resource, func=analyze_func, result=result)
         if res is None:
             file = Path(inspect.getsourcefile(analyze_func))
             print(f"❌ [PIPELINE RUNNER] {resource} analyzer Function returned {res} \n"
                 f"Action: Check what {analyze_func.__name__} returns \n"
-                f"File: {file}")
+                f"File: {file}"
+                f"Note: Not supposed to be an issue. This is just a test check if your analyzer func returned a value")
             return
         print(f"✅ {resource} Metrics Analysis Passed")
     else:

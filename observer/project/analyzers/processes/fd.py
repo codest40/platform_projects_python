@@ -39,17 +39,15 @@ def analyze_fd(
     # ---------------------------------------------------------
     #
 
-    coverage.check(process.max_fds is not None)
+    coverage.check(process.max_fds_soft is not None)
 
-    if process.max_fds is not None:
+    if process.max_fds_soft is not None:
 
-        analysis.max_fds = process.max_fds
+        analysis.max_fds_soft = process.max_fds_soft
 
-    #
     # ---------------------------------------------------------
     # FD Utilization
     # ---------------------------------------------------------
-    #
 
     coverage.check(process.fd_utilization is not None)
 
@@ -71,10 +69,16 @@ def analyze_fd(
             f"Open FDs: {analysis.open_fds}"
         )
 
-    if analysis.max_fds is not None:
+    if analysis.max_fds_soft is not None:
 
         analysis.facts.append(
-            f"FD limit: {analysis.max_fds}"
+            f"FD Soft limit: {analysis.max_fds_soft}"
+        )
+
+    if analysis.max_fds_hard is not None:
+
+        analysis.facts.append(
+            f"FD hard limit: {analysis.max_fds_hard}"
         )
 
     if analysis.fd_utilization is not None:

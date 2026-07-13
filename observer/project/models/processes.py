@@ -58,7 +58,7 @@ class ProcessSnapshot:
     gid: Optional[int] = None
 
     # ==========================================================
-    # Memory (cheap)
+    # Memory
     # ==========================================================
 
     rss_bytes: Optional[int] = None
@@ -70,7 +70,13 @@ class ProcessSnapshot:
 
     threads: list[ThreadSnapshot] | None=None
     thread_count: Optional[int] = None
-
+    session: int | None = None
+    process_group: int | None = None
+    foreground_process_group: int | None = None
+    tty_nr: int | None = None
+    minor_page_faults: int | None = None
+    major_page_faults: int | None = None
+    rss_limit: int | None = None
     # ==========================================================
     # CPU Accounting
     # ==========================================================
@@ -251,13 +257,15 @@ class ProcessCache:
 class ProcessIdentityAnalysis:
 
     pid: int
+    tid: int | None = None
     process_type: str | None = None
     executable_state: str | None = None
     owner_type: str | None = None
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
     scheduler_class: str | None = None
-
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessWaitChannelAnalysis:
@@ -267,7 +275,8 @@ class ProcessWaitChannelAnalysis:
     wait_type: str | None = None
     facts: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
-
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessSchedulerAnalysis:
@@ -290,6 +299,8 @@ class ProcessSchedulerAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessContextSwitchAnalysis:
@@ -303,6 +314,8 @@ class ProcessContextSwitchAnalysis:
 
     voluntary_ratio: float | None = None
     facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessCpuAnalysis:
@@ -313,9 +326,11 @@ class ProcessCpuAnalysis:
     cpu_percent: float | None = None
     user_cpu_percent: float | None = None
     system_cpu_percent: float | None = None
+    cpu_ticks_per_sec: float | None = None
+    user_ticks_per_sec: float | None = None
+    system_ticks_per_sec: float | None = None
 
     cpu_type: str | None = None
-
     runtime_seconds: float | None = None
     last_processor: int | None = None
 
@@ -324,6 +339,8 @@ class ProcessCpuAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessThreadAnalysis:
@@ -349,6 +366,8 @@ class ProcessThreadAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessFdAnalysis:
@@ -357,10 +376,14 @@ class ProcessFdAnalysis:
     tid: int | None = None
 
     open_fds: int | None = None
-    max_fds: int | None = None
+    max_fds_soft: int | float | str | None = None
+    max_fds_hard: int | float | str | None = None
     fd_utilization: float | None = None
 
     facts: list[str] = field(default_factory=list)
+    classifications: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 
 @dataclass(slots=True)
@@ -395,7 +418,8 @@ class ProcessLimitsAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
-
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessIoAnalysis:
@@ -423,6 +447,8 @@ class ProcessIoAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessMemoryAnalysis:
@@ -439,7 +465,8 @@ class ProcessMemoryAnalysis:
 
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
-
+    recommendations: list[str] = field(default_factory=list)
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessSummary:
@@ -464,7 +491,7 @@ class ProcessSummary:
     facts: list[str] = field(default_factory=list)
     recommendations: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
-
+    coverage: str = "UNKNOWN"
 
 @dataclass(slots=True)
 class ProcessSummaryInventory:
