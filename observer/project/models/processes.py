@@ -32,6 +32,8 @@ class RuntimeEvent:
     timestamp: float
     category: str
     code: str
+    value: int | None = None
+    metadata: dict | None = None
 
 @dataclass(slots=True)
 class ProcessRuntimeEvents:
@@ -122,7 +124,7 @@ class ProcessSnapshot:
 
     start_time: Optional[float] = None
     runtime_seconds: Optional[float] = None
-    runtime_events: ProcessRuntimeEvents | None = None
+    runtime_collected_events: ProcessRuntimeEvents | None = None
 
     # ==========================================================
     # Container / Cgroups

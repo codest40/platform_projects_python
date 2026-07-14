@@ -20,6 +20,7 @@ from project.collectors.processes.fd import collect_fd
 from project.collectors.processes.limit import collect_limits
 from project.collectors.processes.wait_channel import collect_wait_channel
 from project.collectors.processes.threads import collect_threads
+from project.collectors.processes.runtime_events import collect_runtime_events
 from project.collectors.processes.filter_compute import (
     filter_process_state, compute_process_rates,
   )
@@ -113,6 +114,7 @@ def collect_process_inventory() -> ProcessInventory:
             snapshot = collect_limits(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_wait_channel(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_threads(snapshot, proc_dir, inventory.collector_failures,)
+            snapshot = collect_runtime_events(snapshot, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1
@@ -137,7 +139,7 @@ def collect_process_inventory() -> ProcessInventory:
         except Exception as e:
 
             snapshot.collection_errors.append(
-                f"inventory: {e}"
+                f"[PS inventory]: {e}"
             )
 
             inventory.inaccessible_processes.append(

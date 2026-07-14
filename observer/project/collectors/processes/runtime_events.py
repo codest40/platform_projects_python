@@ -5,8 +5,10 @@ from project.models.processes import (
     RuntimeEvent,
 )
 import signal
-from project.providers.kernel_events import EBPF_EVENTS
+from project.providers.kernel_events import EBPFProvider
+from project.providers.utils.helpers import ENABLE_RUNTIME_EVENTS as enable
 
+enable = True
 
 def collect_runtime_events(
     snapshot: ProcessSnapshot,
@@ -17,65 +19,21 @@ def collect_runtime_events(
     Events comes from: eBPF or tracefs
         - other kernel event providers
     """
+    if not enable:
+        return snapshot
 
     try:
 
-        events = snapshot.runtime_events
-        if events is None:
-            events = ProcessRuntimeEvents()
+        ebpf_provider = EBPFProvider()
+        #if not ebpf_provider.available():
+        #  return snapshot
 
-        runtime_events = EBPF_EVENTS
-        for event in runtime_events:
-            if event.pid != snapshot.pid:
-                continue
+        process_events = ebpf_provider.read_process_events()
+        snapshot.runtime_collected_events = (
+            process_events.get(snapshot.pid)
+            or ProcessRuntimeEvents()
+        )
 
-
-            if event.code == "EMFILE":
-                if events.emfile_count is None:
-                    events.emfile_count = 0
-                events.emfile_count += 1
-
-            elif event.code == "ENFILE":
-                if events.enfile_count is None:
-                    events.enfile_count = 0
-
-                events.enfile_count += 1
-
-
-            elif event.code == "SIGSEGV":
-
-                if events.segfault_count is None:
-                    events.segfault_count = 0
-                events.segfault_count += 1
-                events.last_terminating_signal = signal.SIGSEGV.value
-
-
-            elif event.code == "SIGBUS":
-                if events.sigbus_count is None:
-                    events.sigbus_count = 0
-                events.sigbus_count += 1
-                events.last_terminating_signal = signal.SIGBUS.value
-
-
-            elif event.code == "SIGABRT":
-                if events.sigabrt_count is None:
-                    events.sigabrt_count = 0
-                events.sigabrt_count += 1
-                events.last_terminating_signal = signal.SIGABRT.value
-
-
-            elif event.code == "SIGILL":
-                if events.sigill_count is None:
-                    events.sigill_count = 0
-                events.sigill_count += 1
-                events.last_terminating_signal = signal.SIGILL.value
-
-            elif event.code == "OOM_KILL":
-                if events.oom_kill_count is None:
-                    events.oom_kill_count = 0
-                events.oom_kill_count += 1
-
-        snapshot.runtime_events = events
     except Exception as e:
         collector_failures.append(
             CollectorFailure(

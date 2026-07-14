@@ -35,7 +35,7 @@ def analyze_fd(
     coverage.check(process.max_fds_soft not in OB.values)
     coverage.check(process.max_fds_hard not in OB.values)
     coverage.check(process.fd_utilization not in OB.values)
-    coverage.check(process.runtime_events not in OB.values)
+    coverage.check(process.runtime_collected_events not in OB.values)
 
     # ---------------------------------------------------------
     # Copy Metrics
@@ -165,7 +165,7 @@ def analyze_fd(
     # ---------------------------------------------------------
     # FD Exhausted
     # ---------------------------------------------------------
-    events = process.runtime_events
+    events = process.runtime_collected_events
     if events is not None:
       if events.emfile_count is not None:
             exhausted = (
