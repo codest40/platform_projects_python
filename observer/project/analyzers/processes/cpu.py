@@ -202,6 +202,7 @@ def analyze_cpu(
         analysis.facts.append(
           f"CPU utilization is {process.cpu_percent:.1f}%."
         )
+    """
     if process.state not in OB.values:
         analysis.facts.append(
           f"Scheduler state is '{process.state}'."
@@ -221,7 +222,8 @@ def analyze_cpu(
     if process.runtime_seconds not in OB.values:
         analysis.facts.append(
           f"Process runtime is {process.runtime_seconds:.1f} seconds."
-        )
+        ) """
+
     if process.user_cpu_percent not in OB.values:
         analysis.facts.append(
           f"User CPU utilization is {process.user_cpu_percent:.1f}%."
@@ -240,11 +242,12 @@ def analyze_cpu(
         analysis.facts.append(
           f"User CPU ticks/sec is {process.user_ticks_per_sec:.1f}%."
         )
+    """
     if process.processor not in OB.values:
         analysis.last_processor = process.processor
         analysis.facts.append(
             f"Last executed on logical CPU {process.processor}."
         )
-
+    """
     coverage.apply(process)
     return analysis
