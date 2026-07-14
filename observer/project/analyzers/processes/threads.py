@@ -263,7 +263,7 @@ def analyze_threads(
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-
+    """
     if process.thread_count not in OB.values:
         analysis.facts.append(
             f"Threads: {process.thread_count}"
@@ -318,5 +318,7 @@ def analyze_threads(
         analysis.facts.append(
             f"Runtime: {process.runtime_seconds:.1f}s"
         )
+    """
+
     coverage.apply(process)
     return analysis
