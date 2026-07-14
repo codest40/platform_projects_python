@@ -202,6 +202,25 @@ def analyze_cpu(
         analysis.facts.append(
           f"CPU utilization is {process.cpu_percent:.1f}%."
         )
+    if process.user_cpu_percent not in OB.values:
+        analysis.facts.append(
+          f"User CPU utilization is {process.user_cpu_percent:.1f}%."
+        )
+
+    if process.system_cpu_percent not in OB.values:
+        analysis.facts.append(
+          f"Kernel CPU utilization is {process.system_cpu_percent:.1f}%."
+        )
+
+    if process.system_ticks_per_sec not in OB.values:
+        analysis.facts.append(
+          f"Kernel CPU ticks/sec is {process.system_ticks_per_sec:.1f}%."
+        )
+    if process.user_ticks_per_sec not in OB.values:
+        analysis.facts.append(
+          f"User CPU ticks/sec is {process.user_ticks_per_sec:.1f}%."
+        )
+
     """
     if process.state not in OB.values:
         analysis.facts.append(
@@ -222,27 +241,7 @@ def analyze_cpu(
     if process.runtime_seconds not in OB.values:
         analysis.facts.append(
           f"Process runtime is {process.runtime_seconds:.1f} seconds."
-        ) """
-
-    if process.user_cpu_percent not in OB.values:
-        analysis.facts.append(
-          f"User CPU utilization is {process.user_cpu_percent:.1f}%."
         )
-
-    if process.system_cpu_percent not in OB.values:
-        analysis.facts.append(
-          f"Kernel CPU utilization is {process.system_cpu_percent:.1f}%."
-        )
-
-    if process.system_ticks_per_sec not in OB.values:
-        analysis.facts.append(
-          f"Kernel CPU ticks/sec is {process.system_ticks_per_sec:.1f}%."
-        )
-    if process.user_ticks_per_sec not in OB.values:
-        analysis.facts.append(
-          f"User CPU ticks/sec is {process.user_ticks_per_sec:.1f}%."
-        )
-    """
     if process.processor not in OB.values:
         analysis.last_processor = process.processor
         analysis.facts.append(
