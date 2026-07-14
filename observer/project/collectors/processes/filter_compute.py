@@ -78,12 +78,9 @@ def _delta(current, previous):
     """
     Safe counter delta.
     """
-
     if current is None or previous is None:
         return None
-
     delta = current - previous
-
     if delta < 0:
         return None
 
@@ -97,10 +94,8 @@ def _rate(current, previous, elapsed):
     delta = _delta(current, previous)
     if delta is None:
         return None
-
     if elapsed <= 0:
         return None
-
     return delta / elapsed
 
 
@@ -108,22 +103,18 @@ def _ratio(numerator, denominator):
     """
     Safe ratio helper.
     """
-
     if numerator is None:
         return None
     if denominator in (None, 0):
         return None
     if math.isinf(denominator) or math.isinf(numerator):
         return "N/A"
-
     return numerator / denominator
 
 def _percent(rate, total):
     value = _ratio(rate, total)
-
     if value is None:
         return None
-
     return value * 100
 
 # ==========================================================
@@ -187,9 +178,13 @@ def compute_process_rates(
             CLK_TCK,
         )
 
+        u = process.user_ticks_per_sec
+        s = process.system_ticks_per_sec
+        if u is not None and s is not None:
+            process.cpu_ticks_per_sec = u + s
+
         u = process.user_cpu_percent
         s = process.system_cpu_percent
-
         if u is not None and s is not None:
             process.cpu_percent = u + s
 

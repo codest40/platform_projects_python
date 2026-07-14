@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from project.analyzers.utils.coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessMemoryAnalysis,
+    ObserverState as OB,
 )
 
 
@@ -10,8 +12,7 @@ def analyze_memory(
     process: ProcessSnapshot,
 ) -> ProcessMemoryAnalysis:
     """
-    Analyze process memory characteristics.
-    Uses normalized values only.
+    Analyze process memory behaviour.
     """
 
     analysis = ProcessMemoryAnalysis(
@@ -21,97 +22,235 @@ def analyze_memory(
 
     coverage = Coverage()
 
-    #
+    LARGE_RSS = 1024 * 1024 * 1024       # 1GB
+    LARGE_VMS = 10 * 1024 * 1024 * 1024 # 10GB
+    LOW_RESIDENT_RATIO = 0.01
+
+
     # ---------------------------------------------------------
-    # Resident Memory
+    # Copy metrics
     # ---------------------------------------------------------
-    #
+    analysis.rss_bytes = process.rss_bytes
+    analysis.vms_bytes = process.vms_bytes
+    analysis.thread_count = process.thread_count
+    analysis.resident_ratio = process.resident_ratio
 
-    coverage.check(process.rss_bytes is not None)
 
-    if process.rss_bytes is not None:
+    coverage.check(
+        process.rss_bytes not in OB.values
+    )
 
-        analysis.rss_bytes = process.rss_bytes
+    coverage.check(
+        process.vms_bytes not in OB.values
+    )
 
-        if process.rss_bytes > 0:
+    coverage.check(
+        process.thread_count not in OB.values
+    )
+
+    coverage.check(
+        process.resident_ratio not in OB.values
+    )
+
+
+    # ---------------------------------------------------------
+    # Has memory
+    # ---------------------------------------------------------
+
+    if process.rss_bytes not in OB.values:
+
+        allocated = (
+            process.rss_bytes > 0
+        )
+        analysis.signals[
+            "is_memory_allocated"
+        ] = allocated
+
+
+        if allocated:
+
             analysis.classifications.append(
                 "resident_memory"
             )
 
-    #
+    else:
+
+        analysis.signals[
+            "is_memory_allocated"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
-    # Virtual Memory
+    # Large RSS
     # ---------------------------------------------------------
-    #
+    if process.rss_bytes not in OB.values:
 
-    coverage.check(process.vms_bytes is not None)
+        large = (
+            process.rss_bytes >= LARGE_RSS
+        )
 
-    if process.vms_bytes is not None:
+        analysis.signals[
+            "is_memory_large"
+        ] = large
 
-        analysis.vms_bytes = process.vms_bytes
 
-        if process.vms_bytes > 0:
+        if large:
+
             analysis.classifications.append(
-                "virtual_memory"
+                "large_resident_memory"
             )
 
-    #
+            analysis.recommendations.append(
+                "Investigate memory growth if RSS continues increasing."
+            )
+
+    else:
+
+        analysis.signals[
+            "is_memory_large"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
-    # Thread Count
+    # Large virtual memory
     # ---------------------------------------------------------
-    #
+    if process.vms_bytes not in OB.values:
 
-    coverage.check(process.thread_count is not None)
+        large_vms = (
+            process.vms_bytes >= LARGE_VMS
+        )
 
-    if process.thread_count is not None:
 
-        analysis.thread_count = process.thread_count
+        analysis.signals[
+            "is_virtual_memory_large"
+        ] = large_vms
 
-        if process.thread_count > 1:
+
+        if large_vms:
+
+            analysis.classifications.append(
+                "large_virtual_memory"
+            )
+
+
+    else:
+
+        analysis.signals[
+            "is_virtual_memory_large"
+        ] = OB.NA
+
+
+
+    # ---------------------------------------------------------
+    # Resident ratio
+    # ---------------------------------------------------------
+
+    if process.resident_ratio not in OB.values:
+
+        fragmented = (
+            process.resident_ratio
+            <= LOW_RESIDENT_RATIO
+        )
+
+
+        analysis.signals[
+            "is_memory_fragmented"
+        ] = fragmented
+
+
+        if fragmented:
+
+            analysis.classifications.append(
+                "low_resident_ratio"
+            )
+
+
+    else:
+
+        analysis.signals[
+            "is_memory_fragmented"
+        ] = OB.NA
+
+
+
+    # ---------------------------------------------------------
+    # Thread count
+    # ---------------------------------------------------------
+
+    if process.thread_count not in OB.values:
+
+        multi = (
+            process.thread_count > 1
+        )
+
+        analysis.signals[
+            "is_multithreaded"
+        ] = multi
+
+
+        analysis.signals[
+            "is_single_threaded"
+        ] = not multi
+
+
+        if multi:
+
             analysis.classifications.append(
                 "multithreaded"
             )
+
         else:
+
             analysis.classifications.append(
                 "single_threaded"
             )
 
-    #
-    # ---------------------------------------------------------
-    # RSS / VMS Ratio
-    # ---------------------------------------------------------
-    #
 
-    coverage.check(process.resident_ratio is not None)
-    if process.resident_ratio is not None:
-        analysis.resident_ratio = process.resident_ratio
+    else:
+
+        analysis.signals[
+            "is_multithreaded"
+        ] = OB.NA
+
+        analysis.signals[
+            "is_single_threaded"
+        ] = OB.NA
+
+
 
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-    if analysis.rss_bytes is not None:
+
+    if process.rss_bytes not in OB.values:
 
         analysis.facts.append(
-            f"RSS: {analysis.rss_bytes:,} bytes"
+            f"RSS: {process.rss_bytes:,} bytes"
         )
 
-    if analysis.vms_bytes is not None:
+
+    if process.vms_bytes not in OB.values:
 
         analysis.facts.append(
-            f"Virtual memory: {analysis.vms_bytes:,} bytes"
+            f"Virtual memory: {process.vms_bytes:,} bytes"
         )
 
-    if analysis.thread_count is not None:
+
+    if process.thread_count not in OB.values:
 
         analysis.facts.append(
-            f"Threads: {analysis.thread_count}"
+            f"Threads: {process.thread_count}"
         )
 
-    if analysis.resident_ratio is not None:
+
+    if process.resident_ratio not in OB.values:
 
         analysis.facts.append(
-            f"Resident ratio: {analysis.resident_ratio:.2f}"
+            f"Resident ratio: {process.resident_ratio:.2f}"
         )
+
 
     coverage.apply(process)
     return analysis

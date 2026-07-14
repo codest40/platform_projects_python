@@ -1,10 +1,12 @@
 from __future__ import annotations
+
 from project.analyzers.processes.users import get_user
 from project.analyzers.utils.coverage import Coverage
 
 from project.models.processes import (
     ProcessSnapshot,
     ProcessIdentityAnalysis,
+    ObserverState as OB,
 )
 
 
@@ -12,128 +14,309 @@ def analyze_identity(
     process: ProcessSnapshot,
 ) -> ProcessIdentityAnalysis:
     """
-    Classify process identity.
-    It simply answers:
-        • What is this process?
-        • Who owns it?
-        • Where is it running?
-        • Is the executable healthy?
+    Analyze process identity.
+
+    Answers:
+        - What is this process?
+        - Who owns it?
+        - Where is it running?
+        - Is the executable healthy?
     """
 
     analysis = ProcessIdentityAnalysis(
-        pid=process.pid, tid=process.tid,
+        pid=process.pid,
+        tid=process.tid,
     )
 
     coverage = Coverage()
+
     # ---------------------------------------------------------
-    # Process type
+    # Copy identity information
     # ---------------------------------------------------------
+
+    analysis.name = process.name
+    analysis.command = process.command
+    analysis.executable_state = process.executable
+    analysis.uid = process.uid
+    analysis.gid = process.gid
+    analysis.container_id = process.container_id
+    analysis.cgroup = process.cgroup
+
+
+    # ---------------------------------------------------------
+    # Process Type
+    # ---------------------------------------------------------
+
+    coverage.check(
+        process.command not in OB.values
+        or process.executable not in OB.values
+    )
 
     user = get_user(process.uid)
 
-    coverage.check(
-        process.command is not None or
-        process.executable is not None
+    kernel_thread = (
+        process.command in OB.values
+        and process.executable in OB.values
     )
 
-    if not process.command and process.executable is None:
+    analysis.signals["is_kernel_thread"] = kernel_thread
+
+    if kernel_thread:
+
         analysis.process_type = "kernel_thread"
-        analysis.classifications.append("kernel_thread")
+        analysis.classifications.append(
+            "kernel_thread"
+        )
 
 
-    elif process.container_id:
+    elif process.container_id not in OB.values:
+
+        analysis.signals["is_container_process"] = True
+
         analysis.process_type = "container_process"
-        analysis.classifications.append("container_process")
+        analysis.classifications.append(
+            "container_process"
+        )
+
 
     else:
+
+        analysis.signals["is_host_process"] = True
+
         analysis.process_type = "host_process"
-        analysis.classifications.append("host_process")
+        analysis.classifications.append(
+            "host_process"
+        )
 
-    #
-    # ---------------------------------------------------------
-    # Executable state
-    # ---------------------------------------------------------
-    #
-    coverage.check(process.executable is not None)
-    if process.executable:
 
-        if process.executable.endswith(" (deleted)"):
+    # ---------------------------------------------------------
+    # Executable State
+    # ---------------------------------------------------------
+
+    coverage.check(
+        process.executable not in OB.values
+    )
+
+    if process.executable not in OB.values:
+
+        deleted = (
+            process.executable.endswith(
+                " (deleted)"
+            )
+        )
+
+        analysis.signals[
+            "is_executable_deleted"
+        ] = deleted
+
+
+        if deleted:
+
             analysis.executable_state = "deleted"
 
+            analysis.classifications.append(
+                "deleted_executable"
+            )
+
+            analysis.recommendations.append(
+                "Investigate why the process is running a deleted executable."
+            )
+
+
         else:
+
             analysis.executable_state = "resolved"
 
+            analysis.classifications.append(
+                "valid_executable"
+            )
+
+
     else:
+
+        analysis.signals[
+            "is_executable_deleted"
+        ] = OB.NA
+
         analysis.executable_state = "missing"
 
-    #
+
+
     # ---------------------------------------------------------
-    # Owner classification
+    # Owner
     # ---------------------------------------------------------
-    #
 
     if user is None:
+
+        analysis.signals[
+            "is_unknown_owner"
+        ] = True
+
         analysis.owner_type = "unknown"
 
-    elif user.pw_name == "root":
-        analysis.owner_type = "root"
-        analysis.classifications.append("root_owned")
+        analysis.classifications.append(
+            "unknown_owner"
+        )
 
-    elif user.pw_shell.endswith("nologin"):
-        analysis.owner_type = "service_account"
-        analysis.classifications.append("service_process")
 
     else:
-        analysis.owner_type = "regular_user"
 
-    #
+        analysis.signals[
+            "is_unknown_owner"
+        ] = False
+
+
+        if user.pw_name == "root":
+
+            analysis.signals[
+                "is_root_owned"
+            ] = True
+
+            analysis.owner_type = "root"
+
+            analysis.classifications.append(
+                "root_owned"
+            )
+
+
+        elif user.pw_shell.endswith(
+            "nologin"
+        ):
+
+            analysis.signals[
+                "is_service_account"
+            ] = True
+
+            analysis.owner_type = (
+                "service_account"
+            )
+
+            analysis.classifications.append(
+                "service_process"
+            )
+
+
+        else:
+
+            analysis.signals[
+                "is_root_owned"
+            ] = False
+
+            analysis.signals[
+                "is_service_account"
+            ] = False
+
+            analysis.owner_type = (
+                "regular_user"
+            )
+
+
+
     # ---------------------------------------------------------
-    # Interactive shell
+    # Interactive Shell
     # ---------------------------------------------------------
-    #
 
-    if process.name:
+    shells = {
+        "bash",
+        "zsh",
+        "fish",
+        "sh",
+        "dash",
+    }
 
-        if process.name in {
-            "bash",
-            "zsh",
-            "fish",
-            "sh",
-            "dash",
-        }:
+    if process.name not in OB.values:
+
+        interactive = (
+            process.name in shells
+        )
+
+        analysis.signals[
+            "is_interactive_shell"
+        ] = interactive
+
+
+        if interactive:
 
             analysis.classifications.append(
                 "interactive_shell"
             )
 
-    #
+    else:
+
+        analysis.signals[
+            "is_interactive_shell"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
-    # System daemon
+    # System Daemon
     # ---------------------------------------------------------
-    #
 
     if (
-        process.ppid == 1
-        and analysis.process_type != "kernel_thread"
+        process.ppid is not None
+        and process.ppid == 1
+        and not kernel_thread
     ):
+
+        analysis.signals[
+            "is_system_daemon"
+        ] = True
+
         analysis.classifications.append(
             "system_daemon"
         )
 
-    if process.tid != process.pid:
-        analysis.classifications.append("thread")
     else:
-        analysis.classifications.append("process")
 
-    #
+        analysis.signals[
+            "is_system_daemon"
+        ] = False
+
+
+
+    # ---------------------------------------------------------
+    # Process / Thread
+    # ---------------------------------------------------------
+
+    if process.tid is not None:
+
+        is_thread = (
+            process.tid != process.pid
+        )
+
+        analysis.signals[
+            "is_thread"
+        ] = is_thread
+
+
+        if is_thread:
+
+            analysis.classifications.append(
+                "thread"
+            )
+
+        else:
+
+            analysis.classifications.append(
+                "process"
+            )
+
+    else:
+
+        analysis.signals[
+            "is_thread"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-    #
 
     if process.name:
         analysis.facts.append(
-            f"Process: {process.name}"
+            f"Process name: {process.name}"
         )
 
     if process.command:
@@ -158,13 +341,14 @@ def analyze_identity(
 
     if process.container_id:
         analysis.facts.append(
-            "Container ID detected"
+            f"Container ID: {process.container_id}"
         )
 
     if process.cgroup:
         analysis.facts.append(
             f"Cgroup: {process.cgroup}"
         )
+
 
     coverage.apply(process)
     return analysis

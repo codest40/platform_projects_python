@@ -1,9 +1,44 @@
 from __future__ import annotations
 from typing import Type
+from project.analyzers.processes.data import ANALYZER_SIGNALS
+from project.models.processes import (
+    ProcessCpuAnalysis,
+    ProcessMemoryAnalysis,
+    ProcessFdAnalysis,
+    ProcessIoAnalysis,
+    ProcessSchedulerAnalysis,
+    ProcessThreadAnalysis,
+    ProcessIdentityAnalysis,
+    ProcessWaitChannelAnalysis,
+    ProcessLimitsAnalysis,
+    ObserverState as OB,
+)
 
-# ==========================================================
-# Analysis Lookup
-# ==========================================================
+CPU = ANALYZER_SIGNALS["analyze_cpu"]
+MEM = ANALYZER_SIGNALS["analyze_memory"]
+FD = ANALYZER_SIGNALS["analyze_fd"]
+IO = ANALYZER_SIGNALS["analyze_io"]
+SCHED = ANALYZER_SIGNALS["analyze_scheduler"]
+THREAD = ANALYZER_SIGNALS["analyze_threads"]
+IDENTITY = ANALYZER_SIGNALS["analyze_identity"]
+WAIT = ANALYZER_SIGNALS["analyze_wait_channel"]
+LIMIT = ANALYZER_SIGNALS["analyze_limits"]
+
+
+
+def get_signal(
+    analyses: list,
+    analysis_type: Type,
+    signal: str,
+) -> bool | str | None:
+
+    analysis = get_analysis(
+        analyses,
+        analysis_type,
+    )
+    if analysis is None:
+        return None
+    return analysis.signals.get(signal)
 
 def get_analysis(
     analyses: list,
@@ -32,10 +67,8 @@ def has_classification(
     """
     Return True if an analysis contains a classification.
     """
-
     if analysis is None:
         return False
-
     return (
         classification
         in analysis.classifications
@@ -53,511 +86,201 @@ def has_fact(
     """
     Return True if an analysis contains a fact.
     """
-
     if analysis is None:
         return False
-
     return any(
         text in fact
         for fact in analysis.facts
     )
 
-
-# ==========================================================
-# Coverage
-# ==========================================================
-
-def coverage_percent(
-    analysis,
-) -> float | None:
+def unavailable(*values):
     """
-    Percentage of metrics successfully analyzed.
+    Collapse unavailable observer states into one.
     """
+    if all(value == OB.UNSEEN for value in values):
+        return OB.UNSEEN
+    if all(value in OB.values for value in values):
+        return OB.NA
+    return False
 
-    if analysis is None:
-        return None
-
-    expected = analysis.metrics_expected
-    available = analysis.metrics_available
-
-    if (
-        expected is None
-        or available is None
-        or expected == 0
-    ):
-        return None
-
-    return (
-        available / expected
-    ) * 100
-
-
-from project.models.processes import (
-    ProcessThreadAnalysis,
-)
 
 def is_multithreaded(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
     Determine whether the process is multithreaded.
     """
-
-    threads = get_analysis(
+    return get_signal(
         analyses,
         ProcessThreadAnalysis,
+        THREAD["MULTITHREADED"],
     )
 
-    if threads is None:
-        return None
-
-    if threads.thread_count is None:
-        return None
-
-    return threads.thread_count > 1
-
-
-
-
-from project.models.processes import (
-    ProcessIdentityAnalysis,
-)
 
 def is_interactive(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
-    Determine whether the process is interactive.
+    Determine whether the process is an interactive shell.
     """
-
-    identity = get_analysis(
+    return get_signal(
         analyses,
         ProcessIdentityAnalysis,
+        IDENTITY["INTERACTIVE_SHELL"],
     )
-
-    if identity is None:
-        return None
-
-    return has_classification(
-        identity,
-        "interactive_shell",
-    )
-
-from project.models.processes import (
-    ProcessIdentityAnalysis,
-)
 
 
 def is_daemon(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
     Determine whether the process is a system daemon.
     """
-
-    identity = get_analysis(
+    return get_signal(
         analyses,
         ProcessIdentityAnalysis,
+        IDENTITY["SYSTEM_DAEMON"],
     )
-
-    if identity is None:
-        return None
-
-    return has_classification(
-        identity,
-        "system_daemon",
-    )
-
-
-from project.models.processes import (
-    ProcessIdentityAnalysis,
-)
-
 
 def is_container(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
     Determine whether the process is running inside
     a container.
     """
-
-    identity = get_analysis(
+    return get_signal(
         analyses,
         ProcessIdentityAnalysis,
+        IDENTITY["CONTAINER_PROCESS"],
     )
-
-    if identity is None:
-        return None
-
-    return has_classification(
-        identity,
-        "container_process",
-    )
-
-
-from project.models.processes import (
-    ProcessSchedulerAnalysis,
-    ProcessWaitChannelAnalysis,
-)
 
 
 def is_blocked(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
-    Determine whether the process is blocked waiting
-    for a kernel resource.
+    Determine whether the process is blocked
+    waiting for a kernel resource.
     """
-
-    scheduler = get_analysis(
+    scheduler = get_signal(
         analyses,
         ProcessSchedulerAnalysis,
+        SCHED["WAITING_ON_IO"],
     )
 
-    wait = get_analysis(
+    wait = get_signal(
         analyses,
         ProcessWaitChannelAnalysis,
+        WAIT["WAITING"],
     )
-
-    if (
-        scheduler is None
-        and wait is None
-    ):
-        return None
-
-    # Uninterruptible sleep (D state)
-    if (
-        scheduler is not None
-        and scheduler.state == "D"
-    ):
+    if scheduler is True:
         return True
-
-    # Waiting in the kernel
-    if (
-        wait is not None
-        and has_classification(
-            wait,
-            "waiting",
-        )
-    ):
+    if wait is True:
         return True
-
+    if scheduler in OB.values and wait in OB.values:
+        return OB.NA
     return False
-
-
-from project.models.processes import (
-    ProcessMemoryAnalysis,
-    ProcessFdAnalysis,
-    ProcessLimitsAnalysis,
-)
-
-
-def is_resource_constrained(
-    analyses: list,
-) -> bool | None:
-    """
-    Determine whether the process appears to be
-    constrained by system resources.
-    """
-
-    memory = get_analysis(
-        analyses,
-        ProcessMemoryAnalysis,
-    )
-
-    fd = get_analysis(
-        analyses,
-        ProcessFdAnalysis,
-    )
-
-    limits = get_analysis(
-        analyses,
-        ProcessLimitsAnalysis,
-    )
-
-    if (
-        memory is None
-        and fd is None
-        and limits is None
-    ):
-        return None
-
-    #
-    # High file descriptor utilization
-    #
-
-    if (
-        fd is not None
-        and isinstance(fd.fd_utilization, float)
-        and fd.fd_utilization >= 0.90
-    ):
-        return True
-
-    #
-    # Resource limits reached/fixed
-    #
-
-    if limits is not None:
-
-        for classification in limits.classifications:
-
-            if classification.endswith("_fixed"):
-                return True
-
-    return False
-
-
-from project.models.processes import (
-    ProcessFdAnalysis,
-    ProcessLimitsAnalysis,
-)
-
-
-def is_approaching_limits(
-    analyses: list,
-) -> bool | None:
-    """
-    Determine whether the process is approaching one
-    or more configured resource limits.
-    """
-
-    fd = get_analysis(
-        analyses,
-        ProcessFdAnalysis,
-    )
-
-    limits = get_analysis(
-        analyses,
-        ProcessLimitsAnalysis,
-    )
-
-    if (
-        fd is None
-        and limits is None
-    ):
-        return None
-
-    #
-    # File descriptor utilization
-    #
-
-    if (
-        fd is not None
-        and isinstance(fd.fd_utilization, float)
-        and fd.fd_utilization >= 0.80
-    ):
-        return True
-
-    #
-    # Future:
-    #
-    # - Stack utilization
-    # - Process count utilization
-    # - Address space utilization
-    # - Locked memory utilization
-    # - CPU time utilization
-    #
-
-    return False
-
-
-from project.models.processes import (
-    ProcessIoAnalysis,
-)
-
-
-def is_io_bound(
-    analyses: list,
-) -> bool | None:
-    """
-    Determine whether the process is I/O bound.
-    """
-
-    io = get_analysis(
-        analyses,
-        ProcessIoAnalysis,
-    )
-
-    if io is None:
-        return None
-
-    # Active I/O throughput
-    if (
-        io.io_bytes_per_sec is not None
-        and io.io_bytes_per_sec > 0
-    ):
-        return True
-    # Active I/O syscalls
-    if (
-        io.io_syscalls_per_sec is not None
-        and io.io_syscalls_per_sec > 0
-    ):
-        return True
-    return False
-
-
-from project.models.processes import (
-    ProcessCpuAnalysis,
-    ProcessIoAnalysis,
-)
 
 
 def is_cpu_bound(
     analyses: list,
-) -> bool | None:
+) -> bool | str | None:
     """
-    Determine whether the process appears to be
-    CPU bound.
+    Determine whether the process is CPU-bound.
     """
-
-    cpu = get_analysis(
+    return get_signal(
         analyses,
         ProcessCpuAnalysis,
+        CPU["CPU_BOUND"],
     )
 
-    io = get_analysis(
+
+def is_io_bound(
+    analyses: list,
+) -> bool | str | None:
+    """
+    Determine whether the process is I/O-bound.
+    """
+    return get_signal(
         analyses,
         ProcessIoAnalysis,
+        IO["IO_HEAVY"],
     )
 
-    if (
-        cpu is None
-        and io is None
-    ):
-        return None
 
-    if (
-        cpu is None
-        or cpu.cpu_ticks_per_sec is None
-        or cpu.cpu_ticks_per_sec <= 0
-    ):
-        return False
-
-    if io is not None:
-
-        if (
-            io.io_bytes_per_sec is not None
-            and io.io_bytes_per_sec > 0
-        ):
-            return False
-
-        if (
-            io.io_syscalls_per_sec is not None
-            and io.io_syscalls_per_sec > 0
-        ):
-            return False
-
-    return True
-
-
-def is_process_healthy(
-    summary,
-) -> bool | None:
+def is_resource_constrained(
+    analyses: list,
+) -> bool | str | None:
     """
-    Determine the overall health of a process.
+    Determine whether the process is constrained by
+    one or more system resources.
     """
+    signals = (
+        get_signal(
+            analyses,
+            ProcessFdAnalysis,
+            FD["FD_LIMIT_REACHED"],
+        ),
+        get_signal(
+            analyses,
+            ProcessFdAnalysis,
+            FD["FD_EXHAUSTED"],
+        ),
+        get_signal(
+            analyses,
+            ProcessFdAnalysis,
+            FD["LOW_FD_AVAILABILITY"],
+        ),
+        get_signal(
+            analyses,
+            ProcessMemoryAnalysis,
+            MEM["MEMORY_FRAGMENTED"],
+        ),
+        get_signal(
+            analyses,
+            ProcessCpuAnalysis,
+            CPU["CPU_TIME_LIMIT_REACHED"],
+        ),
+        get_signal(
+            analyses,
+            ProcessSchedulerAnalysis,
+            SCHED["WAITING_ON_IO"],
+        ),
+    )
 
-    if all(
-        value is None
-        for value in (
-            summary.cpu_bound,
-            summary.io_bound,
-            summary.blocked,
-            summary.resource_constrained,
-            summary.approaching_limits,
-        )
-    ):
-        return None
+    if any(signal is True for signal in signals):
+        return True
+    unavailable_state = unavailable(*signals)
+    if unavailable_state:
+        return unavailable_state
+    return False
 
-    # Definitely unhealthy
-    if summary.blocked:
-        return False
 
-    if summary.resource_constrained:
-        return False
-
-    # Warning state
-    if summary.approaching_limits:
+def is_approaching_limits(
+    analyses: list,
+) -> bool | str | None:
+    """
+    Determine whether the process is approaching one
+    or more configured resource limits.
+    """
+    signals = (
+        get_signal(
+            analyses,
+            ProcessFdAnalysis,
+            FD["NEAR_FD_LIMIT"],
+        ),
+        get_signal(
+            analyses,
+            ProcessFdAnalysis,
+            FD["LOW_FD_AVAILABILITY"],
+        ),
+    )
+    if any(signal is True for signal in signals):
         return True
 
-    return True
+    unavailable_state = unavailable(*signals)
+    if unavailable_state:
+        return unavailable_state
+    return False
 
-
-def calculate_confidence(
-    analyses: list,
-) -> str:
-    """
-    Estimate confidence in the process summary.
-
-    Confidence reflects how much evidence was
-    successfully collected and analyzed.
-    """
-
-    if not analyses:
-        return "LOW"
-
-    score = 0.0
-
-    for analysis in analyses:
-
-        if analysis.coverage == "COMPLETE":
-            score += 1.0
-
-        elif analysis.coverage == "PARTIAL":
-            score += 0.5
-
-    score /= len(analyses)
-
-    if score >= 0.80:
-        return "HIGH"
-
-    if score >= 0.50:
-        return "MEDIUM"
-
-    return "LOW"
-
-
-def calculate_severity(
-    summary,
-) -> str:
-    """
-    Determine the overall severity of the process.
-    """
-
-    if all(
-        value is None
-        for value in (
-            summary.healthy,
-            summary.blocked,
-            summary.resource_constrained,
-            summary.approaching_limits,
-        )
-    ):
-        return "UNKNOWN"
-
-    #
-    # Critical
-    #
-
-    if summary.blocked:
-        return "CRITICAL"
-
-    if summary.resource_constrained:
-        return "CRITICAL"
-
-    #
-    # Warning
-    #
-
-    if summary.approaching_limits:
-        return "WARNING"
-
-    #
-    # Healthy
-    #
-
-    if summary.healthy:
-        return "PASS"
-
-    return "WARNING"

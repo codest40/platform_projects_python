@@ -4,7 +4,9 @@ from project.analyzers.utils.coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessSchedulerAnalysis,
+    ObserverState as OB,
 )
+
 
 SCHED_POLICY = {
     0: "other",
@@ -19,182 +21,334 @@ SCHED_POLICY = {
 def analyze_scheduler(
     process: ProcessSnapshot,
 ) -> ProcessSchedulerAnalysis:
-    """
-    Analyze Linux scheduler behaviour for a process.
-    """
 
+    """
+    Analyze Linux scheduler behaviour.
+    """
     analysis = ProcessSchedulerAnalysis(
         pid=process.pid,
         tid=process.tid,
     )
 
-    coverage = Coverage()
 
-    #
+    coverage = Coverage()
+    LONG_RUNNING = 3600
+
+    # ---------------------------------------------------------
+    # Copy values
+    # ---------------------------------------------------------
+
+    analysis.state = process.state
+    analysis.priority = process.priority
+    analysis.nice = process.nice
+    analysis.rt_priority = process.rt_priority
+    analysis.policy = process.policy
+    analysis.processor = process.processor
+    analysis.runtime_seconds = process.runtime_seconds
+    analysis.start_time = process.start_time
+
+
     # ---------------------------------------------------------
     # Scheduler State
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.state is not None)
+    coverage.check(
+        process.state not in OB.values
+    )
+    if process.state not in OB.values:
+        states = {
 
-    if process.state is not None:
+            "R": (
+                "is_running",
+                "running",
+            ),
 
-        analysis.state = process.state
+            "S": (
+                "is_sleeping",
+                "sleeping",
+            ),
 
-        STATE_CLASSIFICATIONS = {
-            "R": "running",
-            "S": "sleeping",
-            "D": "uninterruptible_sleep",
-            "T": "stopped",
-            "t": "traced",
-            "Z": "zombie",
-            "X": "dead",
-            "I": "idle",
+            "D": (
+                "is_waiting_on_io",
+                "uninterruptible_sleep",
+            ),
+
+            "T": (
+                "is_stopped",
+                "stopped",
+            ),
+
+            "Z": (
+                "is_zombie",
+                "zombie",
+            ),
+
         }
 
-        classification = STATE_CLASSIFICATIONS.get(process.state)
+        item = states.get(
+            process.state
+        )
 
-        if classification:
-            analysis.classifications.append(classification)
 
-    #
+        if item:
+            signal, classification = item
+
+            analysis.signals[signal] = True
+
+            analysis.classifications.append(
+                classification
+            )
+        else:
+            analysis.classifications.append(
+                "unknown_state"
+            )
+
+
+    else:
+        for signal in [
+            "is_running",
+            "is_sleeping",
+            "is_waiting_on_io",
+            "is_stopped",
+            "is_zombie",
+        ]:
+
+            analysis.signals[signal] = OB.NA
+
+
+
     # ---------------------------------------------------------
     # Priority
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.priority is not None)
+    coverage.check(
+        process.priority not in OB.values
+    )
 
-    if process.priority is not None:
+    if process.priority not in OB.values:
+        high = (
+            process.priority < 100
+        )
 
-        analysis.priority = process.priority
 
-        if process.priority < 100:
-            analysis.classifications.append("high_priority")
-        else:
-            analysis.classifications.append("normal_priority")
+        analysis.signals[
+            "has_high_priority"
+        ] = high
 
-    #
+
+        if high:
+
+            analysis.classifications.append(
+                "high_priority"
+            )
+
+
+    else:
+
+        analysis.signals[
+            "has_high_priority"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
     # Nice
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.nice is not None)
+    coverage.check(
+        process.nice not in OB.values
+    )
 
-    if process.nice is not None:
 
-        analysis.nice = process.nice
+    if process.nice not in OB.values:
 
-        if process.nice < 0:
-            analysis.classifications.append("negative_nice")
 
-    #
+        negative = (
+            process.nice < 0
+        )
+
+
+        analysis.signals[
+            "has_negative_nice"
+        ] = negative
+
+
+        if negative:
+
+            analysis.classifications.append(
+                "negative_nice"
+            )
+
+
+    else:
+
+        analysis.signals[
+            "has_negative_nice"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
-    # Real-time Priority
+    # Real-time scheduling
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.rt_priority is not None)
+    if process.rt_priority not in OB.values:
 
-    if process.rt_priority is not None:
 
-        analysis.rt_priority = process.rt_priority
+        realtime = (
+            process.rt_priority > 0
+        )
 
-        if process.rt_priority > 0:
-            analysis.classifications.append("realtime")
 
-    #
+        analysis.signals[
+            "is_realtime_process"
+        ] = realtime
+
+
+        if realtime:
+
+            analysis.classifications.append(
+                "realtime_process"
+            )
+
+            analysis.recommendations.append(
+                "Verify that real-time scheduling is intentional."
+            )
+
+
+    else:
+
+        analysis.signals[
+            "is_realtime_process"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
     # Scheduling Policy
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.policy is not None)
+    if process.policy not in OB.values:
 
-    if process.policy is not None:
-        analysis.policy = process.policy
-        scheduler_class = SCHED_POLICY.get(
+        scheduler = SCHED_POLICY.get(
             process.policy,
             "unknown",
         )
-        analysis.scheduler_class = scheduler_class
-        analysis.classifications.append(
-            f"{scheduler_class}_scheduler"
+
+
+        analysis.scheduler_class = scheduler
+
+
+        policy_signal = {
+
+            "fifo":
+                "uses_fifo_scheduler",
+
+            "rr":
+                "uses_round_robin_scheduler",
+
+            "deadline":
+                "uses_deadline_scheduler",
+
+        }.get(
+            scheduler
         )
 
-    #
+
+        if policy_signal:
+
+            analysis.signals[
+                policy_signal
+            ] = True
+
+
+            analysis.classifications.append(
+                scheduler + "_scheduler"
+            )
+
+
     # ---------------------------------------------------------
-    # Last CPU
+    # Long Running
     # ---------------------------------------------------------
-    #
 
-    coverage.check(process.processor is not None)
+    if process.runtime_seconds not in OB.values:
 
-    if process.processor is not None:
 
-        analysis.processor = process.processor
+        long_running = (
+            process.runtime_seconds >= LONG_RUNNING
+        )
 
-    #
-    # ---------------------------------------------------------
-    # Lifetime
-    # ---------------------------------------------------------
-    #
 
-    coverage.check(process.runtime_seconds is not None)
+        analysis.signals[
+            "is_long_running"
+        ] = long_running
 
-    if process.runtime_seconds is not None:
 
-        analysis.runtime_seconds = process.runtime_seconds
+        if long_running:
 
-    coverage.check(process.start_time is not None)
+            analysis.classifications.append(
+                "long_running"
+            )
 
-    if process.start_time is not None:
 
-        analysis.start_time = process.start_time
+    else:
 
-    #
+        analysis.signals[
+            "is_long_running"
+        ] = OB.NA
+
+
+
     # ---------------------------------------------------------
     # Facts
     # ---------------------------------------------------------
-    #
-    if analysis.state is not None:
-        analysis.facts.append(f"State: {analysis.state}")
 
-    if analysis.priority is not None:
+    if process.state:
+
         analysis.facts.append(
-            f"Priority: {analysis.priority}"
+            f"State: {process.state}"
         )
 
-    if analysis.nice is not None:
+
+    if process.priority:
+
         analysis.facts.append(
-            f"Nice: {analysis.nice}"
+            f"Priority: {process.priority}"
         )
 
-    if analysis.rt_priority is not None:
+
+    if process.nice is not None:
+
         analysis.facts.append(
-            f"RT priority: {analysis.rt_priority}"
+            f"Nice: {process.nice}"
         )
 
-    if analysis.policy is not None:
-      if analysis.policy:
+
+    if process.rt_priority is not None:
+
         analysis.facts.append(
-            f"Scheduling policy: {analysis.scheduler_class} {analysis.policy}"
+            f"RT priority: {process.rt_priority}"
         )
 
-    if analysis.processor is not None:
+
+    if process.policy is not None:
+
         analysis.facts.append(
-            f"Last CPU: {analysis.processor}"
+            f"Scheduling policy: {analysis.scheduler_class}"
         )
 
-    if analysis.runtime_seconds is not None:
+
+    if process.processor is not None:
+
         analysis.facts.append(
-            f"Runtime: {analysis.runtime_seconds:.1f}s"
+            f"Last CPU: {process.processor}"
         )
-    if analysis.start_time is not None:
+
+
+    if process.runtime_seconds is not None:
+
         analysis.facts.append(
-            f"Started at: {analysis.start_time:.2f}s"
+            f"Runtime: {process.runtime_seconds:.1f}s"
         )
 
     coverage.apply(process)

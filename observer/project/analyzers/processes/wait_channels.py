@@ -24,12 +24,12 @@ def analyze_wait_channel(
 
       if process.wchan in (None, "-", "0", "0000000000000000"):
         analysis.wait_channel = OB.NA
+        analysis.signals["is_waiting"] = False
         analysis.classifications.append("not_waiting")
-        analysis.facts.append(
-            f"Process is NOT Waiting"
-        )
+        analysis.facts.append("Process is not blocked in a kernel wait channel.")
       else:
         analysis.wait_channel = process.wchan
+        analysis.signals["is_waiting"] = True
         analysis.facts.append(
             f"Kernel wait channel: {process.wchan}"
         )
@@ -37,3 +37,4 @@ def analyze_wait_channel(
 
     coverage.apply(process)
     return analysis
+

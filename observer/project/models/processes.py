@@ -5,7 +5,6 @@ class ObserverState:
     NIL = None
     NA = "N/A"        # Not applicable
     UNSEEN = "N/S"    # Metric/source was not observed
-
     values = frozenset({NIL, NA, UNSEEN})
 
 @dataclass
@@ -27,6 +26,39 @@ class ThreadSnapshot:
     involuntary_context_switches: int | None = None
     start_time: float | None = None
 
+@dataclass(slots=True)
+class RuntimeEvent:
+    pid: int
+    timestamp: float
+    category: str
+    code: str
+
+@dataclass(slots=True)
+class ProcessRuntimeEvents:
+    emfile: list[str] | None = None
+    enfile: list[str] | None = None
+    emfile_count: int | None = None
+    enfile_count: int | None = None
+    oom_kill_count: int | None = None
+    oom_allocation_failures: int | None = None
+    #fatal signals
+    sigbus_count: int | None = None
+    sigabrt_count: int | None = None
+    sigill_count: int | None = None
+    sigfpe_count: int | None = None
+    sigpipe_count: int | None = None
+    segfault_count: int | None = None
+    # Filesystem / storage
+    io_error_count: int | None = None
+    filesystem_error_count: int | None = None
+    nfs_error_count: int | None = None
+    # Networking
+    connect_failure_count: int | None = None
+    accept_failure_count: int | None = None
+
+    last_terminating_signal: int | None = None
+    collection_errors: list[str] = field(default_factory=list)
+
 
 @dataclass(slots=True)
 class ProcessSnapshot:
@@ -44,7 +76,6 @@ class ProcessSnapshot:
     # ==========================================================
 
     state: Optional[str] = None
-
     priority: Optional[int] = None
     nice: Optional[int] = None
     rt_priority: Optional[int] = None
@@ -91,6 +122,7 @@ class ProcessSnapshot:
 
     start_time: Optional[float] = None
     runtime_seconds: Optional[float] = None
+    runtime_events: ProcessRuntimeEvents | None = None
 
     # ==========================================================
     # Container / Cgroups
@@ -98,7 +130,6 @@ class ProcessSnapshot:
 
     cgroup: Optional[str] = None
     container_id: Optional[str] = None
-
     # ==========================================================
     # File Descriptors
     # ==========================================================
@@ -136,6 +167,7 @@ class ProcessSnapshot:
     cpu_percent: Optional[float] = None
     user_ticks_per_sec: Optional[float] = None
     system_ticks_per_sec: Optional[float] = None
+    cpu_ticks_per_sec: float | None = None
 
     # Mem
     resident_ratio: Optional[float] = None
@@ -259,8 +291,14 @@ class ProcessIdentityAnalysis:
 
     pid: int
     tid: int | None = None
+    name: str | None = None
     process_type: str | None = None
+    command: Optional[str] = None
     executable_state: str | None = None
+    cgroup: Optional[str] = None
+    container_id: Optional[str] = None
+    uid: Optional[int] = None
+    gid: Optional[int] = None
     owner_type: str | None = None
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
@@ -354,27 +392,25 @@ class ProcessThreadAnalysis:
 
     pid: int
     tid: int | None = None
-
     thread_count: int | None = None
-
     session: int | None = None
     process_group: int | None = None
     foreground_process_group: int | None = None
-
     state: str | None = None
-
     priority: int | None = None
     nice: int | None = None
     rt_priority: int | None = None
-
     runtime_seconds: float | None = None
-
     processor: int | None = None
 
+    running_threads: int | None = None
+    sleeping_threads: int | None = None
+    blocked_threads: int | None = None
+    zombie_threads: int | None = None
+    idle_threads: int | None = None
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
     signals: dict[str, bool] = field(default_factory=dict)
-
     recommendations: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
 
@@ -441,21 +477,15 @@ class ProcessIoAnalysis:
     read_bytes_per_sec: float | None = None
     write_bytes_per_sec: float | None = None
     io_bytes_per_sec: float | None = None
-
     read_write_ratio: float | None = None
-
     read_syscalls_per_sec: float | None = None
     write_syscalls_per_sec: float | None = None
     io_syscalls_per_sec: float | None = None
-
     cancelled_write_bytes: int | None = None
-
     average_read_size: float | None = None
     average_write_size: float | None = None
-
     lifetime_average_read_size: float | None = None
     lifetime_average_write_size: float | None = None
-
     classifications: list[str] = field(default_factory=list)
     facts: list[str] = field(default_factory=list)
     signals: dict[str, bool] = field(default_factory=dict)
