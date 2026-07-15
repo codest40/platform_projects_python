@@ -4,6 +4,13 @@
 
 providers/
 
+# eBPF build artifacts
+*.o
+*.skel.h
+runtime_loader
+*.tmp
+
+
 # Linux
 *~
 .fuse_hidden*

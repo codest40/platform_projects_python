@@ -2,7 +2,6 @@ from project.models.processes import (
     ProcessSnapshot,
     CollectorFailure,
     ProcessRuntimeEvents,
-    RuntimeEvent,
 )
 import signal
 from project.providers.kernel_events import EBPFProvider
@@ -14,7 +13,6 @@ def collect_runtime_events(
     """
     Collect process runtime events.
     Events comes from: eBPF or tracefs
-        - other kernel event providers
     """
     try:
         ebpf_provider = EBPFProvider()
