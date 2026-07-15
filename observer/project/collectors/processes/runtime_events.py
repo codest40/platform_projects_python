@@ -18,9 +18,12 @@ def collect_runtime_events(
     """
     try:
         ebpf_provider = EBPFProvider()
-        #if not ebpf_provider.available():
-        #  return snapshot
+        if not ebpf_provider.available():
+          return snapshot
+    except Exception as e:
+        return snapshot
 
+    try:
         process_events = ebpf_provider.read_process_events()
         snapshot.runtime_collected_events = (
             process_events.get(snapshot.pid)
