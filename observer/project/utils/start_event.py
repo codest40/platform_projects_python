@@ -5,6 +5,7 @@ from project.logging.logger import emit, emit_span, emit_exception, emit_analysi
 from project.utils.runners import TraceObserver, EventRunner
 from project.utils.adapters import adapt_event_model, adapt_analysis_model
 from project.utils.context import get_caller_context
+from project.utils.helpers import start_count
 import traceback as tb
 from threading import Lock
 from collections import defaultdict
@@ -134,14 +135,18 @@ def run_analysis(
 ):
 
     caller = get_caller_context(inspect.unwrap(func))
+    start = start_count()
 
     try:
         analysis = func(result=result, **kwargs)
+        duration_ms = start_count() - start
 
     except Exception:
+        duration_ms = start_count() - start
         emit_exception(
             caller=caller,
             exc_info=sys.exc_info(),
+            duration_ms = duration_ms
             **(failure or {}),
         )
         return None
@@ -149,7 +154,10 @@ def run_analysis(
     payload = adapt_analysis_model(
         resource=resource,
         analysis=analysis,
-        overrides=success,
+        overrides={
+            **(success or {}),
+            "duration_ms": duration_ms,
+            },
     )
 
     emit_analysis(

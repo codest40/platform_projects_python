@@ -6,9 +6,6 @@ from project.models.processes import (
 )
 import signal
 from project.providers.kernel_events import EBPFProvider
-from project.providers.utils.helpers import ENABLE_RUNTIME_EVENTS as enable
-
-enable = True
 
 def collect_runtime_events(
     snapshot: ProcessSnapshot,
@@ -19,11 +16,7 @@ def collect_runtime_events(
     Events comes from: eBPF or tracefs
         - other kernel event providers
     """
-    if not enable:
-        return snapshot
-
     try:
-
         ebpf_provider = EBPFProvider()
         #if not ebpf_provider.available():
         #  return snapshot

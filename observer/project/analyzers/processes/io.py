@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessIoAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 
 
 def analyze_io(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessIoAnalysis:
     """
     Analyze process IO behaviour.
@@ -373,5 +375,7 @@ def analyze_io(
         )
 
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    coverage.score(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

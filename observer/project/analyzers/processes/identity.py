@@ -1,17 +1,18 @@
 from __future__ import annotations
 
 from project.analyzers.processes.users import get_user
-from project.analyzers.utils.coverage import Coverage
-
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessIdentityAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 
 
 def analyze_identity(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessIdentityAnalysis:
     """
     Analyze process identity.
@@ -52,7 +53,7 @@ def analyze_identity(
         or process.executable not in OB.values
     )
 
-    user = get_user(process.uid)
+    user = get_user(process.uid) if process.uid not in OB.values else get_user(None)
 
     kernel_thread = (
         process.command in OB.values
@@ -350,5 +351,6 @@ def analyze_identity(
         )
 
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

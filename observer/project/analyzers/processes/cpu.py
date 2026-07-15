@@ -2,12 +2,14 @@ from __future__ import annotations
 from project.models.processes import (
     ProcessSnapshot,
     ProcessCpuAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 
 def analyze_cpu(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessCpuAnalysis:
     """
     Analyze CPU behaviour for a single process.
@@ -17,10 +19,10 @@ def analyze_cpu(
         tid=process.tid,
     )
 
-    coverage = Coverage()
     HIGH_CPU = 85.0
     IDLE_CPU = 5.0
     LONG_RUNNING = 3600.0
+    coverage = Coverage()
 
     coverage.check(process.cpu_percent not in OB.values)
     coverage.check(process.state not in OB.values)
@@ -248,5 +250,6 @@ def analyze_cpu(
             f"Last executed on logical CPU {process.processor}."
         )
     """
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

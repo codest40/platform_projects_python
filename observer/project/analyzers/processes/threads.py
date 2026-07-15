@@ -1,15 +1,16 @@
 from __future__ import annotations
-
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessThreadAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 
 
 def analyze_threads(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessThreadAnalysis:
     """
     Analyze process thread topology.
@@ -320,5 +321,6 @@ def analyze_threads(
         )
     """
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

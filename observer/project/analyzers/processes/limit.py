@@ -1,15 +1,16 @@
 from __future__ import annotations
-
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.analyzers.processes.data import LIMITS
 from project.models.processes import (
     ProcessSnapshot,
+    TotalMetrics,
     ProcessLimitsAnalysis,
 )
 
 
 def analyze_limits(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessLimitsAnalysis:
     """
     Analyze process resource limits.
@@ -135,6 +136,6 @@ def analyze_limits(
                 f"{label} hard limit: {hard}"
             )
 
-
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

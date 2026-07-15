@@ -5,7 +5,8 @@ class ObserverState:
     NIL = None
     NA = "N/A"        # Not applicable
     UNSEEN = "N/S"    # Metric/source was not observed
-    values = frozenset({NIL, NA, UNSEEN})
+    DF = "DEFAULT"    # Value does not matter here(No significanxce at this layer)
+    values = frozenset({NIL, NA, UNSEEN, DF})
 
 @dataclass
 class ThreadSnapshot:
@@ -249,10 +250,14 @@ class ProcessSnapshot:
     metrics_available: Optional[int] = None
     metrics_expected: Optional[int] = None
 
+@dataclass(slots=True)
+class TotalMetrics:
+    total_analyzed: Optional[int] = None
+    total_available: Optional[int] = None
+    total_scores: list[float] = None
 
 @dataclass(slots=True)
 class InaccessibleProcess:
-
     pid: int
     reason: str
 
@@ -550,4 +555,5 @@ class ProcessSummaryInventory:
     analysis_errors: list[str] = field(
         default_factory=list
     )
-
+    analyzed_at: str | None=None
+    confidence: str | None=None

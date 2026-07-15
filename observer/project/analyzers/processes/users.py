@@ -1,3 +1,6 @@
+from project.models.processes import (
+    ObserverState as OB,
+)
 from functools import lru_cache
 import pwd
 import grp
@@ -7,6 +10,8 @@ import grp
 def get_user(uid: int):
     """Return the passwd entry for a UID."""
 
+    if uid in OB.values:
+        return None
     try:
         uid = pwd.getpwuid(uid)
         return uid
@@ -17,6 +22,8 @@ def get_user(uid: int):
 @lru_cache(maxsize=None)
 def get_group(gid: int):
 
+    if uid in OB.values:
+        return None
     try:
         return grp.getgrgid(gid)
     except KeyError:

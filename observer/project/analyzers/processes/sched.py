@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessSchedulerAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 
@@ -20,6 +21,7 @@ SCHED_POLICY = {
 
 def analyze_scheduler(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessSchedulerAnalysis:
 
     """
@@ -351,5 +353,6 @@ def analyze_scheduler(
             f"Runtime: {process.runtime_seconds:.1f}s"
         )
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

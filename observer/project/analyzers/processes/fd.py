@@ -1,15 +1,17 @@
 from __future__ import annotations
 
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessFdAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 import signal
 
 def analyze_fd(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessFdAnalysis:
     """
     Analyze process file descriptor usage.
@@ -227,5 +229,6 @@ def analyze_fd(
           f"Process was terminated by {signal.Signals(sig).name} (sig)."
         )
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis

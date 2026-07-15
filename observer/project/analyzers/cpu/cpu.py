@@ -81,7 +81,7 @@ def analyze_cpu_metrics(
     # ======================================================
     # 2. Normalize Signals
     # ======================================================
-    #print("FROM MAIN CPU FIELE:")
+    #print("FROM MAIN CPU FILE:")
     #print(cpu)
     #print(type(cpu))
     #print(cpu.signals_expected)

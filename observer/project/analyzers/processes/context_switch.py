@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessContextSwitchAnalysis,
@@ -10,6 +10,7 @@ from project.models.processes import (
 
 def analyze_context_switch(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessContextSwitchAnalysis:
     """
     Analyze scheduler context-switch behaviour for a single process.
@@ -230,5 +231,7 @@ def analyze_context_switch(
             "of all context switches."
         )
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
+
     return analysis

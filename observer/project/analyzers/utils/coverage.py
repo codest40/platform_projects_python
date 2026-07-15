@@ -1,31 +1,38 @@
-
 class Coverage:
     """
     Tracks how much evidence was available for an analyzer.
-    Measures analysis completeness
+    Used within a single analyzer to record
+    how many metrics were expected and how many were successfully
+    analyzed.
     """
 
     def __init__(self):
         self.available = 0
         self.expected = 0
+        self.result = 0.0
 
-    def check(self, condition: bool) -> None:
+    def check(
+        self,
+        condition: bool,
+    ) -> None:
+
         self.expected += 1
-
         if condition:
             self.available += 1
 
-    def apply(self, target) -> None:
-        target.metrics_available = self.available
-        target.metrics_expected = self.expected
+    def apply( self, target, available: str, total: str,) -> None:
 
-    @property
-    def score(self) -> float:
+        setattr(target, available, self.available,)
+        setattr(target, total, self.expected,)
+
+    def score(self, target, value: str,) -> float:
         if self.expected == 0:
-            return 0.0
+            self.result = 0.0
+        else:
+            self.result = round(
+                self.available / self.expected,
+                2,
+            )
 
-        return round(
-            self.available / self.expected * 100,
-            1,
-        )
-
+        setattr(target, value, self.result,)
+        return self.result

@@ -69,7 +69,6 @@ class AnalysisEvent:
     duration_ms: float | None = None
 
     trace_id: str | None = None
-
+    analysis_id: str | None = None
     span_id: str | None = None
 
-    analysis_id: str | None = None

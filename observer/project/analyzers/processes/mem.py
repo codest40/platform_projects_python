@@ -1,15 +1,16 @@
 from __future__ import annotations
-
-from project.analyzers.utils.coverage import Coverage
+from project.analyzers.utils.process_coverage import Coverage
 from project.models.processes import (
     ProcessSnapshot,
     ProcessMemoryAnalysis,
+    TotalMetrics,
     ObserverState as OB,
 )
 
 
 def analyze_memory(
     process: ProcessSnapshot,
+    metrics: TotalMetrics,
 ) -> ProcessMemoryAnalysis:
     """
     Analyze process memory behaviour.
@@ -252,5 +253,6 @@ def analyze_memory(
         )
 
 
-    coverage.apply(process)
+    coverage.apply(metrics)
+    analysis.coverage = coverage.score(metrics)
     return analysis
