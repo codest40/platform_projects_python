@@ -19,6 +19,30 @@ class EBPFProvider:
     def __init__(self) -> None:
         self.metadata: dict = {}
 
+    @staticmethod
+    def available() -> bool:
+        """
+        Return True if the system appears capable of running
+        the eBPF provider.
+        """
+        is_pkg = (
+            shutil.which("bpftool") is not None
+            or shutil.which("bpftrace") is not None
+        )
+
+        is_binary = (
+            Path("/path1").exists()
+            and Path("/path2").exists()
+        )
+
+        if is_pkg and is_binary:
+            return True
+        return False
+
+    @staticmethod
+    def load_ebpf_program():
+      pass
+
     def read_events(self) -> list[RuntimeEvent]:
         return [
             RuntimeEvent(
@@ -53,6 +77,11 @@ class EBPFProvider:
         """
         Aggregate runtime events by PID.
         """
+        if not self.available():
+            return {}
+        else:
+            ebpf = self.load_ebpf_program()
+
         processes: dict[int, ProcessRuntimeEvents] = defaultdict(
             ProcessRuntimeEvents
         )
