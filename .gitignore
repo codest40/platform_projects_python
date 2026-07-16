@@ -2,8 +2,6 @@
 # OS / Editor / IDE
 ########################################
 
-providers/
-
 # eBPF build artifacts
 *.o
 *.skel.h
