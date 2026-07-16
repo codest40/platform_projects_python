@@ -323,18 +323,17 @@ def compute_process_rates(
     #      and p.max_fds_soft is not None
     #      and p.fd_utilization is None
     #    ):
-    """        bad.append(( p.pid, p.open_fds, p.max_fds_soft, ))
-    print(  f"Missing utilization: {bad} "
-        f"out of {len(inventory.processes)}"
-    )
+    #        bad.append(( p.pid, p.open_fds, p.max_fds_soft, ))
+    #print(  f"Missing utilization: {bad} "
+    #    f"out of {len(inventory.processes)}"
+    #)
 
-    caught = []
-    for x in missing:
-        if bad and x == bad[0][0]:
-            caught.append(x)
-    print(f"Missing Previous & fd_util=None {missing}")
-    print(f"Caught Red Handed: {caught}")
-    """
+    #caught = []
+    #for x in missing:
+    #    if bad and x == bad[0][0]:
+    #        caught.append(x)
+    #print(f"Missing Previous & fd_util=None {missing}")
+    #print(f"Caught Red Handed: {caught}")
 
     return inventory
 

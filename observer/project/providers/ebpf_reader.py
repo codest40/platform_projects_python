@@ -2,6 +2,7 @@ from __future__ import annotations
 from project.models.processes import RuntimeEvent
 from project.utils.helpers import start_count
 import time
+import select
 
 class EBPFReader:
     """
@@ -36,7 +37,11 @@ class EBPFReader:
         collection_window = 5
         while start_count() - start_time < collection_window:
 
-            line = stdout.readline()
+            ready, _, _ = select.select([stdout], [], [], 0.1)
+            if ready:
+                line = stdout.readline()
+            else:
+                continue
 
             if not line:
                 #time.sleep(0.1)
@@ -55,6 +60,8 @@ class EBPFReader:
 
                 raw[key] = int(value)
 
+            print("EVENT:", line)
+            print("Creating RuntimeEvent...")
             events.append(
                 RuntimeEvent(
                     pid=raw["pid"],
@@ -66,7 +73,7 @@ class EBPFReader:
                 )
             )
 
-            if not stdout.peek(1):
+            if not stdout:
                 break
 
         self.did_read_succeed = True

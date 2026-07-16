@@ -1,3 +1,4 @@
+
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -30,7 +31,8 @@ class ThreadSnapshot:
 @dataclass(slots=True)
 class RuntimeEvent:
     pid: int
-    timestamp: float
+    tid: int
+    timestamp_ns: float
     category: str
     code: str
     value: int | None = None

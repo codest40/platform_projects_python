@@ -38,13 +38,12 @@ def get_provider_runtime_events():
         }
 
         events = process_events
-        print("\n========== START_PROVIDER ==========")
-        print("Provider state:", provider_state)
-        print("Event PIDs:", list(process_events.keys()))
-        for pid, event in process_events.items():
-            print(pid, event)
-        print("====================================\n")
-
+        #print("\n========== START_PROVIDER ==========")
+        #print("Provider state:", provider_state)
+        #print("Event PIDs:", list(process_events.keys()))
+        #for pid, event in process_events.items():
+        #    print(pid, event)
+        #print("====================================\n")
     except Exception as e:
         print("Collector failed:", e)
 

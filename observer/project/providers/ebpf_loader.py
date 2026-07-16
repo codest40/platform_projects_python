@@ -52,7 +52,8 @@ class EBPFLoader:
             )
 
         self.process = subprocess.Popen(
-            [str(self.LOADER)],
+            ["stdbuf", "-o0", str(self.LOADER)],
+            #[str(self.LOADER)],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
@@ -63,10 +64,12 @@ class EBPFLoader:
             self.process is not None
             and self.process.poll() is None
         )
-        #print("Process:", self.process)
-        #print("Poll:", self.process.poll())
-        #print("Loading:", self.did_loading_succeed)
-
+        print("PID:", self.process.pid)
+        print("Running:", self.process.poll() is None)
+        import time
+        time.sleep(2)
+        print("Reading one line...")
+        print(repr(self.process.stdout.readline()))
 
     def unload(self) -> None:
         """
