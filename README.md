@@ -21,8 +21,6 @@ These projects are designed to be reusable building blocks that can be incorpora
 
 Projects are primarily built with:
 * Python
-* Bash (where system integration is smoother)
-* C (for kernel extensions)
 
 For detailed information about any project, navigate to its directory and read its dedicated README.
 
