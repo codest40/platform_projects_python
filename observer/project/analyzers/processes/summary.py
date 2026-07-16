@@ -6,7 +6,7 @@ from project.models.processes import (
     TotalMetrics,
     ObserverState as OB,
 )
-from project.analyzers.processes.all import analyses
+from project.analyzers.processes.all import all_analyses
 from project.analyzers.processes import rules
 
 SUMMARY_RULES = {
@@ -130,7 +130,6 @@ def calculate_coverage(results) -> str:
     ]
     if not coverages:
         return "UNKNOWN"
-
     complete = coverages.count("COMPLETE")
     partial = coverages.count("PARTIAL")
     unavailable = coverages.count("UNAVAILABLE")
@@ -159,9 +158,10 @@ def summarize_process(
     )
 
     results = []
-    for analyzer in analyses:
+    for analyzer in all_analyses:
         analysis = analyzer(process, metrics)
         results.append(analysis)
+        summary.analyses.append(analysis)
         merge_analysis(summary, analysis)
     deduplicate_summary(summary)
     for field, rule in SUMMARY_RULES.items():

@@ -97,8 +97,8 @@ def unavailable(*values):
     """
     Collapse unavailable observer states into one.
     """
-    if all(value == OB.UNSEEN for value in values):
-        return OB.UNSEEN
+    if all(value == OB.NS for value in values):
+        return OB.NS
     if all(value in OB.values for value in values):
         return OB.NA
     return False

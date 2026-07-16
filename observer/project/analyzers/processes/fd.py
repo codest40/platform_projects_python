@@ -37,7 +37,7 @@ def analyze_fd(
     coverage.check(process.max_fds_soft not in OB.values)
     coverage.check(process.max_fds_hard not in OB.values)
     coverage.check(process.fd_utilization not in OB.values)
-    coverage.check(process.runtime_collected_events not in OB.values)
+    coverage.check(process.runtime_collected_events is not OB.NIL)
 
     # ---------------------------------------------------------
     # Copy Metrics
@@ -48,6 +48,13 @@ def analyze_fd(
     analysis.max_fds_hard = process.max_fds_hard
     analysis.fd_utilization = process.fd_utilization
 
+
+    if process.pid == 42354:
+        print(
+          f"ANALYZER: pid={process.pid} "
+          f"fds={process.open_fds} "
+          f"fd_utilization={process.fd_utilization}"
+        )
     # ---------------------------------------------------------
     # Has Open FDs
     # ---------------------------------------------------------
@@ -75,8 +82,10 @@ def analyze_fd(
             analysis.recommendations.append(
                 "Monitor file descriptor usage if it remains high."
             )
-    else:
+    elif process.fd_utilization is OB.NA:
         analysis.signals["is_high_fd_usage"] = OB.NA
+    else:
+        analysis.signals["is_high_fd_usage"] = OB.NS
 
     # ---------------------------------------------------------
     # Near FD Limit
@@ -169,6 +178,7 @@ def analyze_fd(
     # ---------------------------------------------------------
     events = process.runtime_collected_events
     if events is not None:
+      #print(f"Event Seen: {events}")
       if events.emfile_count is not None:
             exhausted = (
               events.emfile_count > 0
@@ -178,19 +188,36 @@ def analyze_fd(
             ] = exhausted
             if exhausted:
                 analysis.classifications.append(
-                  "fd_exhausted"
+                  "fd_emfile_exhausted"
                 )
                 analysis.recommendations.append(
-                  "The process experienced file descriptor allocation failures."
+                  "The process experienced emfile descriptor allocation failures."
+                )
+      if events.enfile_count is not None:
+            exhausted = (
+              events.enfile_count > 0
+            )
+            analysis.signals[
+              "is_fd_exhausted"
+            ] = exhausted
+            if exhausted:
+                analysis.classifications.append(
+                  "fd_enfile_exhausted"
+                )
+                analysis.recommendations.append(
+                  "The process experienced enfile descriptor allocation failures."
                 )
       else:
+          analysis.signals[
+              "is_fd_exhausted"
+          ] = OB.NA
           analysis.classifications.append(
-              f"fd_exhausted_{OB.NS}"
+              f"fd_not_exhausted_yet"
             )
     else:
             analysis.signals[
               "is_fd_exhausted"
-            ] = OB.NA
+            ] = OB.NS
 
     # ---------------------------------------------------------
     # Facts
@@ -222,13 +249,22 @@ def analyze_fd(
         analysis.facts.append(
             f"{remaining} file descriptors remain before the soft limit."
         )
-    if events not in OB.values:
+    if events is not OB.NIL:
       if (events.last_terminating_signal not in OB.values
-        and last_terminating_signal == sig):
+        and events.last_terminating_signal == sig):
         analysis.facts.append(
           f"Process was terminated by {signal.Signals(sig).name} (sig)."
         )
-
+      if events.emfile_count not in OB.values:
+        analysis.facts.append(
+          f"Process experienced emfile exhaustion count: {events.emfile_count}. "
+          f"Result: {events.emfile}"
+        )
+      if (events.enfile_count not in OB.values):
+        analysis.facts.append(
+          f"Process experienced wide enfile exhaustion count: {events.enfile_count}. "
+          f"Result: {events.enfile}"
+        )
     coverage.apply(metrics)
     analysis.coverage = coverage.score(metrics)
     return analysis

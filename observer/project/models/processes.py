@@ -3,10 +3,10 @@ from typing import Optional
 
 class ObserverState:
     NIL = None
-    NA = "N/A"        # Not applicable
-    UNSEEN = "N/S"    # Metric/source was not observed
+    NA = "N/A"        # Not applicable(General conclusin)
+    NS = "N/S"        # Metric/source was confidently not observed/seen
     DF = "DEFAULT"    # Value does not matter here(No significanxce at this layer)
-    values = frozenset({NIL, NA, UNSEEN, DF})
+    values = frozenset({NIL, NA, NS, DF})
 
 @dataclass
 class ThreadSnapshot:
@@ -38,6 +38,10 @@ class RuntimeEvent:
 
 @dataclass(slots=True)
 class ProcessRuntimeEvents:
+    is_event_available: bool | None=None
+    did_loading_succeed: bool | None=None
+    did_read_succeed: bool | None=None
+
     emfile: list[str] | None = None
     enfile: list[str] | None = None
     emfile_count: int | None = None
@@ -122,7 +126,7 @@ class ProcessSnapshot:
     # ==========================================================
     # Lifetime
     # ==========================================================
-
+    start_time_since_boot: Optional[int] = None
     start_time: Optional[float] = None
     runtime_seconds: Optional[float] = None
     runtime_collected_events: ProcessRuntimeEvents | None = None
@@ -542,6 +546,8 @@ class ProcessSummary:
     recommendations: list[str] = field(default_factory=list)
     classifications: list[str] = field(default_factory=list)
     coverage: str = "UNKNOWN"
+    analyses: list = field(default_factory=list)
+
 
 @dataclass(slots=True)
 class ProcessSummaryInventory:

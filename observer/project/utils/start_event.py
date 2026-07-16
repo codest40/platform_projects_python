@@ -146,7 +146,7 @@ def run_analysis(
         emit_exception(
             caller=caller,
             exc_info=sys.exc_info(),
-            duration_ms = duration_ms
+            duration_ms = duration_ms,
             **(failure or {}),
         )
         return None

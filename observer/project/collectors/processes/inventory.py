@@ -6,7 +6,7 @@ from project.models.processes import (
     CollectorFailure,
     ProcessCache,
 )
-
+from project.providers.start_provider import get_provider_runtime_events
 from project.collectors.processes.identity import collect_identity
 from project.collectors.processes.scheduler import collect_scheduler
 from project.collectors.processes.owner import collect_owner
@@ -73,12 +73,12 @@ def collect_process_inventory() -> ProcessInventory:
     """
 
     inventory = ProcessInventory()
+    runtime_events, provider_data = get_provider_runtime_events()
 
     with open("/proc/uptime") as f:
         uptime_seconds = float(f.readline().split()[0])
 
     for entry in PROC.iterdir():
-
         if not entry.name.isdigit():
             continue
         inventory.total_processes += 1
@@ -114,7 +114,7 @@ def collect_process_inventory() -> ProcessInventory:
             snapshot = collect_limits(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_wait_channel(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_threads(snapshot, proc_dir, inventory.collector_failures,)
-            snapshot = collect_runtime_events(snapshot, inventory.collector_failures,)
+            snapshot = collect_runtime_events(snapshot, runtime_events, provider_data, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1

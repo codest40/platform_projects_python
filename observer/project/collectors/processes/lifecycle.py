@@ -15,33 +15,25 @@ def collect_lifecycle(
     Collect process lifetime information.
     Source:
         /proc/<pid>/stat
-
     """
     try:
 
         if cache.stat is None:
             raise RuntimeError("/proc/<pid>/stat unavailable")
         stat = cache.stat
-        #
         # comm is enclosed in parentheses.
-        #
         _, remainder = stat.rsplit(")", 1)
 
         fields = remainder.strip().split()
 
-        #
         # Process start time since boot (clock ticks)
-        #
         start_ticks = int(fields[19])
 
-        #
         # Convert to seconds since boot.
-        #
+        snapshot.start_time_since_boot = start_ticks
         snapshot.start_time = start_ticks / CLK_TCK
 
-        #
         # Process runtime.
-        #
         snapshot.runtime_seconds = max(
             0.0,
             uptime_seconds - snapshot.start_time,

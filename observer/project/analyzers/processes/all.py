@@ -28,7 +28,7 @@ from project.analyzers.processes.wait_channels import (
 )
 
 
-analyses = [
+all_analyses = [
     analyze_identity,
     analyze_cpu,
     analyze_memory,

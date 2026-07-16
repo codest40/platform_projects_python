@@ -15,11 +15,13 @@ def filter_process_state(result: EventRunner) -> dict:
     interval computation.
     """
     inventory: ProcessInventory = result.data
-    return {
-        "collected_at": result.collected_at,
+    processes = {}
+    for process in inventory.processes:
+        if process.start_time_since_boot is None:
+            continue
 
-        "processes": {
-            process.pid: {
+        key = f"{process.pid}:{process.start_time_since_boot}"
+        processes[key] = {
                 # ------------------------------------------
                 # CPU Accounting (/proc/<pid>/stat)
                 # ------------------------------------------
@@ -44,9 +46,11 @@ def filter_process_state(result: EventRunner) -> dict:
 
                 "voluntary_context_switches": process.voluntary_context_switches,
                 "involuntary_context_switches": process.involuntary_context_switches,
-            }
-            for process in inventory.processes
-        },
+        }
+
+    return {
+            "collected_at": result.collected_at,
+            "processes": processes,
     }
 
 
@@ -65,7 +69,6 @@ def parse_limit(value):
         int           -> finite limit
     """
     UNLIMITED = float("inf")
-
     if value is None:
         return None
     if value == "unlimited":
@@ -143,13 +146,25 @@ def compute_process_rates(
     if elapsed <= 0:
         return inventory
 
-    previous_processes = { int(pid): data for pid, data in previous["processes"].items() }
-
+    #missing=[]
+    previous_processes = previous["processes"]
     for process in inventory.processes:
 
-        previous_process = previous_processes.get(process.pid)
+        # Derived Mem
+        process.resident_ratio = _ratio(
+            process.rss_bytes,
+            process.vms_bytes,
+        )
+        # File Descriptors
+        process.fd_utilization = _ratio(
+            process.open_fds,
+            parse_limit(process.max_fds_soft),
+        )
 
+        key = f"{process.pid}:{process.start_time_since_boot}"
+        previous_process = previous_processes.get(key)
         if previous_process is None:
+            #missing.append(process.pid)
             #emit(f"{process.pid}: no previous snapshot found")
             continue
 
@@ -294,22 +309,32 @@ def compute_process_rates(
             process.total_context_switches_per_sec,
         )
 
-        # ======================================================
-        # File Descriptors
-        # ======================================================
-
-        process.fd_utilization = _ratio(
-            process.open_fds,
-            parse_limit(process.max_fds_soft),
-        )
-
     #print(f"Current processes : {len(inventory.processes)}")
     #print(f"Previous processes: {len(previous_processes)}")
     #current_pids = {p.pid for p in inventory.processes}
     #previous_pids = set(previous_processes.keys())
-
     #print("Common:", len(current_pids & previous_pids))
     #print("New:", len(current_pids - previous_pids))
     #print("Gone:", len(previous_pids - current_pids))
+    #bad = []
+    #for p in inventory.processes:
+    #    if (
+    #      p.open_fds is not None
+    #      and p.max_fds_soft is not None
+    #      and p.fd_utilization is None
+    #    ):
+    """        bad.append(( p.pid, p.open_fds, p.max_fds_soft, ))
+    print(  f"Missing utilization: {bad} "
+        f"out of {len(inventory.processes)}"
+    )
+
+    caught = []
+    for x in missing:
+        if bad and x == bad[0][0]:
+            caught.append(x)
+    print(f"Missing Previous & fd_util=None {missing}")
+    print(f"Caught Red Handed: {caught}")
+    """
+
     return inventory
 

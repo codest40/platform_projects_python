@@ -33,6 +33,12 @@ def analyze_processes(
                 f"function={frame.name} | "
                 f"line={frame.lineno}"
             )
+        #fd = next(x for x in summary.analyses
+        #   if type(x).__name__ == "ProcessFdAnalysis")
+        #if fd:
+        #  print(fd.signals)
+
+
     result.analyzed_total = len(inventory.processes)
     result.analyzed_at = timestamp()
     result.confidence = OB.DF

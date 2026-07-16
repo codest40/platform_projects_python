@@ -3,32 +3,36 @@ from project.models.processes import (
     CollectorFailure,
     ProcessRuntimeEvents,
 )
-import signal
-from project.providers.kernel_events import EBPFProvider
 
 def collect_runtime_events(
     snapshot: ProcessSnapshot,
+    all_events: dict[int, ProcessRuntimeEvents],
+    provider_state,
     collector_failures: list[CollectorFailure],
 ) -> ProcessSnapshot:
     """
-    Collect process runtime events.
-    Events comes from: eBPF or tracefs
+    Collect process runtime events for a process.
     """
-    try:
-        ebpf_provider = EBPFProvider()
-        if not ebpf_provider.available():
-          return snapshot
-    except Exception as e:
+    if all_events is None:
+        snapshot.runtime_collected_events = ProcessRuntimeEvents()
         return snapshot
 
     try:
-        process_events = ebpf_provider.read_process_events()
-        snapshot.runtime_collected_events = (
-            process_events.get(snapshot.pid)
-            or ProcessRuntimeEvents()
-        )
+      print(
+          snapshot.pid,
+          "FOUND" if snapshot.pid in all_events else "missing"
+      )
+      events = all_events.get(snapshot.pid)
+      if events is None:
+          events = ProcessRuntimeEvents()
+
+      events.is_event_available = provider_state["is_event_available"]
+      events.did_loading_succeed = provider_state["did_loading_succeed"]
+      events.did_read_succeed = provider_state["did_read_succeed"]
+      snapshot.runtime_collected_events = events
 
     except Exception as e:
+        print("[RUNTIME EVENTS COLLECTOR] Collector failed:", e)
         collector_failures.append(
             CollectorFailure(
                 pid=snapshot.pid,
@@ -37,5 +41,4 @@ def collect_runtime_events(
                 reason=str(e),
             )
         )
-
     return snapshot
