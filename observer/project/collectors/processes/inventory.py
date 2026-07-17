@@ -7,6 +7,7 @@ from project.models.processes import (
     ProcessCache,
 )
 from project.providers.start_provider import get_provider_runtime_events
+from project.collectors.processes.extra import build_cache, separate_runtime_events
 from project.collectors.processes.identity import collect_identity
 from project.collectors.processes.scheduler import collect_scheduler
 from project.collectors.processes.owner import collect_owner
@@ -33,38 +34,7 @@ from project.utils.decorators import trace
 
 PROC = Path("/proc")
 
-def build_cache(proc_dir: Path) -> ProcessCache:
-
-    cache = ProcessCache()
-
-    try:
-        cache.stat = (proc_dir / "stat").read_text()
-    except Exception:
-        pass
-
-    try:
-      cache.status = (proc_dir / "status").read_text()
-    except Exception:
-        pass
-
-    try:
-        cache.cmdline = (proc_dir / "cmdline").read_bytes()
-    except Exception:
-      pass
-
-    try:
-        cache.cgroup = (proc_dir / "cgroup").read_text()
-    except Exception:
-        pass
-
-    try:
-        cache.io = (proc_dir / "io").read_text()
-    except Exception:
-        pass
-
-    return cache
-
-@trace("ps_inv")
+@trace("process_inventory")
 def collect_process_inventory() -> ProcessInventory:
     """
     Build a lightweight inventory of all running processes.
@@ -73,12 +43,26 @@ def collect_process_inventory() -> ProcessInventory:
     """
 
     inventory = ProcessInventory()
-    runtime_events, provider_data = get_provider_runtime_events()
+    proc_entries = [
+        entry for entry in PROC.iterdir() if entry.name.isdigit()
+    ]
+
+    runtime_events, provider_state = get_provider_runtime_events()
+
+    live_pids = set()
+    live_pids = { int(entry.name) for entry in proc_entries}
+    matched_events, ended_events = separate_runtime_events(
+       runtime_events, live_pids, provider_state
+    )
+    runtime_events = matched_events
+    inventory.ended_process_events = ended_events
+    inventory.live_process_events = runtime_events
 
     with open("/proc/uptime") as f:
         uptime_seconds = float(f.readline().split()[0])
 
-    for entry in PROC.iterdir():
+    for entry in proc_entries:
+
         if not entry.name.isdigit():
             continue
         inventory.total_processes += 1
@@ -114,7 +98,7 @@ def collect_process_inventory() -> ProcessInventory:
             snapshot = collect_limits(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_wait_channel(snapshot, proc_dir, inventory.collector_failures,)
             snapshot = collect_threads(snapshot, proc_dir, inventory.collector_failures,)
-            snapshot = collect_runtime_events(snapshot, runtime_events, provider_data, inventory.collector_failures,)
+            snapshot = collect_runtime_events(snapshot, runtime_events, provider_state, inventory.collector_failures,)
 
             inventory.accessible_processes += 1
             inventory.collected_successful += 1
@@ -160,31 +144,18 @@ def start_process_collection():
       compute_func=compute_process_rates,
   )
 
+  if result.resource.lower() == "process":
+    print("FROM INVENTORY: Returned Result ID is correct")
+    inventory = result.data
+    print(f"Missed events: {inventory.runtime_orphaned_events}")
+  else:
+    print("Wrong Id for Process Event")
   return result
 
 @trace("process_pipeline")
 def process_pipeline():
     return start_process_collection()
 
+
 process_pipeline()
 
-def nothing():
-#if __name__ == "__main__":
-    inventory = process_pipeline()
-
-    print(f"Collected {inventory.collected_successful}/{inventory.collected_total}")
-    print(
-        f"Visible: {inventory.total_processes} | "
-        f"Accessible: {inventory.accessible_processes} | "
-        f"Inaccessible: {inventory.inaccessible_processes} | "
-    )
-    for process in inventory.processes[-2:]:
-        print(process)
-    for failure in inventory.collector_failures[:1]:
-        print(failure)
-    for ps in inventory.processes:
-      if ps.pid == 3526:
-        print("Process 3526 Found!")
-        print(ps.thread_count)
-        print(ps.threads[:2])
-        print(len(ps.threads))

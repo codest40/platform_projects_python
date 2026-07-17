@@ -23,7 +23,6 @@ class EBPFLoader:
         """
         Return True if the eBPF runtime can be started.
         """
-
         return (
             cls.LOADER.exists()
             and os.access(cls.LOADER, os.X_OK)

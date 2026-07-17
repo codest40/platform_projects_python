@@ -56,6 +56,8 @@ class RuntimeAggregator:
         runtime_events: list[
             RuntimeEvent
         ] = self.reader.read()
+        print("Runtime events:", runtime_events)
+        print("Count:", len(runtime_events))
 
         for event in runtime_events:
 
@@ -69,25 +71,20 @@ class RuntimeAggregator:
                     )
 
                 elif event.code == CODE_ENFILE:
-
                     events.enfile_count = (
                         (events.enfile_count or 0) + 1
                     )
 
             # Memory events
             elif event.category == EVENT_MEMORY:
-
                 if event.code == CODE_OOM_KILL:
-
                     events.oom_kill_count = (
                         (events.oom_kill_count or 0) + 1
                     )
 
             # Fatal signals
             elif event.category == EVENT_SIGNAL:
-
                 if event.code == CODE_SIGSEGV:
-
                     events.segfault_count = (
                         (events.segfault_count or 0) + 1
                     )
@@ -145,5 +142,5 @@ class RuntimeAggregator:
                     events.last_terminating_signal = (
                         signal.SIGPIPE.value
                     )
-
+        print("PIDs:", list(processes.keys()))
         return dict(processes)

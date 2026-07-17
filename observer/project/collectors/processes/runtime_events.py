@@ -18,11 +18,12 @@ def collect_runtime_events(
         return snapshot
 
     try:
-      #print(
-      #    snapshot.pid,
-      #    "FOUND" if snapshot.pid in all_events else "missing"
-      #)
       events = all_events.get(snapshot.pid)
+      #if events is not None:
+      #    print(f"MATCHED: snapshot.pid={snapshot.pid}")
+      #else:
+      #    print(f"MISSEd : snapshot.pid={snapshot.pid}")
+
       if events is None:
           events = ProcessRuntimeEvents()
 

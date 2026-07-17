@@ -6,11 +6,8 @@ def safe_event(*args, **kwargs) -> PlatformEvent:
     Positional arguments
     --------------------
     emit()
-
     emit(summary)
-
     emit(event_name, summary)
-
     More than two positional arguments raises ValueError.
     """
     msg = ("emit() accepts at most two positional arguments:\n"
@@ -23,20 +20,14 @@ def safe_event(*args, **kwargs) -> PlatformEvent:
     if len(args) > 2:
         raise ValueError(msg)
 
-    #
     # defaults
-    #
-
     severity = kwargs.pop("severity", kwargs.pop("level", "INFO"))
 
     event_name = kwargs.pop("event_name", "event")
 
     summary = kwargs.pop("summary", "")
 
-    #
     # positional parsing
-    #
-
     if len(args) == 1:
         summary = args[0]
 
@@ -44,10 +35,7 @@ def safe_event(*args, **kwargs) -> PlatformEvent:
         event_name = args[0]
         summary = args[1]
 
-    #
     # known fields
-    #
-
     category = kwargs.pop("category", "system")
 
     collector = kwargs.pop("collector", "unknown")

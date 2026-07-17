@@ -286,7 +286,8 @@ class ProcessInventory:
     collector_failures: list[CollectorFailure] = field(default_factory=list)
     collected_total: int = 0
     collected_successful: int = 0
-
+    ended_process_events: dict[int, ProcessRuntimeEvents] = field(default_factory=dict)
+    live_process_events: dict[int, ProcessRuntimeEvents] = field(default_factory=dict)
 
 @dataclass(slots=True)
 class ProcessCache:
