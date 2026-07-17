@@ -19,8 +19,5 @@ These projects are designed to be reusable building blocks that can be incorpora
 ```
 
 
-Projects are primarily built with:
-* Python
-
 For detailed information about any project, navigate to its directory and read its dedicated README.
 
