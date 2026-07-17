@@ -1,11 +1,9 @@
 // runtime_loader.c
 //
 // Userspace loader for Observer runtime eBPF program.
-//
 // Loads runtime.bpf.o
 // Attaches tracepoints
 // Reads ring buffer events
-//
 
 #include <errno.h>
 #include <signal.h>
@@ -25,7 +23,7 @@ static volatile sig_atomic_t running = 1;
 
 
 /*
- * Must match runtime.bpf.c exactly
+ * runtime.bpf.c matchh
  */
 
 struct runtime_event {
@@ -209,9 +207,7 @@ int main(void)
 
 
 
-    printf(
-        "Observer runtime loader running...\n"
-    );
+    // printf("Observer runtime loader running correctly...\n");
 
 
 

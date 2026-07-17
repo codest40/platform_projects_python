@@ -63,12 +63,12 @@ class EBPFLoader:
             self.process is not None
             and self.process.poll() is None
         )
-        print("PID:", self.process.pid)
-        print("Running:", self.process.poll() is None)
-        import time
-        time.sleep(2)
-        print("Reading one line...")
-        print(repr(self.process.stdout.readline()))
+        #print("PID:", self.process.pid)
+        #print("Running:", self.process.poll() is None)
+        #import time
+        #time.sleep(2)
+        #print("Reading one line...")
+        #print(repr(self.process.stdout.readline()))
 
     def unload(self) -> None:
         """

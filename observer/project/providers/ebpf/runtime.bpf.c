@@ -23,8 +23,6 @@ char LICENSE[] SEC("license") = "GPL";
 
 /*
  * Linux error numbers.
- *
- * eBPF programs do not include libc headers.
  */
 
 #define EMFILE 24
@@ -181,9 +179,7 @@ static __always_inline void emit_event(
 
 
 /*
- *
  * FD exhaustion
- *
  */
 
 
@@ -251,9 +247,7 @@ int trace_openat2_exit(
 
 
 /*
- *
  * Signals
- *
  */
 
 
@@ -335,17 +329,12 @@ int trace_signal(
 
 
 /*
- *
  * OOM
- *
  */
 
 
 /*
- * Your kernel has the tracepoint,
- * but BTF does not expose the struct.
- *
- * Match the tracepoint layout manually.
+ * Matching the tracepoint layout manually.
  */
 
 

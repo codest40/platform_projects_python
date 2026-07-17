@@ -147,7 +147,7 @@ def start_process_collection():
   if result.resource.lower() == "process":
     print("FROM INVENTORY: Returned Result ID is correct")
     inventory = result.data
-    print(f"Missed events: {inventory.runtime_orphaned_events}")
+    print(f"Missed events: {inventory.ended_process_events}")
   else:
     print("Wrong Id for Process Event")
   return result

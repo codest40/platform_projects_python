@@ -60,8 +60,8 @@ class EBPFReader:
 
                 raw[key] = int(value)
 
-            print("EVENT:", line)
-            print("Creating RuntimeEvent...")
+           # print("EVENT:", line)
+            #print("Creating RuntimeEvent...")
             events.append(
                 RuntimeEvent(
                     pid=raw["pid"],

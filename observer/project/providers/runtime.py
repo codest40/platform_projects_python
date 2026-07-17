@@ -9,19 +9,13 @@ from project.models.processes import (
 )
 
 
-#
 # Runtime event categories
-#
-
 EVENT_FD = 1
 EVENT_MEMORY = 2
 EVENT_SIGNAL = 3
 
 
-#
 # Runtime event codes
-#
-
 CODE_EMFILE = 1
 CODE_ENFILE = 2
 
@@ -56,8 +50,8 @@ class RuntimeAggregator:
         runtime_events: list[
             RuntimeEvent
         ] = self.reader.read()
-        print("Runtime events:", runtime_events)
-        print("Count:", len(runtime_events))
+        #print("Runtime events:", runtime_events)
+        #print("Count:", len(runtime_events))
 
         for event in runtime_events:
 
@@ -142,5 +136,5 @@ class RuntimeAggregator:
                     events.last_terminating_signal = (
                         signal.SIGPIPE.value
                     )
-        print("PIDs:", list(processes.keys()))
+        #print("PIDs:", list(processes.keys()))
         return dict(processes)
