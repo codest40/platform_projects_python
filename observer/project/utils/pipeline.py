@@ -70,7 +70,7 @@ def pipeline_runner(resource, collect_func, analyze_func, filter_func, compute_f
                 f"File: {file}"
                 f"Note: Not supposed to be an issue. This is just a test check if your analyzer func returned a value")
             return
-        print(f"✅ {resource} Metrics Analysis Passed")
+        #print(f"✅ {resource} Metrics Analysis Passed")
     else:
       emit("PIPELINE RUNNER]", f"❌ [UNKNOWN ERROR]: Executor function run_collection response returned: {result.status}")
 

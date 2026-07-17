@@ -144,17 +144,17 @@ def start_process_collection():
       compute_func=compute_process_rates,
   )
 
-  if result.resource.lower() == "process":
-    print("FROM INVENTORY: Returned Result ID is correct")
-    inventory = result.data
-    print(f"Missed events: {inventory.ended_process_events}")
-  else:
-    print("Wrong Id for Process Event")
+  #if result.resource.lower() == "process":
+  #  print("FROM INVENTORY: Returned Result ID is correct")
+  #  inventory = result.data
+  #  print(f"Missed events: {inventory.ended_process_events}")
+  #else:
+  #  print("Wrong Id for Process Event")
   return result
 
 @trace("process_pipeline")
 def process_pipeline():
-    return start_process_collection()
+    start_process_collection()
 
 
 process_pipeline()
