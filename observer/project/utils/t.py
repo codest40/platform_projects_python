@@ -14,7 +14,7 @@ def get_cpu_model():
         for line in f:
             if line.startswith("model name"):
                 return line.split(":", 1)[1].strip()
-    return "Unknown"
+    return "Not Seen"
 
 
 print(get_cpu_model())
