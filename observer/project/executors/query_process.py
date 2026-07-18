@@ -1,13 +1,13 @@
 from project.models.query import QueryResult
-from project.models.processes import ObserverState as OB
 
 
-def get_process_by_pid(inventory, pid):
-    """
-    Return information about a single process.
-    """
-    for process in inventory.processes:
-        if process.pid == pid:
+def _processes(inventory):
+    return inventory["metadata"]["processes"]
+
+
+def find_by_pid(inventory, pid):
+    for process in _processes(inventory):
+        if process.get("pid") == pid:
             return QueryResult(
                 title=f"Process {pid}",
                 description="Process found.",
@@ -23,38 +23,76 @@ def get_process_by_pid(inventory, pid):
     )
 
 
-def get_waiting_processes(inventory):
-    """
-    Return all processes currently waiting.
-    """
-    waiting = [
+def filter_by_signal(inventory, signal, value=True):
+    result = [
         process
-        for process in inventory.processes
-        if process.wait_channel_analysis
-        and process.wait_channel_analysis.signals.get("is_waiting")
+        for process in _processes(inventory)
+        if process.get("signals", {}).get(signal) == value
     ]
 
     return QueryResult(
-        title="Waiting Processes",
-        description=f"{len(waiting)} waiting process(es) found.",
-        processes=waiting,
+        title=f"Signal: {signal}",
+        description=f"{len(result)} process(es) matched.",
+        processes=result,
         warnings=[],
     )
 
 
-def get_high_memory_processes(inventory, limit=10):
-    """
-    Return processes using the most resident memory.
-    """
-    processes = sorted(
-        inventory.processes,
-        key=lambda p: p.rss_bytes or 0,
+def filter_by_field(inventory, field, value):
+    result = [
+        process
+        for process in _processes(inventory)
+        if process.get(field) == value
+    ]
+
+    return QueryResult(
+        title=f"{field} = {value}",
+        description=f"{len(result)} process(es) matched.",
+        processes=result,
+        warnings=[],
+    )
+
+
+def sort_by(inventory, field, reverse=True):
+    result = sorted(
+        _processes(inventory),
+        key=lambda p: p.get(field) or 0,
+        reverse=reverse,
+    )
+
+    return QueryResult(
+        title=f"Sorted by {field}",
+        description=f"{len(result)} process(es).",
+        processes=result,
+        warnings=[],
+    )
+
+
+def top(inventory, field, limit=10):
+    result = sorted(
+        _processes(inventory),
+        key=lambda p: p.get(field) or 0,
         reverse=True,
     )[:limit]
 
     return QueryResult(
-        title="Highest Memory Processes",
-        description=f"Top {len(processes)} memory consumers.",
-        processes=processes,
+        title=f"Top {limit} by {field}",
+        description=f"{len(result)} process(es).",
+        processes=result,
         warnings=[],
     )
+
+
+def search(inventory, predicate):
+    result = [
+        process
+        for process in _processes(inventory)
+        if predicate(process)
+    ]
+    return QueryResult(
+        title="Custom Search",
+        description=f"{len(result)} process(es) matched.",
+        processes=result,
+        warnings=[],
+    )
+

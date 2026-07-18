@@ -1,12 +1,17 @@
-from project.searchers.questions_process import QUESTIONS
-from project.formatters.process import load_process_inventory_from_logs
+from project.searchers.process.questions_process import QUESTIONS
+from project.extractors.process import load_process_inventory_from_logs
 
 
 def run_search(question, inventory, **kwargs):
     entry = QUESTIONS.get(question)
     if entry is None:
         raise ValueError(f"Unknown question: {question}")
-    return entry["executor"](inventory, **kwargs)
+
+    result = entry["executor"](
+        inventory,
+        **kwargs,
+    )
+    return result, entry["formatter"]
 
 
 def list_questions():
@@ -19,33 +24,39 @@ def list_questions():
 def interactive_process_search(inventory):
     keys = list_questions()
     try:
-      choice = int(input("\nSelect a question: "))
-      question = keys[choice - 1]
-    except Exception as e:
-      return(f"ERROR: Try Again. Pick one number Only")
+        choice = int(input("\nSelect a question: "))
+        question = keys[choice - 1]
+    except Exception:
+        print("ERROR: Try Again. Pick one number only.")
+        return None, None
 
     kwargs = {}
     if question == "process":
         kwargs["pid"] = int(input("PID: "))
-    result = run_search(
+    result, formatter = run_search(
         question,
         inventory,
         **kwargs,
     )
+    return result, formatter
 
-    return result
 
+def print_answer(result, formatter):
+    print(formatter(result))
 
 def start(event_type="analysis"):
     inventory = load_process_inventory_from_logs(event_type)
-
     if inventory is None:
         print("No process inventory found.")
         return
+    answer, formatter = interactive_process_search(inventory)
 
-    answer = interactive_process_search(inventory)
-    print(answer)
-    #print_answer(answer)
+    if answer is None:
+        return
+    print_answer(
+        answer,
+        formatter,
+    )
 
 
 start()
