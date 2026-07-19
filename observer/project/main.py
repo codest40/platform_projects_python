@@ -25,3 +25,4 @@ start_resource("memory", memory_pipeline)
 
 #DISK
 start_resource("disk", disk_pipeline)
+
